@@ -3,7 +3,7 @@
   @brief A very basic sample for using VideoCapture and VideoWriter
   @author PkLab.net
   @date Aug 24, 2016
-  Rev:  171004 D. Wiwel
+  Rev:  171004 D. Wiwel  
 
 */
 
@@ -17,7 +17,12 @@ using namespace std;
 
 int main(int, char**)
 {
+    cout << "Starting grabber test program ...\n" << endl;
+
     Mat frame;
+    Mat prevFrame;
+    Mat saveFrame;
+
     //--- INITIALIZE VIDEOCAPTURE
     VideoCapture cap;
     // open the default camera using default API
@@ -40,6 +45,7 @@ int main(int, char**)
     {
         // wait for a new frame from camera and store it into 'frame'
         cap.read(frame);
+
         // check if we succeeded
         if (frame.empty()) {
             cerr << "ERROR! blank frame grabbed\n";
@@ -47,14 +53,31 @@ int main(int, char**)
             break;
         }
         // show live and wait for a key with timeout long enough to show images
-        imshow("Live", frame);
+        if (!frame.empty() ) imshow("Live", frame);
+
+        if (!prevFrame.empty() ) imshow("PrevFrame", prevFrame);
     
-        if (cv::waitKey(1000) >= 0) 
+        Scalar prevStdDev, currentStdDev;
+        cv::meanStdDev(prevFrame, Scalar(), prevStdDev);
+        cv::meanStdDev(frame, Scalar(), currentStdDev);
+
+        cout << "prevStdDev: " << prevStdDev << "   currentStdDev: " << currentStdDev << endl;    
+
+        
+        if ( cv::abs(currentStdDev[1] - prevStdDev[1]) > 5 )
         {
-            cout << "Stopping little grabber\n";
+            cout << "! Activity detected !" << endl;
+            saveFrame = frame.clone();
+           if (!saveFrame.empty() ) imshow("saveFrame", saveFrame);
+        } 
+        
+
+        if (cv::waitKey(100) >= 0) 
+        {
             break;
         }
-    
+        
+        prevFrame = frame.clone();
     }
     // the camera will be deinitialized automatically in VideoCapture destructor
     cout << "Little grabber stopped.  Enjoy the day!\n";

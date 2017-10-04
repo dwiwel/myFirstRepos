@@ -1,6 +1,8 @@
 #!/bin/bash
 
-echo  `pkg-config --cflags --libs opencv` 
+# Use this to build with V3.3 and then run with "run" to load v3.3 libraries.
+
+echo  `pkg-config --cflags --libs opencv`   # (this points to older v3.2 opencv libs )
 echo ""
 echo ""
 echo ""
@@ -10,5 +12,6 @@ echo ""
 #g++ grabber.cpp  -o grabber  -I/usr/local/include/opencv -I/usr/local/include -L ~/opencv/build/lib -lopencv_shape -lopencv_stitching -lopencv_objdetect -lopencv_superres -lopencv_videostab -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_video -lopencv_photo -lopencv_ml -lopencv_imgproc -lopencv_flann -lopencv_viz -lopencv_core
 
 
-g++ grabber.cpp  -o grabber -I ~/opencv/include  -L ~/opencv/build/lib  -lopencv_shape -lopencv_stitching -lopencv_objdetect -lopencv_superres -lopencv_videostab -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_video -lopencv_photo -lopencv_ml -lopencv_imgproc -lopencv_flann -lopencv_viz -lopencv_core
+# This will build with opencv newer v3.3 libraries, which are in my home dir. Work so much better.
 
+g++ grabber.cpp  -o grabber -I ~/opencv/include  -L ~/opencv/build/lib  -lopencv_shape -lopencv_stitching -lopencv_objdetect -lopencv_superres -lopencv_videostab -lopencv_calib3d -lopencv_features2d -lopencv_highgui -lopencv_videoio -lopencv_imgcodecs -lopencv_video -lopencv_photo -lopencv_ml -lopencv_imgproc -lopencv_flann -lopencv_viz -lopencv_core

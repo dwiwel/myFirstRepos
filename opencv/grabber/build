@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo  `pkg-config --cflags --libs opencv` 
+echo ""
+echo ""
+echo ""
+
+g++ grabber.cpp  -o grabber  `pkg-config --cflags --libs opencv` 
+
+
+

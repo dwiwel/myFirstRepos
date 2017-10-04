@@ -1,13 +1,16 @@
 /**
-  @file videocapture_basic.cpp
+  @file grabber.cpp  (taken from videocapture_basic.cpp
   @brief A very basic sample for using VideoCapture and VideoWriter
   @author PkLab.net
   @date Aug 24, 2016
+  Rev:  171004 D. Wiwel
+
 */
 
-#include <opencv2/opencv.hpp>
 #include <iostream>
 #include <stdio.h>
+#include <opencv2/opencv.hpp>
+
 
 using namespace cv;
 using namespace std;
@@ -26,13 +29,13 @@ int main(int, char**)
     cap.open(deviceID + apiID);
     // check if we succeeded
     if (!cap.isOpened()) {
-        cerr << "ERROR! Unable to open camera\n";
+        cerr << "ERROR! Unable to open camera\n";      
         return -1;
     }
 
     //--- GRAB AND WRITE LOOP
-    cout << "Start grabbing" << endl
-        << "Press any key to terminate" << endl;
+    cout << "Start my little grabber ..." 
+         << "Press any key to terminate" << endl;
     for (;;)
     {
         // wait for a new frame from camera and store it into 'frame'
@@ -40,13 +43,20 @@ int main(int, char**)
         // check if we succeeded
         if (frame.empty()) {
             cerr << "ERROR! blank frame grabbed\n";
+            cout << "ERROR! blank frame grabbed\n";
             break;
         }
         // show live and wait for a key with timeout long enough to show images
         imshow("Live", frame);
-        if (waitKey(5) >= 0)
+    
+        if (cv::waitKey(1000) >= 0) 
+        {
+            cout << "Stopping little grabber\n";
             break;
+        }
+    
     }
     // the camera will be deinitialized automatically in VideoCapture destructor
+    cout << "Little grabber stopped.  Enjoy the day!\n";
     return 0;
 }

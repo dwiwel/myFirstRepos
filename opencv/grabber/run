@@ -1,6 +1,7 @@
 # This will run with opencv v3.3 shared libraries, which are in my home dir.  Oh my!
 #
-# instead of using export LD.. here, a permanent fix it to add line to /etc/ld.so.conf.d/opencv.conf
+# Instead of using export LD_LIBRARY_PATH here, a permanent fix it to add 
+# line to /etc/ld.so.conf.d/opencv.conf.  This is how the default load path is established. 
 
 export LD_LIBRARY_PATH="/home/dwiwel/opencv/build/lib"
 

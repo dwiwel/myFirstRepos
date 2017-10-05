@@ -3,14 +3,16 @@
   @brief A very basic sample for using VideoCapture and VideoWriter
   @author PkLab.net
   @date Aug 24, 2016
-  Rev:  171004 D. Wiwel  
-
 */
+//
+// Don Wiwel, 05OCT2017
+// Rev:
 
 #include <iostream>
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 
+#include "utils.hh"
 
 using namespace cv;
 using namespace std;
@@ -19,9 +21,15 @@ int main(int, char**)
 {
     cout << "Starting grabber test program ...\n" << endl;
 
-    Mat frame;
+    Utils meUtils;
+
+    meUtils.initApp();
+
+    Utils::testMe();
+
+    Mat frame;            // Current (last) frame read.
     Mat prevFrame;
-    Mat saveFrame;
+    Mat saveFrame;        // Frame to be saved to disk.
 
     //--- INITIALIZE VIDEOCAPTURE
     VideoCapture cap;
@@ -64,11 +72,15 @@ int main(int, char**)
         cout << "prevStdDev: " << prevStdDev << "   currentStdDev: " << currentStdDev << endl;    
 
         
-        if ( cv::abs(currentStdDev[1] - prevStdDev[1]) > 5 )
+        if ( cv::abs(currentStdDev[1] - prevStdDev[1]) > 4 )
         {
             cout << "! Activity detected !" << endl;
             saveFrame = frame.clone();
-           if (!saveFrame.empty() ) imshow("saveFrame", saveFrame);
+            if (!saveFrame.empty() )
+            { 
+                imshow("saveFrame", saveFrame);
+                Utils::saveImageFile( saveFrame );
+            }
         } 
         
 

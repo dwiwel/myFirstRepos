@@ -5,7 +5,7 @@
   @date Aug 24, 2016
 */
 //
-// Don Wiwel, 05OCT2017
+// Don Wiwel, 06OCT2017
 // Rev:
 
 #include <iostream>
@@ -19,7 +19,7 @@ using namespace std;
 
 int main(int, char**)
 {
-    cout << "Starting grabber test program ...\n" << endl;
+    cout << "Starting my little grabber test program ...\n" << endl;
 
     Utils meUtils;
 
@@ -71,7 +71,7 @@ int main(int, char**)
         cout << "prevStdDev: " << prevStdDev << "   currentStdDev: " << currentStdDev << endl;    
 
         
-        if ( cv::abs(currentStdDev[1] - prevStdDev[1]) > 4 )
+        if ( cv::abs(currentStdDev[1] - prevStdDev[1]) > 3 )
         {
             cout << "! Activity detected !" << endl;
             saveFrame = frame.clone();

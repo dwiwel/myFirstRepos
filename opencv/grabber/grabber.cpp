@@ -3,14 +3,16 @@
   @brief A very basic sample for using VideoCapture and VideoWriter
   @author PkLab.net
   @date Aug 24, 2016
-  Rev:  171004 D. Wiwel  
-
 */
+//
+// Don Wiwel, 05OCT2017
+// Rev:
 
 #include <iostream>
 #include <stdio.h>
 #include <opencv2/opencv.hpp>
 
+#include "utils.hh"
 
 using namespace cv;
 using namespace std;
@@ -19,14 +21,20 @@ int main(int, char**)
 {
     cout << "Starting grabber test program ...\n" << endl;
 
-    Mat frame;
+    Utils meUtils;
+
+    meUtils.initApp();
+
+    Utils::testMe();
+
+    Mat frame;            // Current (last) frame read.
     Mat prevFrame;
-    Mat saveFrame;
+    Mat saveFrame;        // Frame to be saved to disk.
 
     //--- INITIALIZE VIDEOCAPTURE
     VideoCapture cap;
     // open the default camera using default API
-    cap.open(0);
+    //cap.open(0);
     // OR advance usage: select any API backend
     int deviceID = 0;             // 0 = open default camera
     int apiID = cv::CAP_ANY;      // 0 = autodetect default API
@@ -48,7 +56,6 @@ int main(int, char**)
 
         // check if we succeeded
         if (frame.empty()) {
-            cerr << "ERROR! blank frame grabbed\n";
             cout << "ERROR! blank frame grabbed\n";
             break;
         }
@@ -64,11 +71,15 @@ int main(int, char**)
         cout << "prevStdDev: " << prevStdDev << "   currentStdDev: " << currentStdDev << endl;    
 
         
-        if ( cv::abs(currentStdDev[1] - prevStdDev[1]) > 5 )
+        if ( cv::abs(currentStdDev[1] - prevStdDev[1]) > 4 )
         {
             cout << "! Activity detected !" << endl;
             saveFrame = frame.clone();
-           if (!saveFrame.empty() ) imshow("saveFrame", saveFrame);
+            if (!saveFrame.empty() )
+            { 
+                imshow("saveFrame", saveFrame);
+                Utils::saveImageFile( saveFrame );
+            }
         } 
         
 

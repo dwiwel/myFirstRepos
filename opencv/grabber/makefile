@@ -4,6 +4,15 @@
 CLFLAGS = `pkg-config --cflags opencv`
 LIBS = `pkg-config --libs opencv`
 
+src = \
+    grabber.cpp \
+    utils.cpp
+
+src = $(wildcard *.cpp)
+obj = $(src:.c=o.)
+
+grabber: $(obj)
+
 % : %.cpp
-	g++  -o $@ $<  $(CFLAGS) $(LIBS)
+	g++  -g3 -o $@ $^  $(CFLAGS) $(LIBS)  
 

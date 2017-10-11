@@ -1,0 +1,14 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber/MyGrabber_CmakeProj/MyGrabber_CmakeProh.cpp
+iostream
+-
+stdio.h
+-
+

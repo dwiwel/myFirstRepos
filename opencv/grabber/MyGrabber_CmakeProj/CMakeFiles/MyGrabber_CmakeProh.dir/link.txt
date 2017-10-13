@@ -1,1 +1,1 @@
-/usr/bin/c++      CMakeFiles/MyGrabber_CmakeProh.dir/MyGrabber_CmakeProh.cpp.o  -o MyGrabber_CmakeProh -rdynamic 
+/usr/bin/c++   -g   CMakeFiles/MyGrabber_CmakeProh.dir/MyGrabber_CmakeProh.cpp.o  -o MyGrabber_CmakeProh -rdynamic 

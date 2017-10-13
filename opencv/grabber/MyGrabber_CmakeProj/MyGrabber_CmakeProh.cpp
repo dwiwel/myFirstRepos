@@ -7,5 +7,6 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
+	int my_int;
 	std::cout << " Hello from myGrabber_CmakeProject. \n" ;
 }

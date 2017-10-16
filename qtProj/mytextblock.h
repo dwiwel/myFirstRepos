@@ -1,3 +1,7 @@
+// myTextblock.h
+//
+
+
 #ifndef MYTEXTBLOCK_H
 #define MYTEXTBLOCK_H
 
@@ -9,7 +13,7 @@ namespace Ui {
 class myTextBlock;
 }
 
-class myTextBlock : public QTextBrowser
+class myTextBlock : public QWidget
 {
     Q_OBJECT
 
@@ -18,7 +22,7 @@ class myTextBlock : public QTextBrowser
          ~myTextBlock();
 
     signals:
-        void on_MySignal();
+
 };
 
 #endif // MYTEXTBLOCK_H

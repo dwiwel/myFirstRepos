@@ -90,10 +90,5 @@ void MainWindow::on_pushButton_3_clicked()
 }
 
 
-void MainWindow::on_MySignal()
-{
-  std::cout << " In Slot on_MySignal.  " << std::endl;
-}
-
 
 

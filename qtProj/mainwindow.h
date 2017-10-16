@@ -26,10 +26,9 @@ private slots:
 
     void on_pushButton_3_clicked();
 
-    void on_MySignal();
 
 signals:
-    void mySignal();
+
 
 private:
     Ui::MainWindow *ui;

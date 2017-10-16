@@ -122,7 +122,7 @@
   </connection>
  </connections>
  <slots>
-  <signal>mysignal1()</signal>
-  <slot>myslot1()</slot>
+
+
  </slots>
 </ui>

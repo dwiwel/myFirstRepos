@@ -1,3 +1,6 @@
+// myTextblock.cpp
+//
+
 #include "mytextblock.h"
 
 #include <iostream>
@@ -6,15 +9,17 @@
 
 
 
-myTextBlock::myTextBlock(QWidget *parent) :
+myTextBlock::myTextBlock(QWidget *parent)
 {
 
 
 }
 
-void myTextBlock::on_MySignal()
+myTextBlock::~myTextBlock()
 {
-  std::cout << " In Slot myTextBlock::on_MySignal.  " << std::endl;
+
+
 }
 
+x
 

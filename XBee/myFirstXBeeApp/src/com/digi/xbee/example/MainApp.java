@@ -17,9 +17,9 @@ public class MainApp {
 
     /* Constants */
     // TODO Replace with the serial port where your sender module is connected to.
-    private static String PORT = "/dev/ttyUSB0";
+    private static String PORT = "/dev/ttyUSB1";
     // TODO Replace with the baud rate of your sender module.  
-    private static final int BAUD_RATE = 9600;
+    private static final int BAUD_RATE = 115200;
     // TODO Optionally, replace with the text you want to send to the server.
     private static  String TEXT = "Hello XBee World!";
 

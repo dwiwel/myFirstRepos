@@ -1,3 +1,0 @@
-This is a sample code file.
-I have aded something to this file.
-anther line

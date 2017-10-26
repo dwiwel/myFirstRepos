@@ -1,3 +1,3 @@
-/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/CMakeFiles/edit_cache.dir
-/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/CMakeFiles/rebuild_cache.dir
-/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/CMakeFiles/grabber3.dir
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber3/CMakeFiles/edit_cache.dir
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber3/CMakeFiles/rebuild_cache.dir
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber3/CMakeFiles/grabber3.dir

@@ -5,7 +5,11 @@
   @date Aug 24, 2016
 */
 //
+<<<<<<< HEAD
 // Don Wiwel, 05OCT2017
+=======
+// Don Wiwel, 06OCT2017
+>>>>>>> 81a042de45649b48817d228a091a03dadfb779ec
 // Rev:
 
 #include <iostream>
@@ -19,7 +23,7 @@ using namespace std;
 
 int main(int, char**)
 {
-    cout << "Starting grabber test program ...\n" << endl;
+    cout << "Starting my little grabber test program ...\n" << endl;
 
     Utils meUtils;
 
@@ -27,6 +31,15 @@ int main(int, char**)
 
     Utils::testMe();
 
+<<<<<<< HEAD
+    Utils meUtils;
+
+    meUtils.initApp();
+
+    Utils::testMe();
+
+=======
+>>>>>>> 81a042de45649b48817d228a091a03dadfb779ec
     Mat frame;            // Current (last) frame read.
     Mat prevFrame;
     Mat saveFrame;        // Frame to be saved to disk.
@@ -71,7 +84,11 @@ int main(int, char**)
         cout << "prevStdDev: " << prevStdDev << "   currentStdDev: " << currentStdDev << endl;    
 
         
+<<<<<<< HEAD
         if ( cv::abs(currentStdDev[1] - prevStdDev[1]) > 4 )
+=======
+        if ( cv::abs(currentStdDev[1] - prevStdDev[1]) > 3 )
+>>>>>>> 81a042de45649b48817d228a091a03dadfb779ec
         {
             cout << "! Activity detected !" << endl;
             saveFrame = frame.clone();

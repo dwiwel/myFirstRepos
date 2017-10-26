@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>Debug_grabber</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.cdt.core.cnature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>grabber</name>
+			<type>1</type>
+			<location>/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber/grabber</location>
+		</link>
+	</linkedResources>
+</projectDescription>

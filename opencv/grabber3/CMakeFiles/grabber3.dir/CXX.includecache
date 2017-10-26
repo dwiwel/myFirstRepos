@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/grabber.cpp
+iostream
+-
+stdio.h
+-
+opencv2/opencv.hpp
+-
+utils.hh
+/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/utils.hh
+
+/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/utils.cpp
+iostream
+-
+stdio.h
+-
+ctime
+-
+opencv2/opencv.hpp
+-
+utils.hh
+/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/utils.hh
+
+/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/utils.hh
+iostream
+-
+stdio.h
+-
+opencv2/opencv.hpp
+-
+

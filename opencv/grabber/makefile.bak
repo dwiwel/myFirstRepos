@@ -1,0 +1,18 @@
+#
+# This make file will use older version of opencv files; those that are found by pkg-config  (oh-no; grabber wont run right. )
+
+CLFLAGS = `pkg-config --cflags opencv`
+LIBS = `pkg-config --libs opencv`
+
+src = \
+    grabber.cpp \
+    utils.cpp
+
+src = $(wildcard *.cpp)
+obj = $(src:.c=o.)
+
+grabber: $(obj)
+
+% : %.cpp
+	g++  -g3 -o $@ $^  $(CFLAGS) $(LIBS)  
+

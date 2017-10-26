@@ -17,9 +17,9 @@ public class MainApp {
 
     /* Constants */
     // TODO Replace with the serial port where your sender module is connected to.
-    private static String PORT = "COM17";
+    private static String PORT = "/dev/ttyUSB0";
     // TODO Replace with the baud rate of your sender module.  
-    private static final int BAUD_RATE = 115200;
+    private static final int BAUD_RATE = 9600;
     // TODO Optionally, replace with the text you want to send to the server.
     private static  String TEXT = "Hello XBee World!";
 
@@ -100,8 +100,8 @@ public class MainApp {
 		            IPMessage response = myDevice.readIPData();
 		            
 		            if (response == null) 
-		            {
-		                System.out.format("!! Echo response was not received from the server.\n");
+		            {		            	
+		                 System.out.format("!! Echo response was not received from the server.\n");
 		            }
 		            else
 		            {        

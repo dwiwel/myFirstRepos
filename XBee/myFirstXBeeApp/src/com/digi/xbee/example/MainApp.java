@@ -1,3 +1,7 @@
+// MainApp.java
+//
+// Initial prototype using Digi XBee Cellular device.
+
 package com.digi.xbee.example;
 
 import java.net.Inet4Address;

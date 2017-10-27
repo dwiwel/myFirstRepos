@@ -6,7 +6,11 @@
 
 #IncludeRegexTransform: 
 
+<<<<<<< HEAD
+/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/grabber.cpp
+=======
 /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber3/grabber.cpp
+>>>>>>> 81a042de45649b48817d228a091a03dadfb779ec
 iostream
 -
 stdio.h
@@ -14,9 +18,15 @@ stdio.h
 opencv2/opencv.hpp
 -
 utils.hh
+<<<<<<< HEAD
+/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/utils.hh
+
+/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/utils.cpp
+=======
 /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber3/utils.hh
 
 /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber3/utils.cpp
+>>>>>>> 81a042de45649b48817d228a091a03dadfb779ec
 iostream
 -
 stdio.h
@@ -26,9 +36,15 @@ ctime
 opencv2/opencv.hpp
 -
 utils.hh
+<<<<<<< HEAD
+/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/utils.hh
+
+/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/utils.hh
+=======
 /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber3/utils.hh
 
 /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber3/utils.hh
+>>>>>>> 81a042de45649b48817d228a091a03dadfb779ec
 iostream
 -
 stdio.h
@@ -36,6 +52,8 @@ stdio.h
 opencv2/opencv.hpp
 -
 
+<<<<<<< HEAD
+=======
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h
 /usr/local/include/opencv/opencv2/core/core_c.h
@@ -1296,3 +1314,4 @@ opencv2/core/cuda.hpp
 opencv2/features2d.hpp
 /usr/local/include/opencv2/xfeatures2d/opencv2/features2d.hpp
 
+>>>>>>> 81a042de45649b48817d228a091a03dadfb779ec

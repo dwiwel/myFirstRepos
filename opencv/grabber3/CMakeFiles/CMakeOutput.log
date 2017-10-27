@@ -557,6 +557,8 @@ make[1]: Leaving directory '/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/gr
     Feature record: CXX_FEATURE:0cxx_variable_templates
     Feature record: CXX_FEATURE:0cxx_variadic_macros
     Feature record: CXX_FEATURE:0cxx_variadic_templates
+<<<<<<< HEAD
+=======
 The system is: Linux - 4.9.35-v7+ - armv7l
 Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
 Compiler: /usr/bin/cc 
@@ -1097,3 +1099,4 @@ make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabbe
     Feature record: CXX_FEATURE:0cxx_variable_templates
     Feature record: CXX_FEATURE:0cxx_variadic_macros
     Feature record: CXX_FEATURE:0cxx_variadic_templates
+>>>>>>> 81a042de45649b48817d228a091a03dadfb779ec

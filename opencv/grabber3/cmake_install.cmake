@@ -1,4 +1,8 @@
+<<<<<<< HEAD
+# Install script for directory: /home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3
+=======
 # Install script for directory: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber3
+>>>>>>> 81a042de45649b48817d228a091a03dadfb779ec
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -40,5 +44,9 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
+<<<<<<< HEAD
+file(WRITE "/home/dwiwel/Java_Proj/gitHub/myFirstRepos/opencv/grabber3/${CMAKE_INSTALL_MANIFEST}"
+=======
 file(WRITE "/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber3/${CMAKE_INSTALL_MANIFEST}"
+>>>>>>> 81a042de45649b48817d228a091a03dadfb779ec
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

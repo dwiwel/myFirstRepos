@@ -10,7 +10,7 @@ import com.digi.xbee.api.models.IPMessage;
 import com.digi.xbee.api.models.IPProtocol;
 
 
-public class MainApp2 {
+public class MainApp2 {  
 
     /* Constants */
     // TODO Replace with the serial port where your sender module is connected to.

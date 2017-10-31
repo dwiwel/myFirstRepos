@@ -24,13 +24,14 @@ class Send {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(image, "jpg", byteArrayOutputStream);
 
-        byte[] size = ByteBuffer.allocate(4).putInt(byteArrayOutputStream.size()).array();
+        byte[] size = ByteBuffer.allocate(16).putInt(byteArrayOutputStream.size()).array();
+        System.out.println("Send Image size: " + size);
         outputStream.write(size);
         outputStream.write(byteArrayOutputStream.toByteArray());
         outputStream.flush();
         System.out.println("Flushed: " + System.currentTimeMillis());
 
-        Thread.sleep(120000);
+        Thread.sleep(1000);
         System.out.println("Closing: " + System.currentTimeMillis());
         socket.close();
     	System.out.println("--Don sending image");

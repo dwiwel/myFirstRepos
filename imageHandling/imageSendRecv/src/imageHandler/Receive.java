@@ -1,3 +1,7 @@
+// Receive.java
+// For receiving image files.
+//
+
 package imageHandler;
 
 import java.awt.image.BufferedImage;

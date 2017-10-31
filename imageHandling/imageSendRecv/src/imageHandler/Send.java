@@ -14,10 +14,12 @@ import java.net.*;
 class Send {
 
     public static void main(String[] args) throws Exception {
+    	
+    	System.out.println("--Sending image ...");
         Socket socket = new Socket("localhost", 13085);
         OutputStream outputStream = socket.getOutputStream();
 
-        BufferedImage image = ImageIO.read(new File("C:\\Users\\Jakub\\Pictures\\test.jpg"));
+        BufferedImage image = ImageIO.read(new File("C:\\data\\images\\test.jpg"));
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(image, "jpg", byteArrayOutputStream);
@@ -31,5 +33,7 @@ class Send {
         Thread.sleep(120000);
         System.out.println("Closing: " + System.currentTimeMillis());
         socket.close();
+    	System.out.println("--Don sending image");
+
     }
 }

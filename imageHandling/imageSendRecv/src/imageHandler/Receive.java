@@ -1,5 +1,6 @@
 // Receive.java
-// For receiving image files.
+//
+// For receiving image files, one at a time.  
 // rev: 171031A
 //
 
@@ -18,24 +19,35 @@ import javax.imageio.ImageIO;
 public class Receive {
 
     public static void main(String[] args) throws Exception {
-        ServerSocket serverSocket = new ServerSocket(13085);
-        Socket socket = serverSocket.accept();
-        InputStream inputStream = socket.getInputStream();
-
-        System.out.println("Reading: " + System.currentTimeMillis());
-
-        byte[] sizeAr = new byte[4];
-        inputStream.read(sizeAr);
-        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
-
-        byte[] imageAr = new byte[size];
-        inputStream.read(imageAr);
-
-        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
-
-        System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
-        ImageIO.write(image, "jpg", new File("C:\\Users\\Jakub\\Pictures\\test2.jpg"));
-
-        serverSocket.close();
+    	
+    	Boolean run = true;
+    	
+    	System.out.println("--Starting image receive ...");
+    	while (run)
+    	{
+	        ServerSocket serverSocket = new ServerSocket(13085);
+	        Socket socket = serverSocket.accept();
+	        InputStream inputStream = socket.getInputStream();
+	
+	        System.out.println("Reading: " + System.currentTimeMillis());
+	
+	        byte[] fileName = new byte[32];
+	        
+	        
+	        byte[] sizeAr = new byte[4];        // Size of image.
+	        inputStream.read(sizeAr);
+	        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
+	
+	        byte[] imageAr = new byte[size];
+	        inputStream.read(imageAr);
+	
+	        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
+	
+	        System.out.println("Received " + image.getHeight() + "x" + image.getWidth() + ": " + System.currentTimeMillis());
+	        ImageIO.write(image, "jpg", new File("//data//images//newImage.jpg" + fileName));
+	
+	        serverSocket.close();
+    	}
+    	System.out.println("--Ending image receive ...");
     }
 }

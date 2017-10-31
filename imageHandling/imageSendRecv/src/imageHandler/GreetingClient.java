@@ -29,6 +29,7 @@ public class GreetingClient
             Robot bot;
             bot = new Robot();
             bimg = bot.createScreenCapture(new Rectangle(0, 0, 200, 100));
+            
             ImageIO.write(bimg,"JPG",client.getOutputStream());
             client.close();
         } catch(IOException | AWTException e) {

@@ -1,5 +1,6 @@
 // Receive.java
 // For receiving image files.
+// rev: 171031A
 //
 
 package imageHandler;

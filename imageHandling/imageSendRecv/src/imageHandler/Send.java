@@ -23,16 +23,16 @@ class Send {
         String inputImagePath = "C:\\data\\images\\test.jpg";
         String outputImagePathThumb = "C:\\data\\images\\test_thumb.jpg";
          
-        String fileName = "test_171030_1800.jpg";
-        byte[] fileNameByte = new byte[64];  
+        String fileName = "Cam01_171030_180045.jpg";
+        byte[] fileNameInBytes = new byte[64];  
         
-        fileNameByte = fileName.getBytes();
-        int fileNameLen = fileNameByte.length;
+        fileNameInBytes = fileName.getBytes();
+        int fileNameLen = fileNameInBytes.length;
         
-        byte[] sizeName = ByteBuffer.allocate(4).putInt(fileNameLen).array();
-        outputStream.write(sizeName);
-        outputStream.write(fileNameByte);
-        
+        byte[] sizeOfName = ByteBuffer.allocate(4).putInt(fileNameLen).array();
+        outputStream.write(sizeOfName);
+        outputStream.write(fileNameInBytes);
+    
         // resize to a fixed width (not proportional)
         int scaledWidth = 640;
         int scaledHeight = 480;

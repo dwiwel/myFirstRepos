@@ -44,8 +44,9 @@ public class Receive {
 	        byte[] fileNameArray = new byte[sizeFile];
 	       
 	        inputStream.read(fileNameArray);
-	        char fileNameFromClient = ByteBuffer.wrap(fileNameArray).asCharBuffer().get();
-	              
+	        //char fileNameFromClient = ByteBuffer.wrap(fileNameArray).asCharBuffer().get();
+	         
+	        String fileNameFromClient =  new String(fileNameArray);
 	        System.out.println("Filename: " + fileNameFromClient);
 	        
 	        byte[] sizeAr = new byte[4];        // Size of image in a byte array
@@ -60,7 +61,7 @@ public class Receive {
 	        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
 	        System.out.println("Received image dim: " + image.getHeight() + "x" + image.getWidth() + " time: " + System.currentTimeMillis());
 	        
-	        File fileOut = new File("C://data//images//" + fileName);
+	        File fileOut = new File("C://data//images//" + fileNameFromClient);
 	        		
 	        if (fileOut.exists()) {
 	        	fileOut.delete(); 

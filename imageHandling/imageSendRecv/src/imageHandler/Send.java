@@ -1,3 +1,7 @@
+// Send.java
+// Sends an image to the receiver.
+// 171101
+
 package imageHandler;
 
 import java.net.ServerSocket;

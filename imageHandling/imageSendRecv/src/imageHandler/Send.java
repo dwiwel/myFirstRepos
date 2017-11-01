@@ -24,10 +24,10 @@ class Send {
         socket.setSoTimeout(8000);
         OutputStream outputStream = socket.getOutputStream();
 
-        String inputImagePath = "C:\\data\\images\\test.jpg";
-        String outputImagePathThumb = "C:\\data\\images\\test_thumb.jpg";
+        String inputImagePath = "/data/images/test.jpg";
+        String outputImagePathThumb = "/data/images/test_thumb.jpg";
          
-        String fileName = "Cam01_171030_180045.jpg";
+        String fileName = "Cam01_171030_180045.jpg";   // Filename sent with image.
         byte[] fileNameInBytes = new byte[64];  
         
         fileNameInBytes = fileName.getBytes();

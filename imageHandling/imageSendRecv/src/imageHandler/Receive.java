@@ -61,7 +61,7 @@ public class Receive {
 	        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
 	        System.out.println("Received image dim: " + image.getHeight() + "x" + image.getWidth() + " time: " + System.currentTimeMillis());
 	        
-	        File fileOut = new File("C://data//images//" + fileNameFromClient);
+	        File fileOut = new File("/data/images/" + fileNameFromClient);
 	        		
 	        if (fileOut.exists()) {
 	        	fileOut.delete(); 

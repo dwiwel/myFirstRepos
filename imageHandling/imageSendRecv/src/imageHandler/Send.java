@@ -1,6 +1,9 @@
 // Send.java
 // Sends an image to the receiver.
-// 171101
+// Taken from:
+//     https://stackoverflow.com/questions/25086868/how-to-send-images-through-sockets-in-java
+//
+// 171101, 171103
 
 package imageHandler;
 
@@ -33,6 +36,8 @@ class Send {
         fileNameInBytes = fileName.getBytes();
         int fileNameLen = fileNameInBytes.length;
         
+        // Send size of filename and then filename to receiver
+        //
         byte[] sizeOfName = ByteBuffer.allocate(4).putInt(fileNameLen).array();
         outputStream.write(sizeOfName);
         outputStream.write(fileNameInBytes);
@@ -40,8 +45,10 @@ class Send {
         // resize to a fixed width (not proportional)
         int scaledWidth = 640;
         int scaledHeight = 480;
-        ImageResizer.resize(inputImagePath, outputImagePathThumb, scaledWidth, scaledHeight);
+        //ImageResizer.resize(inputImagePath, outputImagePathThumb, scaledWidth, scaledHeight);
+        ImageResizer.resize(inputImagePath, outputImagePathThumb, .2);
 
+        // Read resized image file.
         BufferedImage image = ImageIO.read(new File(outputImagePathThumb));
         
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -49,12 +56,18 @@ class Send {
 
         int sizeByte = byteArrayOutputStream.size();       
         
+        // Send size of image to send
+        //
         byte[] size = ByteBuffer.allocate(4).putInt(sizeByte).array();
         System.out.println("Send Image size: " + byteArrayOutputStream.size());
         outputStream.write(size);
         
+        // Send the image bytes.
+        //
         byte[] bytesSend = byteArrayOutputStream.toByteArray();
-        outputStream.write(bytesSend);
+        
+        outputStream.write(bytesSend, 0, bytesSend.length);      // All the bytes are here okay. 
+        Thread.sleep(1000);
         outputStream.flush();
         System.out.println("Flushed: " + System.currentTimeMillis());
 

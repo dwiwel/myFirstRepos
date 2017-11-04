@@ -1,7 +1,7 @@
 // Receive.java
 //
 // For receiving image files, one at a time.  
-// rev: 171031A
+// rev: 171031A, 171103
 //
 
 package imageHandler;
@@ -53,11 +53,26 @@ public class Receive {
 
 	        inputStream.read(sizeAr);
 	        int size = ByteBuffer.wrap(sizeAr).asIntBuffer().get();
-	        System.out.println("Received Image Size in bytes: " + size);
+	        System.out.println("Received Image Size value in bytes: " + size);
 	        byte[] imageAr = new byte[size];
+	        
+	        int numBytesRemaining = size;
+	        int totalNumBytesRead = 0;
+	        int numOfBytesRead = 0;
 	       
-	        inputStream.read(imageAr);
-		        
+	        System.out.println("Length of imageAr: " + imageAr.length);
+
+	        
+	        while (numBytesRemaining > 0)
+	        {	       
+	        	  numOfBytesRead = inputStream.read(imageAr, totalNumBytesRead, numBytesRemaining);
+	        	  numBytesRemaining = numBytesRemaining - numOfBytesRead;
+	        	  totalNumBytesRead = totalNumBytesRead + numOfBytesRead;
+	        	  
+	        	  System.out.println("numOfBytesRead: " + numOfBytesRead);	        	  
+	        }	        
+	        
+	        Thread.sleep(2000);
 	        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageAr));
 	        System.out.println("Received image dim: " + image.getHeight() + "x" + image.getWidth() + " time: " + System.currentTimeMillis());
 	        

@@ -6,7 +6,7 @@
 */
 //
 // Don Wiwel, 06OCT2017
-// Rev:
+// Rev:  171104. mods for raspberry pi ops.
 
 #include <iostream>
 #include <stdio.h>

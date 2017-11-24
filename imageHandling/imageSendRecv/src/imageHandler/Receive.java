@@ -26,7 +26,7 @@ public class Receive {
     	System.out.println("--Starting image receive ...");
     	//while (run)
     	{
-	        ServerSocket serverSocket = new ServerSocket(13085);
+	        ServerSocket serverSocket = new ServerSocket(11010);
 	        
 	        System.out.println("--Waiting for client ...");
 	        Socket socket = serverSocket.accept();

@@ -23,7 +23,7 @@ class Send {
     public static void main(String[] args) throws Exception {
     	
     	System.out.println("--Sending image ...");
-        Socket socket = new Socket("localhost", 13085);
+        Socket socket = new Socket("localhost", 11010);
         socket.setSoTimeout(8000);
         OutputStream outputStream = socket.getOutputStream();
 

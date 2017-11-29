@@ -1,4 +1,4 @@
-// Send.java
+//// Send.java
 // Sends an image to the receiver.
 // Taken from:
 //     https://stackoverflow.com/questions/25086868/how-to-send-images-through-sockets-in-java

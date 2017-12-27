@@ -3,12 +3,14 @@
 // Taken from:
 //     https://stackoverflow.com/questions/25086868/how-to-send-images-through-sockets-in-java
 //
-// 171101, 171103, 171129
+// 171101, 171103, 171129, 171201
 
 package imageHandler;
 
 //import java.net.ServerSocket;
 import java.nio.ByteBuffer;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
@@ -31,7 +33,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.nio.file.CopyOption.*;
+import java.nio.file.StandardCopyOption.*;
 
 class Send {
 
@@ -49,18 +55,18 @@ class Send {
     private static final IPProtocol PROTOCOL_TCP = IPProtocol.TCP;
     
     public static CellularDevice myDevice = null;  
-
     
     public static void main(String[] args) throws Exception {
 
-        String inputImagePath = "/data/images/test.jpg";
-        String outputImagePathThumb = "/data/images/test_thumb.jpg";
+        String inputImagePath = "";
+        String outputImagePathThumb = "";
+        String backupImagePath = "";
          
-        String fileName = "Cam01_171030_180045.jpg";   // Filename sent with image.
+        String fileName = "";   // Filename sent with image.
         byte[] fileNameInBytes = new byte[64];  
         
-        fileNameInBytes = fileName.getBytes();
-        int fileNameLen = fileNameInBytes.length;
+        //fileNameInBytes = fileName.getBytes();
+        int fileNameLen = 0;
         
     	System.out.println("--Connecting to server side ...");
     	
@@ -68,111 +74,190 @@ class Send {
         //socket.setSoTimeout(800);
     	//OutputStream outputStream = socket.getOutputStream();    
         
-    	
     	System.out.format("\n-- tty Port to be used for ZigBee Cellular: '%s'\n", TTY_PORT);
         
-    	try
+ 
+    	// Get the list of files in directory
+    	
+    	//List<String> results = new ArrayList<String>();
+    	
+    	
+    	boolean run = true;
+    	
+    	// loop continuously, checking for (new) files.
+    	while (run)
     	{
-        	myDevice = new CellularDevice (TTY_PORT, BAUD_RATE);
-            myDevice.open();
-            // myDevice.setReceiveTimeout(2000);       // seconds.           
-            //myDevice.setParameter(parameter, parameterValue)
-    	}
-    	catch (XBeeException e) 
-		{
-		    System.out.println(" !! Error opening ZigBee cellular device: ");
-		    e.printStackTrace();
-		    System.exit(0);
-		} 
-    	        
-        // Send size of filename and then filename to receiver side
-        //
-        byte[] sizeOfName = ByteBuffer.allocate(4).putInt(fileNameLen).array();
-       // outputStream.write(sizeOfName);
-       // outputStream.write(fileNameInBytes);
-    
-        System.out.format("Sending data to server:  ... \n");		            
-        myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),
-                SERVER_PORT, PROTOCOL_TCP, sizeOfName);
-        myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),
-                SERVER_PORT, PROTOCOL_TCP, fileNameInBytes);
-        
-        // resize to a fixed width (not proportional)
-        int scaledWidth = 640;
-        int scaledHeight = 480;
-        //ImageResizer.resize(inputImagePath, outputImagePathThumb, scaledWidth, scaledHeight);
-        ImageResizer.resize(inputImagePath, outputImagePathThumb, .2);
-
-        // Read resized image file.
-        BufferedImage image = ImageIO.read(new File(outputImagePathThumb));
-        
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(image, "jpg", byteArrayOutputStream);
-
-        int sizeByte = byteArrayOutputStream.size();   // Size of image, in bytes    
-        
-        System.out.println("--Sending image to server side ...");
-        // Send size of image to send
-        //
-        byte[] size = ByteBuffer.allocate(4).putInt(sizeByte).array();
-        System.out.println("Send Image size in bytes: " + byteArrayOutputStream.size());
-        //outputStream.write(size);
-        myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),
-                SERVER_PORT, PROTOCOL_TCP, size);
-        // Send the image bytes.
-        //
-        int PACKET_SIZE = 1000;     // Max packet size is 1500 bytes.
-        byte[] bytesSend = byteArrayOutputStream.toByteArray();    // image as a byte array, for sending.
-        //byte[] bytesSend = new byte[PACKET_SIZE];
-        
-        int numBytesRemaining = byteArrayOutputStream.size();
-        int numBytesSent = 0;
-        int startIndex = 0;
-        int endIndex = 0;
-        while (numBytesRemaining > 0)
-        {
-        	
-        	if (numBytesRemaining >= PACKET_SIZE)      // Send full packet.
-        	{
-        		int numBytesToSend = PACKET_SIZE;
-        		
-        		endIndex = startIndex + numBytesToSend ;
-        		
-        		byte[] byteSendPartial = Arrays.copyOfRange( bytesSend, startIndex, endIndex ); 
-        		        		                      
-        		myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),
-        								SERVER_PORT, PROTOCOL_TCP, byteSendPartial);
-        		
-        	  numBytesRemaining = numBytesRemaining - numBytesToSend;
-        	  startIndex = startIndex + numBytesToSend;
-        	  
-        	}
-        	else       // send remaining partial packet.
-        	{
-        		int numBytesToSend = numBytesRemaining;
-        		
-        		endIndex = startIndex + numBytesToSend ;
-        		
-        		byte[] byteSendPartial = Arrays.copyOfRange( bytesSend, startIndex, endIndex ); 
-        		        		                      
-        		myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),
-        								SERVER_PORT, PROTOCOL_TCP, byteSendPartial);
-        		
-        	  numBytesRemaining = numBytesRemaining - numBytesToSend;
-        	  startIndex = startIndex + numBytesToSend;
-        	}
-        	
-        }
-        
-        Thread.sleep(10);
+		    System.out.println(" Checking for existance of image files ... ");
+    		File[] files = new File("/data/images").listFiles();
+    		for (File file : files)
+	    	{
+	    		if (file.isFile())
+	    		{
+	    		   	try
+	    	    	{
+	    	        	myDevice = new CellularDevice (TTY_PORT, BAUD_RATE);
+	    	            myDevice.open();
+	    	            myDevice.setReceiveTimeout(12000);       // 12 seconds.           
+	    	            //myDevice.setParameter(parameter, parameterValue)
+	    	    	}
+	    	    	catch (XBeeException e) 
+	    			{
+	    			    System.out.println(" !! Error opening ZigBee cellular device: ");
+	    			    e.printStackTrace();
+	    			    break;
+	    			} 
+	    			fileName =  file.getName();
+	    			System.out.format(">>> Next Image file to be processed: '%s'\n", fileName) ;
+	    			inputImagePath = "/data/images/" + fileName;
+	    			backupImagePath = "/data_backup/images/" + fileName;
+	    			outputImagePathThumb = "/data/images/thumb_" + fileName;
+	    			fileNameInBytes = fileName.getBytes();
+	    		    fileNameLen = fileNameInBytes.length;
+	    		    			    	
+			        // Send size of filename string and then send image file to receiver side
+			        //
+			        byte[] sizeOfName = ByteBuffer.allocate(4).putInt(fileNameLen).array();
+			       // outputStream.write(sizeOfName);
+			       // outputStream.write(fileNameInBytes);
+			    
+			        try
+			        {
+				        System.out.format("Sending data to server:  ... \n");		            
+				        myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),
+				                SERVER_PORT, PROTOCOL_TCP, sizeOfName);
+				        myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),
+				                SERVER_PORT, PROTOCOL_TCP, fileNameInBytes);
+			        }
+			        catch (Exception e)
+			        {
+			        	 System.out.println(" !! Trouble sending filename info. exc: " + e);
+			        	 System.out.println("     StackTrace: ");
+			        	 e.printStackTrace();
+			        	 break;
+			        }
+			        // resize to a fixed width (not proportional)
+			        int scaledWidth = 640;
+			        int scaledHeight = 480;
+			        //ImageResizer.resize(inputImagePath, outputImagePathThumb, scaledWidth, scaledHeight);
+			        //ImageResizer.resize(inputImagePath, outputImagePathThumb, .5);
+			        
+			        
+			        // Read (resized) image file.
+			        BufferedImage image = ImageIO.read(new File(inputImagePath));
+			        
+			        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			        ImageIO.write(image, "jpg", byteArrayOutputStream);
+			
+			        int sizeByte = byteArrayOutputStream.size();   // Size of image, in bytes    
+			        
+			        System.out.println("--Sending image to server side ...");
+			        // Send size of image to send
+			        //
+			        byte[] size = ByteBuffer.allocate(4).putInt(sizeByte).array();
+			        System.out.println("Sending Image size in bytes: " + byteArrayOutputStream.size());
+			        //outputStream.write(size);
+			        try
+			        {
+			        myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),
+			                SERVER_PORT, PROTOCOL_TCP, size);
+			        }
+			        catch (Exception ex)
+			        {
+			        	 System.out.println(" !! Trouble sending image size: " + byteArrayOutputStream.size());
+			        	 System.out.println(" !! Exc: " + ex );
+			        }
+			        // Send the image bytes.
+			        //
+			        int PACKET_SIZE = 1500;     // Max packet size is 1500 bytes.
+			        byte[] bytesSend = byteArrayOutputStream.toByteArray();    // image as a byte array, for sending.
+			        //byte[] bytesSend = new byte[PACKET_SIZE];
+			        
+			        int numBytesRemaining = byteArrayOutputStream.size();
+			        int numBytesSent = 0;
+			        int startIndex = 0;
+			        int endIndex = 0;
+			        
+			        while (numBytesRemaining > 0)
+			        {
+			    	
+			        	if (numBytesRemaining >= PACKET_SIZE)      // Send full packet.
+			        	{
+			        		int numBytesToSend = PACKET_SIZE;
+			        		
+			        		endIndex = startIndex + numBytesToSend;
+			        		
+			        		byte[] byteSendPartial = Arrays.copyOfRange( bytesSend, startIndex, endIndex ); 
+			        		
+			        		try
+			        		{
+				        		myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),
+				        								SERVER_PORT, PROTOCOL_TCP, byteSendPartial);
+				        		numBytesSent = numBytesToSend;
+				
+				        		numBytesRemaining = numBytesRemaining - numBytesSent;
+				        		startIndex = startIndex + numBytesSent;
+			        		}
+			        		catch (Exception ex)
+			        		{
+			        			numBytesSent = 0;
+			        			numBytesRemaining = numBytesRemaining - numBytesSent;
+				        		startIndex = startIndex + numBytesSent;
+			        			System.out.println(" !! Trouble sending full packet, ex: " + ex );
+			        		    break;
+			        		}
+			        	  
+			        		
+			        	}
+			        	else       // send remaining partial packet, which is less than Packet Size.
+			        	{
+			        		int numBytesToSend = numBytesRemaining;
+			        		
+			        		endIndex = startIndex + numBytesToSend;
+			        		
+			        		byte[] byteSendPartial = Arrays.copyOfRange( bytesSend, startIndex, endIndex ); 
+			        		     
+			        		try
+			        		{
+				        		myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),
+				        								SERVER_PORT, PROTOCOL_TCP, byteSendPartial);
+				        		numBytesSent = numBytesToSend;
+				        		numBytesRemaining = numBytesRemaining - numBytesSent;
+				        		startIndex = startIndex + numBytesSent;
+			        		}
+			        		
+			           		catch (Exception ex)
+			        		{
+			        			numBytesSent = 0;
+			        			numBytesRemaining = numBytesRemaining - numBytesSent;
+				        		startIndex = startIndex + numBytesSent;
+			        			System.out.println(" !! Trouble sending partial packet, ex: " + ex );
+			        		    break;
+			        		}
+			        	}		        
+			        }        
+			        if (myDevice != null) myDevice.close();
+			        
+			        // Move image file to Backup folder.
+			        //
+			        file.renameTo(new File(backupImagePath));
+	    		}    		
+	    		   	
+	    		Thread.sleep(100);
+	    		
+	    	}
+    	
+    		System.out.println("--Done sending any new images in directory.");
+    		Thread.sleep(5000);     // Check for new files every five seconds, or resend what's there.
+    	} // End while true.
+    	
         //outputStream.flush();
         //System.out.println("Flushed: " + System.currentTimeMillis());
 
         //Thread.sleep(10);
         //System.out.println("Closing: " + System.currentTimeMillis());
         //socket.close();
-    	System.out.println("--Done sending image");
-    	if (myDevice != null) myDevice.close();
+    	
+ 
         System.out.println("\n---- End of BluJay Producer Client execution.");
 
     }

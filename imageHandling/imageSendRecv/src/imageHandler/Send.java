@@ -9,7 +9,7 @@
 // 180308 Added /dev/ttyUSB1 as alternate port.
 // 180826 Work after dev7 attacked.  Minor mods.
 // 190915 Working here now.  
-
+// 191128 Push to remote.
 
 package imageHandler;
 

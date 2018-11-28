@@ -19,7 +19,7 @@ using namespace std;
 
 int main(int, char**)
 {
-    cout << "Starting my little grabber test program ...\n" << endl;
+    cout << " Starting my little grabber test program ...\n" << endl;
 
     Utils meUtils;
 

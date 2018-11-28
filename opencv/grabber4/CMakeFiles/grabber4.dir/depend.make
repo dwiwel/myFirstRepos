@@ -129,6 +129,7 @@ CMakeFiles/grabber4.dir/grabber.cpp.o: /usr/local/include/opencv2/videostab/wobb
 CMakeFiles/grabber4.dir/grabber.cpp.o: /usr/local/include/opencv2/xfeatures2d.hpp
 CMakeFiles/grabber4.dir/grabber.cpp.o: /usr/local/include/opencv2/xfeatures2d/cuda.hpp
 CMakeFiles/grabber4.dir/grabber.cpp.o: /usr/local/include/opencv2/xfeatures2d/nonfree.hpp
+CMakeFiles/grabber4.dir/grabber.cpp.o: /usr/local/include/pigpio.h
 CMakeFiles/grabber4.dir/grabber.cpp.o: /usr/local/include/raspicam/raspicam_cv.h
 
 CMakeFiles/grabber4.dir/utils.cpp.o: utils.cpp

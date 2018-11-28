@@ -22,6 +22,7 @@ class Utils
     public:
         static void initApp();
         static void saveImageFile( Mat image );
+        static void saveImageFile( Mat image, string suffix);
         static string getDateTimeStr();
         static void testMe();
 };

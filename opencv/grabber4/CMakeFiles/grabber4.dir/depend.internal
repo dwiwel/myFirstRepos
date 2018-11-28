@@ -130,6 +130,7 @@ CMakeFiles/grabber4.dir/grabber.cpp.o
  /usr/local/include/opencv2/xfeatures2d.hpp
  /usr/local/include/opencv2/xfeatures2d/cuda.hpp
  /usr/local/include/opencv2/xfeatures2d/nonfree.hpp
+ /usr/local/include/pigpio.h
  /usr/local/include/raspicam/raspicam_cv.h
 CMakeFiles/grabber4.dir/utils.cpp.o
  /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/utils.cpp

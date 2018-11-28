@@ -16,7 +16,7 @@ using namespace std;
 
         void Utils::testMe()
         {
-            cout << "This is test me." << endl;
+            cout << "This is test msg from Utils." << endl;
         }
 
         void Utils::initApp()
@@ -35,8 +35,21 @@ using namespace std;
             }
             // Save the frame into a file
             imwrite(filename, image); // A JPG FILE IS BEING SAVED
-
         }
+
+        void Utils::saveImageFile(Mat image, string suffix)
+        {
+            string filename = "/data/images/img_" + getDateTimeStr() +"_" + suffix + "_.jpg";
+
+            if(image.empty())
+            {
+              std::cerr << "Something is wrong with the webcam, could not get frame." << std::endl;
+              return;
+            }
+            // Save the frame into a file
+            imwrite(filename, image); // A JPG FILE IS BEING SAVED
+        }
+
 
         string Utils::getDateTimeStr()
         {
@@ -48,7 +61,7 @@ using namespace std;
             timeinfo = localtime(&rawtime);
 
             //strftime(buffer,sizeof(buffer),"%d-%m-%Y %I:%M:%S",timeinfo);
-            strftime(buffer,sizeof(buffer),"%Y%m%d_%I%M%S",timeinfo);
+            strftime(buffer,sizeof(buffer),"%Y%m%d_%H%M%S",timeinfo);
             std::string str(buffer);            
             std::cout << str << endl;
 

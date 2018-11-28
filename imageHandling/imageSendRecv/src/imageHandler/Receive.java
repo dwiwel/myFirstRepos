@@ -1,7 +1,7 @@
 // Receive.java
 //
 // For receiving image files, one at a time.  
-// rev: 171031A, 171103
+// rev: 171031A, 171103, 171129
 //
 
 package imageHandler;
@@ -26,7 +26,7 @@ public class Receive {
     	System.out.println("--Starting image receive ...");
     	//while (run)
     	{
-	        ServerSocket serverSocket = new ServerSocket(11010);
+	        ServerSocket serverSocket = new ServerSocket(11207);
 	        
 	        System.out.println("--Waiting for client ...");
 	        Socket socket = serverSocket.accept();
@@ -35,7 +35,7 @@ public class Receive {
 	
 	        System.out.println("Reading time: " + System.currentTimeMillis());
 	
-	        String fileName = "newImage.jpg";      // New output file
+	        //String fileName = "newImage.jpg";      // New output file
 	        byte[] sizeFileName = new byte[4];        // Size of filename;
 
 	        inputStream.read(sizeFileName);

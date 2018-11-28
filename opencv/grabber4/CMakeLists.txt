@@ -9,6 +9,6 @@ find_package( OpenCV REQUIRED )
 
 add_executable(grabber4 grabber.cpp  utils.cpp)
 
-target_link_libraries( grabber4 ${raspicam_CV_LIBS} )
+target_link_libraries( grabber4 ${raspicam_CV_LIBS} pigpio )
 
 

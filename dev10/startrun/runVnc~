@@ -1,0 +1,3 @@
+#! /bin/bash  
+echo "Starting x11vnc ..."
+x11vnc -gui tray=setpass -rfbport PROMPT -bg -o %HOME/.x11vnc.log.%VNCDISPLAY  &

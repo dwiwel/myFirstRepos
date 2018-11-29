@@ -1,6 +1,12 @@
 // MainApp.java
 //
 // Initial prototype using Digi XBee Cellular device.
+//
+// Rev: 171125.
+//
+// -Djava.library.path=/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/native/Linux/arm7l
+//
+
 
 package com.digi.xbee.example;
 
@@ -21,7 +27,7 @@ public class MainApp {
 
     /* Constants */
     // TODO Replace with the serial port where your sender module is connected to.
-    private static String PORT = "/dev/ttyUSB1";
+    private static String PORT = "/dev/ttyUSB0";             // USB port to XBee Cellular kit.
     // TODO Replace with the baud rate of your sender module.  
     private static final int BAUD_RATE = 115200;
     // TODO Optionally, replace with the text you want to send to the server.

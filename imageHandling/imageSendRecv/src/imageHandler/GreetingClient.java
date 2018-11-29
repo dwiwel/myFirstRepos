@@ -16,7 +16,7 @@ public class GreetingClient
 {
     Image newimg;
     static BufferedImage bimg;
-    byte[] bytes;
+   // byte[] bytes;  ??
 
     public static void main(String [] args)
     {

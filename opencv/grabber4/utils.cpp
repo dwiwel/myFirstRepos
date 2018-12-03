@@ -1,10 +1,14 @@
 // Utils.cpp
 //
+// Rev: 181202
 
+
+#include <string>
 
 #include <iostream>
 #include <stdio.h>
 #include <ctime>
+
 
 #include <opencv2/opencv.hpp>
 
@@ -37,9 +41,13 @@ using namespace std;
             imwrite(filename, image); // A JPG FILE IS BEING SAVED
         }
 
-        void Utils::saveImageFile(Mat image, string suffix)
+        void Utils::saveImageFile(Mat image, string suffix, int eventCnt)
         {
-            string filename = "/data/images/img_" + getDateTimeStr() +"_" + suffix + "_.jpg";
+        	char cntStr[16];
+
+        	sprintf( cntStr, "%d", eventCnt);
+            string filename = "/data/images/img_" + getDateTimeStr() + "_"
+            		+ cntStr + "_" + suffix + "_.jpg";
 
             if(image.empty())
             {

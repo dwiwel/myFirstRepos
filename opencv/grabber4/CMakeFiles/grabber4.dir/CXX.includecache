@@ -27,6 +27,8 @@ utils.hh
 /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/utils.hh
 
 /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/utils.cpp
+string
+-
 iostream
 -
 stdio.h
@@ -42,6 +44,8 @@ utils.hh
 iostream
 -
 stdio.h
+-
+string
 -
 opencv2/opencv.hpp
 -

@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <string>
 #include <opencv2/opencv.hpp>
 
 
@@ -22,7 +23,7 @@ class Utils
     public:
         static void initApp();
         static void saveImageFile( Mat image );
-        static void saveImageFile( Mat image, string suffix);
+        static void saveImageFile( Mat image, string suffix, int eventCnt );
         static string getDateTimeStr();
         static void testMe();
 };

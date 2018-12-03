@@ -12,7 +12,7 @@
 //       180905. Minor modes, timing, image size.
 //       180916, Added Web cam, changed heartbeat image timeing.
 //       181028-31  Cam not displaying image, fixed.
-//       181104  Working here now.
+//       181202   Working here now.
 //
 
 
@@ -170,7 +170,7 @@ int main(int, char**)
 			cout << "prevStdDev: " << prevStdDev << "   currentStdDev: " << currentStdDev << endl;
 
 			if ( (cv::abs(currentStdDev[0] - prevStdDev[0]) > 2.5 )           // was 1.2
-				|| ( sendPicPing == true ) )                        // Send image once an hour.
+				|| ( sendPicPing == true ) )                        // Send image at noon.
 			{
 				std::cout << timestr << ": ";
 				cout << "! Camera movement activity detected !" << endl;   // Save the frame.
@@ -202,14 +202,16 @@ int main(int, char**)
         	line18high = gpioRead(18);
         	if (line18high) { line18cnt++; std::cout << timestr << ": "; cout << "-- Line 18 HIGH" << endl; }
         	if (!line18high) { line18cnt = 0;std::cout << timestr << ": "; cout << " -- Line 18 low" << endl;}
-        	if((line18cnt == 1) || (line18cnt == 2))
+
+        	//if( ((line18cnt >= 1) && (line18cnt <= 3)) || sendPicPing )
+        	if (line18high )
         	{
         		std::cout << timestr << ": ";
         		cout << "! IR motion sensor detected activity !" << endl;
         		imshow(" **Cam2 -- Saved frame", frameCam2 );
-				Utils::saveImageFile( frameCam1, "c1" );
-				Utils::saveImageFile( frameCam2, "c2" );
-				Utils::saveImageFile( frameCam2_cor, "c2eq" );
+				Utils::saveImageFile( frameCam1, "c1", line18cnt );
+				Utils::saveImageFile( frameCam2, "c2", line18cnt );
+				Utils::saveImageFile( frameCam2_cor, "c2eq", line18cnt );
         	} // End if line 18 cnt
         } // End if use IR sensor.
 
@@ -217,7 +219,7 @@ int main(int, char**)
 
         //sleep(1);
 
-        waitKey(10);
+        waitKey(200);
 //		if (cv::waitKey(500) >= 0)    // 1000  ms delay.
 //		{
 //			break;

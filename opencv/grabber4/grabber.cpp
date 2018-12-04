@@ -201,21 +201,26 @@ int main(int, char**)
 
         	line18high = gpioRead(18);
         	if (line18high) { line18cnt++; std::cout << timestr << ": "; cout << "-- Line 18 HIGH" << endl; }
-        	if (!line18high) { line18cnt = 0;std::cout << timestr << ": "; cout << " -- Line 18 low" << endl;}
+        	if (!line18high)
+        	{
+        		line18cnt = 0;
+        		//std::cout << timestr << ": ";
+        		//cout << " -- Line 18 low" << endl;
+        	}
 
-        	//if( ((line18cnt >= 1) && (line18cnt <= 3)) || sendPicPing )
+        	if( ((line18cnt >= 1) && (line18cnt <= 3)) || sendPicPing )
         	if (line18high )
         	{
         		std::cout << timestr << ": ";
         		cout << "! IR motion sensor detected activity !" << endl;
         		imshow(" **Cam2 -- Saved frame", frameCam2 );
-				Utils::saveImageFile( frameCam1, "c1", line18cnt );
-				Utils::saveImageFile( frameCam2, "c2", line18cnt );
-				Utils::saveImageFile( frameCam2_cor, "c2eq", line18cnt );
+
+        		string timeDateStr = Utils::getDateTimeStr();
+				Utils::saveImageFile( frameCam1, "c1", line18cnt , timeDateStr);
+				Utils::saveImageFile( frameCam2, "c2", line18cnt , timeDateStr);
+				Utils::saveImageFile( frameCam2_cor, "c2eq", line18cnt , timeDateStr);
         	} // End if line 18 cnt
         } // End if use IR sensor.
-
-
 
         //sleep(1);
 

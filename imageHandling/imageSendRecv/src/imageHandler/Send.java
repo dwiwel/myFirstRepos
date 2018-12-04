@@ -8,8 +8,9 @@
 // 180301
 // 180308 Added /dev/ttyUSB1 as alternate port.
 // 180826 Work after dev7 attacked.  Minor mods.
-// 190915 Working here now.  
-// 191128A Push to remote.
+// 180915 Working here now.  
+// 181128A Push to remote.
+// 181203 Working here. 
 
 package imageHandler;
 
@@ -124,7 +125,10 @@ class Send {
 		    System.out.println("\n>> Checking for existance of new image files, make connection to server ... ");
     		File[] files = new File("/data/images").listFiles();
     		
-    		System.out.println ("  Number if files present: " + files.length );
+    		//ArrayList<File> fileList = new ArrayList<File>(Arrays.asList(files));    		    	
+    		//fileList.sort(c);
+    		
+    		System.out.println ("  Number of files now present: " + files.length );
 //    		if (files.length == 0)
 //    		{
 //    			byte[] value = {1};    			     // Plane mode on; power off.

@@ -41,12 +41,12 @@ using namespace std;
             imwrite(filename, image); // A JPG FILE IS BEING SAVED
         }
 
-        void Utils::saveImageFile(Mat image, string suffix, int eventCnt)
+        void Utils::saveImageFile(Mat image, string suffix, int eventCnt, string dateTimeStr)
         {
         	char cntStr[16];
 
         	sprintf( cntStr, "%d", eventCnt);
-            string filename = "/data/images/img_" + getDateTimeStr() + "_"
+            string filename = "/data/images/img_" + dateTimeStr + "_"
             		+ cntStr + "_" + suffix + "_.jpg";
 
             if(image.empty())
@@ -54,6 +54,7 @@ using namespace std;
               std::cerr << "Something is wrong with the webcam, could not get frame." << std::endl;
               return;
             }
+            cout << "Saving image file: " + filename << endl;
             // Save the frame into a file
             imwrite(filename, image); // A JPG FILE IS BEING SAVED
         }

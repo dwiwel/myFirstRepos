@@ -12,7 +12,7 @@
 //       180905. Minor modes, timing, image size.
 //       180916, Added Web cam, changed heartbeat image timeing.
 //       181028-31  Cam not displaying image, fixed.
-//       181202   Working here now.
+//       181205   Working here now.
 //
 
 
@@ -129,6 +129,12 @@ int main(int, char**)
 			std::cout << timestr << ": ";
 			cout << " Sending noon ping image.\n";
 		}
+        if ( (timeinfo->tm_hour == 0) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
+		{
+			sendPicPing = true;
+			std::cout << timestr << ": ";
+			cout << " Sending midnight ping image.\n";
+		}
 
 		cap.grab();
 		cap.retrieve(frameCam1);
@@ -209,7 +215,7 @@ int main(int, char**)
         	}
 
         	if( ((line18cnt >= 1) && (line18cnt <= 3)) || sendPicPing )
-        	if (line18high )
+        	//if (line18high  || sendPicPing )
         	{
         		std::cout << timestr << ": ";
         		cout << "! IR motion sensor detected activity !" << endl;

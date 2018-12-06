@@ -10,7 +10,7 @@
 // 180826 Work after dev7 attacked.  Minor mods.
 // 180915 Working here now.  
 // 181128A Push to remote.
-// 181203 Working here. 
+// 181205 Working here. 
 
 package imageHandler;
 

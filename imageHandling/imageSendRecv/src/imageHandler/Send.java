@@ -11,6 +11,7 @@
 // 180915 Working here now.  
 // 181128A Push to remote.
 // 181205 Working here. 
+// 181227 Adding command line arg for server's IP address.
 
 package imageHandler;
 

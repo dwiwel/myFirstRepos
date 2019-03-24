@@ -52,7 +52,7 @@ import java.nio.file.StandardCopyOption.*;
 
 class Send {
 
-	static String serverName = "73.40.197.83";  // NY Cir router.
+	static String serverName = "73.40.197.83";  // Default Server IP; NY Cir router.
 	//static String serverName = "10.0.0.39";  // Dev7.
 	                                   
     /* Constants */
@@ -60,7 +60,7 @@ class Send {
     private static String TTY_PORT_0 = "/dev/ttyUSB0";             // USB port to XBee Cellular kit.
     private static String TTY_PORT_1 = "/dev/ttyUSB1";   
     // TODO Replace with the baud rate of your sender module.  
-    private static final int BAUD_RATE = 921600;	// 115200  230400 921600 (need to set using XCTU)
+    private static final int BAUD_RATE = 921600;	// 115200  230400  921600 (need to set XBee Cellular using XCTU)
     
     private static int SERVER_PORT = 8207;                 // Server's listen port. (on DEV7)
 
@@ -72,6 +72,8 @@ class Send {
     
     public static void main(String[] args) throws Exception {
 
+    	System.out.format("\n-- Starting imageSend app ...\n");
+    	
         String inputImagePath = "";
         //
         String outputImagePathThumb = "";
@@ -91,7 +93,17 @@ class Send {
         //socket.setSoTimeout(800);
     	//OutputStream outputStream = socket.getOutputStream();    
         
-    	System.out.format("\n-- tty Port to be used for ZigBee Cellular: '%s'\n", TTY_PORT_0);        
+        if (args.length == 1)
+        {
+        	serverName = args[0];        	
+        }
+        else
+        {
+        	System.out.format("No command line args given.\n");        
+        }
+        
+        System.out.format("-- BlueJay Server: %s \n", serverName );
+    	System.out.format("-- tty Port to be used for ZigBee Cellular: '%s'\n", TTY_PORT_0);        
  
     	// Get the list of files in directory
     	

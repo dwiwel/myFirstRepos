@@ -1,0 +1,3 @@
+
+java -classpath "/home/pi/java_proj/gitHub/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageSend.jar:/home/pi/java_proj/gitHub/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageSend_lib/*"  -Djava.library.path=/usr/lib/jni  imageHandler.Send
+

@@ -21,11 +21,21 @@ using namespace std;
 class Utils
 {
     public:
-        static void initApp();
-        static void saveImageFile( Mat image );
-        static void saveImageFile(Mat image, string suffix, int eventCnt, string dateTimeStr);
-        static string getDateTimeStr();
-        static void testMe();
+
+	    Utils();
+        void initApp();
+        void initApp( int argCnt, char** args);
+        void saveImageFile( Mat image );
+        void saveImageFile(Mat image, string suffix, int eventCnt, string dateTimeStr);
+        string getDateTimeStr();
+        void testMe();
+        bool isHeadless();
+
+    private:
+		int argCnt;
+	    bool headless;
+
+
 };
 
 #endif  // __UTIL_HH

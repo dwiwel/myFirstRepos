@@ -13,6 +13,7 @@
 //       180916, Added Web cam, changed heartbeat image timeing.
 //       181028-31  Cam not displaying image, fixed.
 //       181205   Working here now.
+//       190325  Adding headless feature.
 //
 
 
@@ -31,7 +32,7 @@
 using namespace cv;
 using namespace std;
 
-int main(int, char**)
+int main(int argCnt, char** args)
 {
     cout << "Starting my little grabber4 program, using RPi camera and USB camera ..." << endl;
     cout << "Uses the GPIO to get signal from IR sensor.\n";
@@ -43,11 +44,17 @@ int main(int, char**)
     }
     gpioSetMode(18, PI_INPUT);    // Line 18 is for input.
 
-    Utils meUtils;
+    Utils util;
 
-    meUtils.initApp();
+    util.initApp(argCnt, args);
 
-    Utils::testMe();
+    util.testMe();
+
+    for (int i=0; i < argCnt; i++)
+    {
+    	cout << "arg: " << args[i] << endl;
+
+    }
 
     Mat frameCam1;        // RPi cam Current frame read.   (1280x960)
     Mat frameCam2;        // Web USB camera.
@@ -163,8 +170,11 @@ int main(int, char**)
 			break;
 		}
 
-		imshow("Cam1 -- RPi Live", frameCam1 );
-		imshow("Cam2 -- USB Live", frameCam2 );
+		if( !util.isHeadless())
+		{
+			imshow("Cam1 -- RPi Live", frameCam1 );
+			imshow("Cam2 -- USB Live", frameCam2 );
+		}
 
 		if (useImageProc)  // Use openCV
 		{
@@ -183,8 +193,8 @@ int main(int, char**)
 				saveFrame = frameCam1.clone();
 				if (!saveFrame.empty() )
 				{
-					imshow("Cam 1 -- Saved Image", saveFrame);
-					Utils::saveImageFile( saveFrame );
+					if( !util.isHeadless()) imshow("Cam 1 -- Saved Image", saveFrame);
+					util.saveImageFile( saveFrame );
 					lastImageTime = time(NULL);
 				}
 			}
@@ -202,8 +212,8 @@ int main(int, char**)
 			clahe->apply(frameCam2_bw, frameCam2_cor);
 			//equalizeHist(frameCam2_bw, frameCam2_cor);
 
-			imshow("Cam2 -- BW ", frameCam2_bw);
-			imshow("Cam2 -- Contrast Equalization", frameCam2_cor);
+			if( !util.isHeadless()) imshow("Cam2 -- BW ", frameCam2_bw);
+			if( !util.isHeadless()) imshow("Cam2 -- Contrast Equalization", frameCam2_cor);
 
         	line18high = gpioRead(18);
         	if (line18high) { line18cnt++; std::cout << timestr << ": "; cout << "-- Line 18 HIGH" << endl; }
@@ -219,12 +229,12 @@ int main(int, char**)
         	{
         		std::cout << timestr << ": ";
         		cout << "! IR motion sensor detected activity !" << endl;
-        		imshow(" **Cam2 -- Saved frame", frameCam2 );
+        		if( !util.isHeadless()) imshow(" **Cam2 -- Saved frame", frameCam2 );
 
-        		string timeDateStr = Utils::getDateTimeStr();
-				Utils::saveImageFile( frameCam1, "c1", line18cnt , timeDateStr);
-				Utils::saveImageFile( frameCam2, "c2", line18cnt , timeDateStr);
-				Utils::saveImageFile( frameCam2_cor, "c2eq", line18cnt , timeDateStr);
+        		string timeDateStr = util.getDateTimeStr();
+				util.saveImageFile( frameCam1, "c1", line18cnt , timeDateStr);
+				util.saveImageFile( frameCam2, "c2", line18cnt , timeDateStr);
+				util.saveImageFile( frameCam2_cor, "c2eq", line18cnt , timeDateStr);
         	} // End if line 18 cnt
         } // End if use IR sensor.
 

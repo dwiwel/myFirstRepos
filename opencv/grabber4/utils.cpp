@@ -1,6 +1,7 @@
 // Utils.cpp
 //
 // Rev: 181202
+//      190326
 
 
 #include <string>
@@ -17,6 +18,11 @@
 using namespace cv;
 using namespace std;
 
+		Utils::Utils()
+		{
+			argCnt = 0;
+		    headless = false;
+		}
 
         void Utils::testMe()
         {
@@ -25,7 +31,30 @@ using namespace std;
 
         void Utils::initApp()
         {
-            cout << "Initializing my little app. " << endl;
+            cout << "Utils: Initializing my little app. " << endl;
+        }
+
+        void Utils::initApp( int argCnt, char** args)
+        {
+            cout << "Utils: Initializing my little app, with arguments. " << endl;
+
+            for (int i=0; i < argCnt; i++)
+             {
+             	cout << "Utils: arg: " << args[i] << endl;
+
+             	String argStr(args[i]);
+                if ( strcmp(args[i],  "headless") )
+                {
+                	headless = true;
+                	cout << " Headless -- Operating without a monitor." << endl;
+                }
+             }
+        }
+
+        bool Utils::isHeadless()
+        {
+        	return headless;
+
         }
 
         void Utils::saveImageFile(Mat image)

@@ -13,7 +13,7 @@
 //       180916, Added Web cam, changed heartbeat image timeing.
 //       181028-31  Cam not displaying image, fixed.
 //       181205   Working here now.
-//       190325  Adding headless feature.
+//       190325  Added headless feature.
 //
 
 
@@ -224,7 +224,7 @@ int main(int argCnt, char** args)
         		//cout << " -- Line 18 low" << endl;
         	}
 
-        	if( ((line18cnt >= 1) && (line18cnt <= 3)) || sendPicPing )
+        	if( ((line18cnt >= 1) && (line18cnt <= 2)) || sendPicPing )   // Take two sets for images
         	//if (line18high  || sendPicPing )
         	{
         		std::cout << timestr << ": ";

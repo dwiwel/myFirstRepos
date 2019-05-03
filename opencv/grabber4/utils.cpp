@@ -30,12 +30,13 @@ using namespace std;
         }
 
         void Utils::initApp()
-        {
+        {	headless = false;       // default
             cout << "Utils: Initializing my little app. " << endl;
         }
 
         void Utils::initApp( int argCnt, char** args)
         {
+        	headless = false;       // default
             cout << "Utils: Initializing my little app, with arguments. " << endl;
 
             for (int i=0; i < argCnt; i++)
@@ -43,11 +44,15 @@ using namespace std;
              	cout << "Utils: arg: " << args[i] << endl;
 
              	String argStr(args[i]);
-                if ( strcmp(args[i],  "headless") )
+
+             	cout << ">>> Arg is " + argStr << endl;
+
+             	if (argStr == "headless")
                 {
                 	headless = true;
                 	cout << " Headless -- Operating without a monitor." << endl;
                 }
+
              }
         }
 

@@ -14,7 +14,7 @@
 //       181028-31  Cam not displaying image, fixed.
 //       181205   Working here now.
 //       190325  Added headless feature.
-//
+//       190427  Testing. issues with sensor. 
 
 
 #include <iostream>
@@ -34,8 +34,10 @@ using namespace std;
 
 int main(int argCnt, char** args)
 {
+
     cout << "Starting my little grabber4 program, using RPi camera and USB camera ..." << endl;
-    cout << "Uses the GPIO to get signal from IR sensor.\n";
+    cout << "rev: 190427, 190503 \n";
+    cout << "Uses the GPIO to get signal from IR sensor. Root privilege is required.\n";
 
 
     if (gpioInitialise() < 0)          // GPIO is used for the IR motion detector (disabled at this time)
@@ -87,7 +89,7 @@ int main(int argCnt, char** args)
     bool readyCam1 = false;
     bool readyCam2 = false;
 
-    bool line18high = false;      //
+    bool lineHigh = false;      //
     int line18cnt = 0;             // Count of consecutive line 18 highs.
 
     cap.open();                   // for raspicam
@@ -215,14 +217,21 @@ int main(int argCnt, char** args)
 			if( !util.isHeadless()) imshow("Cam2 -- BW ", frameCam2_bw);
 			if( !util.isHeadless()) imshow("Cam2 -- Contrast Equalization", frameCam2_cor);
 
-        	line18high = gpioRead(18);
-        	if (line18high) { line18cnt++; std::cout << timestr << ": "; cout << "-- Line 18 HIGH" << endl; }
-        	if (!line18high)
+        	lineHigh = gpioRead(13);   // Pin 13
+
+        	if (lineHigh)
+        	{
+        		line18cnt++;
+        		std::cout << timestr << ": ";
+        		cout << "-- Line 21 HIGH" << endl;
+        	}
+        	if (!lineHigh)
         	{
         		line18cnt = 0;
         		//std::cout << timestr << ": ";
-        		//cout << " -- Line 18 low" << endl;
+        		//cout << " -- Line 21 low" << endl;
         	}
+
 
         	if( ((line18cnt >= 1) && (line18cnt <= 2)) || sendPicPing )   // Take two sets for images
         	//if (line18high  || sendPicPing )
@@ -242,7 +251,6 @@ int main(int argCnt, char** args)
 
         waitKey(200);
 //		if (cv::waitKey(500) >= 0)    // 1000  ms delay.
-//		{
 //			break;
 //		}
     } // End main for.

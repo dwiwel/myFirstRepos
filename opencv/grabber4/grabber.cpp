@@ -154,7 +154,7 @@ int main(int argCnt, char** args)
 
 		//Size size(1280, 960);
 		Size size(640, 480);
-		//Size size(160, 120);
+		//Size size(1920, 1080);
 		resize( frameCam1, frameCam1, size );     // Resizes the native frame for transmission.
 		resize( frameCam2, frameCam2, size );
 

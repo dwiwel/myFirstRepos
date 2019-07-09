@@ -3,7 +3,6 @@
 	<name>grabber4</name>
 	<comment></comment>
 	<projects>
-		<project>grabber3</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

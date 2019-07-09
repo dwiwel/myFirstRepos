@@ -35,9 +35,9 @@ using namespace std;
 int main(int argCnt, char** args)
 {
 
-    cout << "Starting my little grabber4 program, using RPi camera and USB camera ..." << endl;
-    cout << "rev: 190427, 190503 \n";
-    cout << "Uses the GPIO to get signal from IR sensor. Root privilege is required.\n";
+    cout << "Starting my little grabber4 program, using RPi camera and USB camera ... 190707" << endl;
+    cout << "rev: 190427, 190503 \n" << endl;
+    cout << "Uses the GPIO to get signal from IR sensor. Root privilege is required.\n" << endl;
 
 
     if (gpioInitialise() < 0)          // GPIO is used for the IR motion detector (disabled at this time)
@@ -86,8 +86,8 @@ int main(int argCnt, char** args)
     cap.set( CV_CAP_PROP_FORMAT, CV_8UC3);  // CV_8UC1, CV_8UC3
     cap2.set( CV_CAP_PROP_FORMAT, CV_8UC3);  // CV_8UC1, CV_8UC3
 
-    bool readyCam1 = false;
-    bool readyCam2 = false;
+    bool readyCam1 = true;
+    bool readyCam2 = true;
 
     bool lineHigh = false;      //
     int line18cnt = 0;             // Count of consecutive line 18 highs.
@@ -95,16 +95,19 @@ int main(int argCnt, char** args)
     cap.open();                   // for raspicam
     // check if we succeeded
     if (!cap.isOpened()) {
-        cerr << "ERROR! Unable to open camera #1, RPi camera.\n";
-        readyCam1 = true;
+        cout << "ERROR! Unable to open camera #1, RPi camera.\n";
+        readyCam1 = false;
     }
 
-    cap2.open(deviceID_cam2);     // for openCV
+	cap2.open(deviceID_cam2);     // for USB Web camera
 	// check if we succeeded
 	if (!cap2.isOpened()) {
-		cerr << "ERROR! Unable to open camera #2, USB camera.\n";
-		readyCam2 = true;
+		cout << "ERROR! Unable to open camera #2, USB camera.\n";
+		readyCam2 = false;
 	}
+
+    try
+    {
 
     //--- GRAB AND WRITE LOOP
     cout << "Start my little grabber ...\n" ;
@@ -145,18 +148,24 @@ int main(int argCnt, char** args)
 			cout << " Sending midnight ping image.\n";
 		}
 
-		cap.grab();
-		cap.retrieve(frameCam1);
+        if (readyCam1)
+        {
+			cap.grab();
+			cap.retrieve(frameCam1);
+        }
 
-		cap2.grab();
-		cap2.retrieve(frameCam2);
+        if (readyCam2)
+        {
+			cap2.grab();
+			cap2.retrieve(frameCam2);
+        }
 
 
 		//Size size(1280, 960);
 		Size size(640, 480);
 		//Size size(1920, 1080);
-		resize( frameCam1, frameCam1, size );     // Resizes the native frame for transmission.
-		resize( frameCam2, frameCam2, size );
+		if (readyCam1) resize( frameCam1, frameCam1, size );     // Resizes the native frame for transmission.
+		if (readyCam2) resize( frameCam2, frameCam2, size );
 
 		// show live and wait for a key with timeout long enough to show images
 		if (!frameCam1.empty() )
@@ -174,8 +183,8 @@ int main(int argCnt, char** args)
 
 		if( !util.isHeadless())
 		{
-			imshow("Cam1 -- RPi Live", frameCam1 );
-			imshow("Cam2 -- USB Live", frameCam2 );
+			if (readyCam1) imshow("Cam1 -- RPi Live", frameCam1 );
+			if (readyCam2) imshow("Cam2 -- USB Live", frameCam2 );
 		}
 
 		if (useImageProc)  // Use openCV
@@ -207,17 +216,20 @@ int main(int argCnt, char** args)
         {
 			// Apply hist eq on image.
 			//
-			cvtColor(frameCam2, frameCam2_bw, CV_RGB2GRAY);
-			//Ptr<CLAHE> clahe = cv::createCLAHE(double clipLimit = 40.0, Size tileGridSize = Size(8, 8));
-			Ptr<CLAHE> clahe = cv::createCLAHE(10.0, Size(8, 8));
-			//clahe->setClipLimit( 1.5 );
-			clahe->apply(frameCam2_bw, frameCam2_cor);
-			//equalizeHist(frameCam2_bw, frameCam2_cor);
+		    if (readyCam2)
+		    {
+		    	cvtColor(frameCam2, frameCam2_bw, CV_RGB2GRAY);
 
-			if( !util.isHeadless()) imshow("Cam2 -- BW ", frameCam2_bw);
-			if( !util.isHeadless()) imshow("Cam2 -- Contrast Equalization", frameCam2_cor);
+				//Ptr<CLAHE> clahe = cv::createCLAHE(double clipLimit = 40.0, Size tileGridSize = Size(8, 8));
+				Ptr<CLAHE> clahe = cv::createCLAHE(10.0, Size(8, 8));
+				//clahe->setClipLimit( 1.5 );
+				clahe->apply(frameCam2_bw, frameCam2_cor);
+				//equalizeHist(frameCam2_bw, frameCam2_cor);
+				if( !util.isHeadless()) imshow("Cam2 -- BW ", frameCam2_bw);
+				if( !util.isHeadless()) imshow("Cam2 -- Contrast Equalization", frameCam2_cor);
+			}
 
-        	lineHigh = gpioRead(13);   // Pin 13
+        	lineHigh = gpioRead(13);   // Pin 13    IR sensor input line
 
         	if (lineHigh)
         	{
@@ -238,12 +250,13 @@ int main(int argCnt, char** args)
         	{
         		std::cout << timestr << ": ";
         		cout << "! IR motion sensor detected activity !" << endl;
-        		if( !util.isHeadless()) imshow(" **Cam2 -- Saved frame", frameCam2 );
+        	    if(readyCam2) if( !util.isHeadless()) imshow(" **Cam2 -- Saved frame", frameCam2 );
 
         		string timeDateStr = util.getDateTimeStr();
 				util.saveImageFile( frameCam1, "c1", line18cnt , timeDateStr);
-				util.saveImageFile( frameCam2, "c2", line18cnt , timeDateStr);
-				util.saveImageFile( frameCam2_cor, "c2eq", line18cnt , timeDateStr);
+
+				if(readyCam2) util.saveImageFile( frameCam2, "c2", line18cnt , timeDateStr);
+				if(readyCam2) util.saveImageFile( frameCam2_cor, "c2eq", line18cnt , timeDateStr);
         	} // End if line 18 cnt
         } // End if use IR sensor.
 
@@ -254,6 +267,15 @@ int main(int argCnt, char** args)
 //			break;
 //		}
     } // End main for.
+
+    }
+    catch (cv::Exception& ex)
+    {
+    	const char* err_msg = ex.what();
+    	String  msgStr = ex.msg;
+    	cout << "!! Some unexpected Exception:" << err_msg << endl;
+    	cout << "   msg: " << msgStr << endl;
+    }
 
     gpioTerminate();
     // the camera will be deinitialized automatically in VideoCapture destructor

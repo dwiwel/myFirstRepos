@@ -3,6 +3,7 @@
 	<name>imageSendRecv</name>
 	<comment></comment>
 	<projects>
+		<project>myFirstXBeeApp</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -1,4 +1,2 @@
-*.class
-.DS_Store
-bin/
-
+/com/
+/bin/

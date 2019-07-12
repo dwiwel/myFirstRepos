@@ -1,0 +1,10 @@
+07:20:45 **** Incremental Build of configuration Default for project grabber3 ****
+make all 
+make[2]: *** No rule to make target 'CMakeFiles/grabber3.dir/build'.  Stop.
+CMakeFiles/Makefile2:67: recipe for target 'CMakeFiles/grabber3.dir/all' failed
+make[1]: *** [CMakeFiles/grabber3.dir/all] Error 2
+Makefile:83: recipe for target 'all' failed
+make: *** [all] Error 2
+
+07:20:45 Build Finished (took 469ms)
+

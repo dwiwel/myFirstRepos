@@ -68,7 +68,7 @@ using namespace std;
 
             if(image.empty())
             {
-              std::cerr << "Something is wrong with the webcam, could not get frame." << std::endl;
+              std::cout << "WARNING: Trying to save image, but frame is empty." << std::endl;
               return;
             }
             // Save the frame into a file
@@ -85,7 +85,7 @@ using namespace std;
 
             if(image.empty())
             {
-              std::cerr << "Something is wrong with the webcam, could not get frame." << std::endl;
+              std::cout << "Something is wrong with the webcam, could not get frame." << std::endl;
               return;
             }
             cout << "Saving image file: " + filename << endl;

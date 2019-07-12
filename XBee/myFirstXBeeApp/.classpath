@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/android-sdk-5.1.1.jar"/>
+	<classpathentry kind="lib" path="/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/android-sdk-addon-3.jar"/>
+	<classpathentry kind="lib" path="/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/rxtx-1.7.jar"/>
+	<classpathentry kind="lib" path="/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/rxtx-2.2.jar"/>
+	<classpathentry kind="lib" path="/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/RXTXcomm-1.7.jar"/>
+	<classpathentry kind="lib" path="/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/slf4j-android-1.7.12.jar"/>
+	<classpathentry kind="lib" path="/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/slf4j-api-1.7.12.jar"/>
+	<classpathentry kind="lib" path="/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/slf4j-jdk14-1.7.12.jar"/>
+	<classpathentry kind="lib" path="/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/slf4j-nop-1.7.12.jar"/>
+	<classpathentry kind="lib" path="/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/slf4j-simple-1.7.12.jar"/>
+	<classpathentry kind="lib" path="/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/xbee-java-library-1.2.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,8 @@
+02:04:31 **** Build of configuration Default for project grabber4a ****
+make all 
+[ 33%] Building CXX object CMakeFiles/grabber3.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber3
+[100%] Built target grabber3
+
+02:04:38 Build Finished (took 7s.87ms)
+

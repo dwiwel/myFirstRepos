@@ -104,7 +104,7 @@ int main(int argCnt, char** args)
 
 		if (!cap.open() )  	    // Capture device raspicam
 		{
-			cout << "ERROR! Trouble opening capture device camera #1, RPi camera.\n";
+			cout << "!!ERROR! Trouble opening capture device camera #1, RPi camera.\n";
 			readyCam1 = false;
 		}
 
@@ -120,7 +120,7 @@ int main(int argCnt, char** args)
 		cap2.open(deviceID_cam2);     // for USB Web camera (a CV item).
 		// check if we succeeded
 		if (!cap2.isOpened()) {
-			cout << "ERROR! Unable to open camera #2, USB camera.\n";
+			cout << "!!ERROR! Unable to open camera #2, USB camera.\n";
 			readyCam2 = false;
 		}
     }

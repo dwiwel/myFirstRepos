@@ -75,7 +75,7 @@ class Send {
     
     public static void main(String[] args) throws Exception {
 
-    	System.out.format("\n-- Starting BlueJay imageSend app rev 190715A ...\n");
+    	System.out.format("\n-- Starting BlueJay imageSend app rev 190716 ...\n");
     	
         String inputImagePath = "";
         String backupImagePath = "";

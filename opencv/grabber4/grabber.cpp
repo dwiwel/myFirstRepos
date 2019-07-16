@@ -266,7 +266,7 @@ int main(int argCnt, char** args)
 					std::cout << timestr << ": ";
 					cout << "-- Line 13 HIGH;" << " count=" << line13cnt << endl;
 				}
-				if (!line13High)
+				if (!line13High)              // Going low resets counter.
 				{
 					line13cnt = 0;
 					//std::cout << timestr << ": ";
@@ -288,9 +288,10 @@ int main(int argCnt, char** args)
 					//cout << " -- Line 19 low" << endl;
 				}
 
-
-				if( ((line13cnt >= 2) && (line13cnt <= 3)) || sendPicPing )   // Take two sets for images when line13 goes high twice.
-				//if (line18high  || sendPicPing )
+				// Take two sets for images after line13 stays high for two counts (~200ms)
+				//
+				//
+				if( ((line13cnt >= 2) && (line13cnt <= 3)) || sendPicPing )   // On count 2 and 3, take images.
 				{
 					std::cout << timestr << ": ";
 					cout << "---IR motion sensor detected activity; GPIO line13 ---" << endl;

@@ -37,7 +37,7 @@ int main(int argCnt, char** args)
 {
 
     cout << "Starting my little grabber4 program, using RPi camera and USB camera ... " << endl;
-    cout << "rev: 190427, 190503, 190712 \n" << endl;
+    cout << "rev: 190716. \n" << endl;
     cout << "Uses the GPIO to get signal from IR sensor. Root privilege is required to run.\n" << endl;
 
 	Mat frameCam1;        // RPi cam Current frame read.   (1280x960)     OpenCV matrices (for frames)
@@ -146,8 +146,8 @@ int main(int argCnt, char** args)
 		time_t currentTime = time(NULL);
 
 
-		bool useImageProc = false;
-		bool useIRsensor = true;   // sensor is too sensitive at the moment; not using now.
+		bool useImageProc = false; // Use openCV image processing to detect movement.
+		bool useIRsensor = true;   // Use IR sensor to detect movement.
 
 
 		for (;;)
@@ -258,13 +258,13 @@ int main(int argCnt, char** args)
 					if( !util.isHeadless()) imshow("Cam2 -- Contrast Equalization", frameCam2_cor);
 				}
 
-				line13High = gpioRead(13);   // GPIO13  IR sensor input line
+				line13High = gpioRead(13);   // GPIO13  IR sensor input line.  (used to trigger image save)
 
 				if (line13High)
 				{
 					line13cnt++;
 					std::cout << timestr << ": ";
-					cout << "-- Line 13 HIGH" << endl;
+					cout << "-- Line 13 HIGH;" << " count=" << line13cnt << endl;
 				}
 				if (!line13High)
 				{
@@ -277,9 +277,9 @@ int main(int argCnt, char** args)
 
 				if (line19High)
 				{
-					line13cnt++;
+					line19cnt++;
 					std::cout << timestr << ": ";
-					cout << "-- Line 19 HIGH" << endl;
+					cout << "-- Line 19 HIGH;" << " count=" << line19cnt << endl;
 				}
 				if (!line19High)
 				{
@@ -289,18 +289,18 @@ int main(int argCnt, char** args)
 				}
 
 
-				if( ((line13cnt >= 1) && (line13cnt <= 2)) || sendPicPing )   // Take two sets for images
+				if( ((line13cnt >= 2) && (line13cnt <= 3)) || sendPicPing )   // Take two sets for images when line13 goes high twice.
 				//if (line18high  || sendPicPing )
 				{
 					std::cout << timestr << ": ";
-					cout << "! IR motion sensor detected activity !" << endl;
+					cout << "---IR motion sensor detected activity; GPIO line13 ---" << endl;
 					if(readyCam2) if( !util.isHeadless()) imshow(" **Cam2 -- Saved frame", frameCam2 );
 
 					string timeDateStr = util.getDateTimeStr();
-					util.saveImageFile( frameCam1, "c1", line13cnt , timeDateStr);
+				    util.saveImageFile( frameCam1, "c1", line13cnt , timeDateStr);
 
-					if(readyCam2) util.saveImageFile( frameCam2, "c2", line13cnt , timeDateStr);
-					if(readyCam2) util.saveImageFile( frameCam2_cor, "c2eq", line13cnt , timeDateStr);
+					util.saveImageFile( frameCam2, "c2", line13cnt , timeDateStr);
+					util.saveImageFile( frameCam2_cor, "c2eq", line13cnt , timeDateStr);
 				} // End if line 18 cnt
 			} // End if use IR sensor.
 

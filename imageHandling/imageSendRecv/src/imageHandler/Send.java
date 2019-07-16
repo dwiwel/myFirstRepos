@@ -12,7 +12,7 @@
 // 181128A Push to remote.
 // 181205 Working here. 
 // 181227 Adding command line arg for server's IP address.
-// 190715 Testing. 
+// 190715B Testing. Cleanup.
 
 package imageHandler;
 
@@ -78,8 +78,6 @@ class Send {
     	System.out.format("\n-- Starting BlueJay imageSend app rev 190715A ...\n");
     	
         String inputImagePath = "";
-        //
-        String outputImagePathThumb = "";
         String backupImagePath = "";
           
         String fileName = "";   // Filename sent with image.

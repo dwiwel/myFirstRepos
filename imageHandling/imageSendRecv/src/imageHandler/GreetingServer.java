@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-public class GreetingServer extends Thread
+public class GreetingServer extends Thread  
 {
        private ServerSocket serverSocket;
        Socket server;

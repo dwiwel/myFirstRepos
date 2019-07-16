@@ -1,9 +1,0 @@
-#!/bin/bash
-
-sleep 2
-
-#java -classpath "/home/pi/java_proj/gitHub/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageSend.jar:/home/pi/java_proj/gitHub/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageSend_lib/*"  -Djava.library.path=/usr/lib/jni  imageHandler.Send &> /home/pi/Desktop/ImageSend.log 2>&1 
-
-java -classpath "/home/pi/java_proj/gitHub/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageSend.jar:/home/pi/java_proj/gitHub/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageSend_lib/*"  -Djava.library.path=/usr/lib/jni  imageHandler.Send | tee  /home/pi/Desktop/ImageSend.log 2>&1 
-
-

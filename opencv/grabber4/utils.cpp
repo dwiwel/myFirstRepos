@@ -2,6 +2,7 @@
 //
 // Rev: 181202
 //      190326
+//      190716
 
 
 #include <string>
@@ -85,7 +86,7 @@ using namespace std;
 
             if(image.empty())
             {
-              std::cout << "Something is wrong with the webcam, could not get frame." << std::endl;
+              std::cout << "!SaveImageFile: Something is wrong with image; image emtpy: " << filename << std::endl;
               return;
             }
             cout << "Saving image file: " + filename << endl;

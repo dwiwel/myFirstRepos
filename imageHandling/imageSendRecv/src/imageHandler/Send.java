@@ -12,6 +12,7 @@
 // 181128A Push to remote.
 // 181205 Working here. 
 // 181227 Adding command line arg for server's IP address.
+// 190715B Testing. Cleanup.
 
 package imageHandler;
 
@@ -50,8 +51,10 @@ import java.util.List;
 import java.nio.file.CopyOption.*;
 import java.nio.file.StandardCopyOption.*;
 
-class Send {
 
+
+class Send {
+  
 	static String serverName = "73.40.197.83";  // Default Server IP; NY Cir router.
 	//static String serverName = "10.0.0.39";  // Dev7.
 	                                   
@@ -72,11 +75,9 @@ class Send {
     
     public static void main(String[] args) throws Exception {
 
-    	System.out.format("\n-- Starting imageSend app ...\n");
+    	System.out.format("\n-- Starting BlueJay imageSend app rev 190715A ...\n");
     	
         String inputImagePath = "";
-        //
-        String outputImagePathThumb = "";
         String backupImagePath = "";
           
         String fileName = "";   // Filename sent with image.

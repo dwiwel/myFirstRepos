@@ -7,11 +7,13 @@
 	<classpathentry kind="lib" path="jars_extra/rxtx-1.7.jar"/>
 	<classpathentry kind="lib" path="jars_extra/rxtx-2.2.jar"/>
 	<classpathentry kind="lib" path="jars_extra/RXTXcomm-1.7.jar"/>
-	<classpathentry kind="lib" path="jars_extra/slf4j-android-1.7.12.jar"/>
 	<classpathentry kind="lib" path="jars_extra/slf4j-api-1.7.12.jar"/>
 	<classpathentry kind="lib" path="jars_extra/slf4j-jdk14-1.7.12.jar"/>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="jars_extra/slf4j-nop-1.7.12.jar"/>
 	<classpathentry kind="lib" path="jars_extra/slf4j-simple-1.7.12.jar"/>
+=======
+>>>>>>> c75bf60becb18ddc99aecf479fe2deeb19f0c47f
 	<classpathentry kind="lib" path="jars_extra/xbee-java-library-1.2.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

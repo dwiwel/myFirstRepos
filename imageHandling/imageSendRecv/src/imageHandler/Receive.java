@@ -37,7 +37,7 @@ class Receive {
 
 		Boolean run = true;
 
-		System.out.println("--Starting BlueJay image receive server ...");
+		System.out.println("--Starting BlueJay image receive server (listen on port 8207) ...");
 		ServerSocket serverSocket = new ServerSocket(8207);
 		
 		while (run)

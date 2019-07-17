@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename local variable &apos;size&apos; in &apos;imageHandler.Receive.main(...)&apos; to &apos;sizeImage&apos;&#x0A;- Original project: &apos;imageSendRecv&apos;&#x0A;- Original element: &apos;imageHandler.Receive.main(String[]).size&apos;&#x0A;- Renamed element: &apos;size&apos;&#x0A;- Update references to refactored element" description="Rename local variable &apos;size&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src&lt;imageHandler{Receive.java[Receive~main~\[QString;@size!3558!3570!3562!3565!I!0!false" name="sizeImage" references="true" stamp="1536830767182" version="1.0"/>
-</session>

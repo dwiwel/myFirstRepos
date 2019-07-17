@@ -305,6 +305,18 @@ int main(int argCnt, char** args)
 				} // End if line 18 cnt
 			} // End if use IR sensor.
 
+
+
+
+
+
+
+
+
+
+
+
+
 			//sleep(1);
 
 			waitKey(200);

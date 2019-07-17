@@ -1,0 +1,36 @@
+// utils.hh   Header file for Utils class. 
+//
+// Don Wiwel, 05OCT2017
+// Rev:
+
+
+
+#ifndef __UTIL_HH
+#define __UTIL_HH
+
+#include <iostream>
+#include <stdio.h>
+#include <string>
+#include <opencv2/opencv.hpp>
+
+
+using namespace cv;
+using namespace std;
+
+
+class Utils
+{
+    public:
+		Utils();
+        static void initApp();
+        static void initApp( int argCnt, char** args);
+        static void saveImageFile( Mat image );
+        static void saveImageFile(Mat image, string suffix, int eventCnt, string dateTimeStr);
+        static string getDateTimeStr();
+        static void testMe();
+
+        static int argCnt = 0;
+        static bool headless = false;
+};
+
+#endif  // __UTIL_HH

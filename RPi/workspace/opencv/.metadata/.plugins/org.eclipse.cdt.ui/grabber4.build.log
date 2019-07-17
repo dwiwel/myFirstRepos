@@ -1,0 +1,9 @@
+20:15:59 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+
+20:16:11 Build Finished (took 12s.129ms)
+

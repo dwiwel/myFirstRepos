@@ -3,6 +3,7 @@
 // Initial prototype using Digi XBee Cellular device.
 //
 // Rev: 171125.
+//      190717
 //
 // -Djava.library.path=/home/pi/java_proj/gitHub/myFirstRepos/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/native/Linux/arm7l
 //

@@ -13,6 +13,7 @@
 // 181205 Working here. 
 // 181227 Adding command line arg for server's IP address.
 // 190715B Testing. Cleanup.
+// 190717 Added SMS receiver, for future commands. 
 
 package imageHandler;
 
@@ -53,9 +54,29 @@ import java.nio.file.StandardCopyOption.*;
 
 
 
+
+// Thread to receive instructions via SMS text messages.  Not currently used. 
+//
+class RecvTxtMsgThread extends Thread {
+	
+	
+	public void run()
+	{
+		System.out.format("\n**-- Starting RecvTxtMsgThread to read SMS text messages ...\n");
+		
+		System.out.format("\n**--  RecvTxtMsgThread done. \n");
+	}
+		
+}
+
+
+
+
+// Main class to send image/data files to server side.
+//
 class Send {
   
-	static String serverName = "73.40.197.83";  // Default Server IP; NY Cir router.
+	static String serverName = "73.40.197.83";  // Default BlueJay Server IP; NY Cir router to Dev10.
 	//static String serverName = "10.0.0.39";  // Dev7.
 	                                   
     /* Constants */
@@ -73,7 +94,8 @@ class Send {
     
     
     
-    public static void main(String[] args) throws Exception {
+    @SuppressWarnings("deprecation")
+	public static void main(String[] args) throws Exception {
 
     	System.out.format("\n-- Starting BlueJay imageSend app rev 190716A ...\n");
     	
@@ -108,10 +130,6 @@ class Send {
  
     	// Get the list of files in directory
     	
-    	//List<String> results = new ArrayList<String>();
-        	
-    	boolean run = true;
-    	boolean connected = false;   // Flag to indicate a connection reset; timeout, no ack msg, etc.
     	
     	// Put XBee device in bypass mode.  (no affect)
     	//
@@ -132,10 +150,98 @@ class Send {
 //    	Thread.sleep(500);
 //    	serPort.close();
     	
+    	RecvTxtMsgThread recvThread = new RecvTxtMsgThread();         // Thread to receive SMS txt messages.
+    	recvThread.start();
+    	
+       	//List<String> results = new ArrayList<String>();
+    	
+    	boolean run = true;
+    	boolean connected = false;   // Flag to indicate a connection reset; timeout, no ack msg, etc.
+     	
     	// loop continuously, checking for (new) files in the /data/images dir and sending those images to server side.
     	//
     	while (run)
     	{	    	    				
+			File devFile0 = new File(TTY_PORT_0);
+			File devFile1 = new File(TTY_PORT_1);	    			
+		    	   		
+    		if (!connected)    // connection requested.
+	   		{
+    		   	try	    		   	
+    	    	{			    	
+    	    	    if (devFile0.exists())    // TTY Port 0
+    	    	    {
+	    		   		System.out.println(">> Attempting new connection to XBee Cellular device via TTY_PORT_0 ... ");
+    		   	    	
+	       		   	    if (myDevice != null)            
+	    		   	    {
+	    		   	    	if (myDevice.isOpen())
+    		   	    		{			    
+    		   	    			myDevice.stopListening();
+    		   	    			myDevice.close();			    		   	    			
+    		   	    		}				    		   	    	
+	    		   	    }
+	       		   	    
+	       		   	    myDevice = null;
+	    	        	myDevice = new CellularDevice (TTY_PORT_0, BAUD_RATE);
+	    	        	
+	    	            myDevice.open();
+	   	    			myDevice.setReceiveTimeout(6000);       // was 12 seconds.
+	   	    
+	   	    		   	connected = true;	  // Connection to XBee cellular is ready.
+	   	 	    	
+	   	    		   	MySMSReceiveListener listener =  new MySMSReceiveListener();
+	   	    		   	listener.myDevice = myDevice;	   	    		   	
+	   	    			myDevice.addSMSListener(listener);     // cb for incoming msgs.
+	   				
+	   	    			System.out.println("\n>> Waiting for SMS...");
+	   	    			
+						//myDevice.reset();
+	    	            // myDevice.setSendTimeout(1000);
+	    	           // myDevice.setParameter(parameter, parameterValue)
+	    	            //String parameter = null;
+	    	            //myDevice.getParameter(parameter);
+    	    	    }
+    	    	    else if (devFile1.exists())
+    	    	    {
+	    		   		System.out.println(" Attempting new connecting to XBee Cellular device via TTY_PORT_1 ... ");
+	    		   	    if (myDevice != null)
+	    		   	    {
+	    		   	    	if (myDevice.isOpen())
+	    		   	    		{			    
+	    		   	    			myDevice.stopListening();
+	    		   	    			myDevice.close();			    		   	    			
+	    		   	    		}
+	    		   	    }
+	    		   	    
+	    		   	    myDevice = null;
+	    	        	myDevice = new CellularDevice (TTY_PORT_1, BAUD_RATE);
+	    	        	
+	    	            myDevice.open();
+	   	    			myDevice.setReceiveTimeout(6000);       // was 12 seconds.
+	    	          			    	    		   	    			
+	    	            //myDevice.reset();
+	    	            //myDevice.setParameter(parameter, parameterValue)
+    	    	    }
+    	    	    else
+    	    	    {
+    	    	    	connected = false;     // try to connected again.
+    	    	    	System.out.println("!! TTY_USB Device file does not exist. Is device connected? ");
+    	    	    	Thread.sleep(1000);
+    	    	    	break;
+    	    	    }
+		   		}
+    	    	catch (XBeeException e) 
+    			{
+    	    		connected = false;
+    			    System.out.println(" !! Error opening ZigBee cellular myDevice: exc: " + e.getMessage() + "\n");
+    			    System.out.println("\n     StackTrace: ");
+    			    e.printStackTrace();
+    			    break;
+		   		}
+	    	} // End if !connected.
+    		
+    		
 		    System.out.println("\n>> Checking for existance of new image files, make connection to server ... ");
     		File[] files = new File("/data/images").listFiles();
     		
@@ -163,82 +269,12 @@ class Send {
 //    		}
     				
     		int fileCnt = 0;
-    		for (File file : files)
+    		for (File file : files)    // For each file in the /data/image dir.
 	    	{
     			
 	    		if (file.isFile())
 	    		{	    
 	    			fileCnt++;
-	    			File devFile0 = new File(TTY_PORT_0);
-	    			File devFile1 = new File(TTY_PORT_1);	    			
-	    	
-	    	   		if (!connected)
-    		   		{
-		    		   	try	    		   	
-		    	    	{			    	
-		    	    	    if (devFile0.exists())
-		    	    	    {
-			    		   		System.out.println(">> Attempting new connection to XBee Cellular device via TTY_PORT_0 ... ");
-		    		   	    	
-			       		   	    if (myDevice != null)
-			    		   	    {
-			    		   	    	if (myDevice.isOpen())
-		    		   	    		{			    
-		    		   	    			myDevice.stopListening();
-		    		   	    			myDevice.close();			    		   	    			
-		    		   	    		}				    		   	    	
-			    		   	    }
-			       		   	    
-			       		   	    myDevice = null;
-			    	        	myDevice = new CellularDevice (TTY_PORT_0, BAUD_RATE);
-			    	        	
-			    	            myDevice.open();
-    		   	    			myDevice.setReceiveTimeout(6000);       // was 12 seconds.
-    		   	    			    		   	    			
-								//myDevice.reset();
-			    	            // myDevice.setSendTimeout(1000);
-			    	           // myDevice.setParameter(parameter, parameterValue)
-			    	            //String parameter = null;
-			    	            //myDevice.getParameter(parameter);
-		    	    	    }
-		    	    	    else if (devFile1.exists())
-		    	    	    {
-			    		   		System.out.println(" Attempting new connecting to XBee Cellular device via TTY_PORT_1 ... ");
-			    		   	    if (myDevice != null)
-			    		   	    {
-			    		   	    	if (myDevice.isOpen())
-			    		   	    		{			    
-			    		   	    			myDevice.stopListening();
-			    		   	    			myDevice.close();			    		   	    			
-			    		   	    		}
-			    		   	    }
-			    		   	    
-			    		   	    myDevice = null;
-			    	        	myDevice = new CellularDevice (TTY_PORT_1, BAUD_RATE);
-			    	        	
-			    	            myDevice.open();
-    		   	    			myDevice.setReceiveTimeout(6000);       // was 12 seconds.
-			    	          			    	    		   	    			
-			    	            //myDevice.reset();
-			    	            //myDevice.setParameter(parameter, parameterValue)
-		    	    	    }
-		    	    	    else
-		    	    	    {
-		    	    	    	connected = false;     // try to connected again.
-		    	    	    	System.out.println("!! TTY_USB Device file does not exist. Is device connected? ");
-		    	    	    	Thread.sleep(000);
-		    	    	    	break;
-		    	    	    }
-	    		   		}
-		    	    	catch (XBeeException e) 
-		    			{
-		    	    		connected = false;
-		    			    System.out.println(" !! Error opening ZigBee cellular myDevice: exc: " + e.getMessage() + "\n");
-		    			    System.out.println("\n     StackTrace: ");
-		    			    e.printStackTrace();
-		    			    break;
-	    		   		}
-	    	    	} // End if !connected.
 	    	   		
 	    	   		// Only proceed if device is open and connected to Internet;
 	    	   		//
@@ -256,7 +292,6 @@ class Send {
     		   			break;
     		   		}	
 	    		   			    			
-	    		   	connected = true;	    	
 	    		   	
 	    			fileName = file.getName();
 	    			System.out.format(">> Next Image file to be processed: '%s'\n", fileName) ;
@@ -517,10 +552,11 @@ class Send {
 	    		Thread.sleep(10);   		
 	    	} // End for (File file : files)
     	
-    		System.out.println("\n--Done attempt to send any available new images in directory.");
+    		System.out.println("\n--Done attempt to send any available new images in image directory.");
     		
-    		Thread.sleep(1000);     // was 2000 Check for new files every two seconds, or resend what's still there.
+    		Thread.sleep(2000);     // was 2000 Check for new files every two seconds, or resend what's still there.
     	} // End while run.
+    	    	
     	
         //outputStream.flush();
         //System.out.println("Flushed: " + System.currentTimeMillis());
@@ -528,6 +564,8 @@ class Send {
         //Thread.sleep(10);
         //System.out.println("Closing: " + System.currentTimeMillis());
         //socket.close();
+    	
+    	recvThread.stop();    	
     	
         System.out.println("\n---- End of BluJay Producer Client execution.");
 

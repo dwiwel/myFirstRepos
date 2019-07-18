@@ -291,7 +291,7 @@ int main(int argCnt, char** args)
 				// Take two sets for images after line13 stays high for two counts (~200ms)
 				//
 				// ####
-				if( ((line13cnt >= 1) && (line13cnt <= 1)) || sendPicPing )   // On count 2 and 3, take images.
+				if( ((line13cnt >= 1) && (line13cnt <= 2)) || sendPicPing )   // On count 1 and 2, take images.
 				{
 					std::cout << timestr << ": ";
 					cout << "---IR motion sensor detected activity; GPIO line13 ---" << endl;

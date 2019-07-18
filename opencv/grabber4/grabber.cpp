@@ -37,7 +37,7 @@ int main(int argCnt, char** args)
 {
 
     cout << "Starting my little grabber4 program, using RPi camera and USB camera ... " << endl;
-    cout << "rev: 190716. \n" << endl;
+    cout << "rev: 190717. \n" << endl;
     cout << "Uses the GPIO to get signal from IR sensor. Root privilege is required to run.\n" << endl;
 
 	Mat frameCam1;        // RPi cam Current frame read.   (1280x960)     OpenCV matrices (for frames)

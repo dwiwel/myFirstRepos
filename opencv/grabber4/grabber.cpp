@@ -16,6 +16,7 @@
 //       190325  Added headless feature.
 //       190427  Testing. issues with sensor. 
 //       190712  Add second IR sensor.
+//       190828  motion app was causing an issue; only one a time.
 
 
 #include <iostream>
@@ -50,8 +51,8 @@ int main(int argCnt, char** args)
 	Mat frameCam2_cor;    // Corrected image; hist eq.
 
 
-	bool readyCam1 = true;
-	bool readyCam2 = true;
+	bool readyCam1 = false;
+	bool readyCam2 = false;
 
 	bool line13High = false;      //
 	bool line19High = false;
@@ -62,18 +63,18 @@ int main(int argCnt, char** args)
 
 	//--- INITIALIZE VIDEOCAPTURE
 	//VideoCapture cap1;
-	raspicam::RaspiCam_Cv cap;                          // Capture item, RPi on-board camera.
+	raspicam::RaspiCam_Cv cap;                          // Capture item, RPi on-board camera, use raspicam lib
 	cv::VideoCapture cap2 =  cv::VideoCapture();        // USB Web camera.
 
 	// open the default camera using default API
 	// cap.open(0);  // for openCV
 	// OR advance usage: select any API backend
-	int deviceID = 0;             // 0 = open default camera
-	int apiID = cv::CAP_ANY;      // 0 = autodetect default API
+	int deviceID_cam1 = 0;             // 0 = open default camera  (raspicam)
+	int apiID_cam1 = cv::CAP_ANY;      // 0 = autodetect default API
 
 	// open selected camera using selected API
 
-	int deviceID_cam2 = 0;             // 0 = open default camera
+	int deviceID_cam2 = 1;             // 1 = (will be USB Cam)
 	int apiID_cam2 = cv::CAP_ANY;      // 0 = autodetect default API
 
     // Initialize GPIO and image sources.
@@ -102,20 +103,21 @@ int main(int argCnt, char** args)
 		cap.set( CV_CAP_PROP_FORMAT, CV_8UC3);  // CV_8UC1, CV_8UC3
 		cap2.set( CV_CAP_PROP_FORMAT, CV_8UC3);  // CV_8UC1, CV_8UC3
 
-		if (!cap.open() )  	    // Capture device raspicam
+		if (!cap.open())  	    // Capture device raspicam
 		{
 			cout << "!!ERROR! Trouble opening capture device camera #1, RPi camera.\n";
 			readyCam1 = false;
 		}
-
-
-
+		else readyCam1 = true;
 
 		// check if we succeeded
-//		if (!cap.isOpened()) {
-//			cout << "ERROR! Unable to open camera #1, RPi camera.\n";
-//			readyCam1 = false;
-//		}
+		if (!cap.isOpened()) {
+			cout << "ERROR! Unable to open camera #1, RPi camera.\n";
+			readyCam1 = false;
+		}
+		else readyCam1 = true;
+
+
 
 		cap2.open(deviceID_cam2);     // for USB Web camera (a CV item).
 		// check if we succeeded
@@ -123,6 +125,8 @@ int main(int argCnt, char** args)
 			cout << "!!ERROR! Unable to open camera #2, USB camera.\n";
 			readyCam2 = false;
 		}
+		else readyCam2 = true;
+
     }
     catch (cv::Exception& ex)
         {
@@ -177,16 +181,27 @@ int main(int argCnt, char** args)
 				cout << " Sending midnight ping image.\n";
 			}
 
-			if (readyCam1)
+			try
 			{
-				cap.grab();
-				cap.retrieve(frameCam1);
-			}
+				if (readyCam1)
+				{
+					cap.grab();
+					cap.retrieve(frameCam1);
+				}
 
-			if (readyCam2)
+				if (readyCam2)
+				{
+					cap2.grab();
+					cap2.retrieve(frameCam2);
+				}
+			}
+			catch (cv::Exception& ex)
 			{
-				cap2.grab();
-				cap2.retrieve(frameCam2);
+				cout << "!! Some Exception occurred while grabbing frames ..." << endl;
+				const char* err_msg = ex.what();
+				String  msgStr = ex.msg;
+				cout << "!! Some exception:" << err_msg << endl;
+				cout << "   msg: " << msgStr << endl;
 			}
 
 
@@ -327,11 +342,13 @@ int main(int argCnt, char** args)
     }
     catch (cv::Exception& ex)
     {
+    	cout << "!! Some unexpected Exception occured ..." << endl;
     	const char* err_msg = ex.what();
     	String  msgStr = ex.msg;
     	cout << "!! Some unexpected Exception:" << err_msg << endl;
     	cout << "   msg: " << msgStr << endl;
     }
+
 
     gpioTerminate();
     // the camera will be deinitialized automatically in VideoCapture destructor

@@ -57,12 +57,12 @@ import java.nio.file.StandardCopyOption.*;
 
 // Thread to receive instructions via SMS text messages.  Not currently used. 
 //
-class RecvTxtMsgThread extends Thread {
+class RecvTxtMsgThread extends Thread {        // Thread not currently used; using xbee callback for SMS
 	
 	
 	public void run()
 	{
-		System.out.format("\n**-- Starting RecvTxtMsgThread to read SMS text messages ...\n");
+		System.out.format("\n**-- Starting RecvTxtMsgThread to read SMS text messages (N/A)...\n");
 		
 		System.out.format("\n**--  RecvTxtMsgThread done. \n");
 	}
@@ -169,7 +169,7 @@ class Send {
 	   		{
     		   	try	    		   	
     	    	{			    	
-    	    	    if (devFile0.exists())    // TTY Port 0
+    	    	    if (devFile0.exists())    // TTY Port 0  may be on port 0 or 1
     	    	    {
 	    		   		System.out.println(">> Attempting new connection to XBee Cellular device via TTY_PORT_0 ... ");
     		   	    	
@@ -219,13 +219,21 @@ class Send {
 	    	        	
 	    	            myDevice.open();
 	   	    			myDevice.setReceiveTimeout(6000);       // was 12 seconds.
-	    	          			    	    		   	    			
+	    	          			    
+	   	    		   	connected = true;	  // Connection to XBee cellular is ready.
+		   	 	    	
+	   	    		   	MySMSReceiveListener listener =  new MySMSReceiveListener();
+	   	    		   	listener.myDevice = myDevice;	   	    		   	
+	   	    			myDevice.addSMSListener(listener);     // cb for incoming msgs.
+	   				
+	   	    			System.out.println("\n>> Waiting for SMS...");
 	    	            //myDevice.reset();
 	    	            //myDevice.setParameter(parameter, parameterValue)
     	    	    }
     	    	    else
     	    	    {
-    	    	    	connected = false;     // try to connected again.
+    	    	    	connected = false;     // not connected yet, so try to connected again.
+    	    	    	
     	    	    	System.out.println("!! TTY_USB Device file does not exist. Is device connected? ");
     	    	    	Thread.sleep(1000);
     	    	    	break;
@@ -240,6 +248,10 @@ class Send {
     			    break;
 		   		}
 	    	} // End if !connected.
+    		
+    		
+    		
+    		
     		
     		
 		    System.out.println("\n>> Checking for existance of new image files, make connection to server ... ");

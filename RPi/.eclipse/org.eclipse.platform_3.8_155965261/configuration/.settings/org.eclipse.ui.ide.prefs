@@ -1,0 +1,5 @@
+MAX_RECENT_WORKSPACES=5
+RECENT_WORKSPACES=/home/pi/workspace/opencv\n/home/pi/workspace/imageSendRecv\n/home/pi/workspace/XBee\n/home/pi/java_proj/gitHub/myFirstRepos/RPi/workspace/imageSendRecv\n/home/pi/java_proj/gitHub/myFirstRepos/RPi_del/workspace/imageSendRecv
+RECENT_WORKSPACES_PROTOCOL=3
+SHOW_WORKSPACE_SELECTION_DIALOG=true
+eclipse.preferences.version=1

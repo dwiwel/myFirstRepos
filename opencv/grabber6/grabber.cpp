@@ -17,7 +17,7 @@
 //       190427  Testing. issues with sensor. 
 //       190712  Add second IR sensor.
 //       190828  motion app was causing an issue; only one a time.
-
+//       190902  Starting grabber6; interprocess messaging. 
 
 #include <iostream>
 #include <stdio.h>
@@ -25,22 +25,111 @@
 #include <unistd.h>  // for sleep
 #include <ctime>
 
-#include <opencv2/opencv.hpp>
-#include <raspicam/raspicam_cv.h>
-#include <pigpio.h>
+#include <pthread.h>
+#include <csignal>
+
+#include <opencv2/opencv.hpp>         // opencv lib for image processing
+#include <raspicam/raspicam_cv.h>     // lib for accessing raspberry pi onboard camera.
+#include <pigpio.h>                   // lib for accessing raspberry pi GPIO lines.
 
 #include "utils.hh"
+#include "SocketServer.h"
+
+#define SIGHUP  1   /* Hangup the process */
+#define SIGINT  2   /* Interrupt the process */
+#define SIGQUIT 3   /* Quit the process */
+#define SIGILL  4   /* Illegal instruction. */
+#define SIGTRAP 5   /* Trace trap. */
+#define SIGABRT 6   /* Abort. */
 
 using namespace cv;
 using namespace std;
 
+
+
+struct args
+{
+	int threadNum;
+	bool run;
+
+};
+
+
+
+
+
+void* getCmdThread(void *passedArg) {
+
+   struct args *threadArgs = (struct args*)(passedArg);
+
+   int tid = threadArgs->threadNum;
+
+   int cmdCnt = 0;
+
+   while (threadArgs->run)
+   {
+	   SocketServer server(54321);
+	   cout << "Listening for a connection control client ..." << endl;
+	   server.listen();
+	   cmdCnt = 0;
+
+	   while (threadArgs->run)
+	   {
+		   try
+		   {
+			   string rec = server.receive(1024);
+			   if (rec == "") break;
+			   if (rec == "EOF") break;
+			   cmdCnt++;
+			   cout << "-->> Client cmd count:  " << cmdCnt << endl;
+			   cout << "Received from the client [" << rec << "]" << endl;
+
+			   string message("The Server says thanks! I love you!");
+			   cout << "Echo back: [" << message << "]" << endl;
+			   int cnt = server.send(message);
+			   if (cnt < 0)  break;
+
+		   }
+		   catch (exception *ex)
+		   {
+			   cout << "! Exception while reading from client. Resetting server." << endl;
+			   sleep(2);
+			   break;
+		   }
+		   sleep(1);
+	   }
+	   sleep(2);
+   }
+
+   cout << "getCmdThread Stopped. " << endl;
+   // pthread_exit(NULL);
+
+   int *x;  // (to avoid warning)
+   return (void*)(x);
+
+}
+
+
+bool run = true;   // Main app run flag.
+void raiseFlag(int signum)
+{
+	printf("Caught signal %d, coming out...\n", signum);
+	cout << "---Stop app requested; received signal: " << signum << endl;
+    run = false;
+    exit(0);
+}
+
+
 int main(int argCnt, char** args)
 {
 
-    cout << "Starting my little grabber4 program, using RPi camera and USB camera ... " << endl;
+    cout << "Starting my little **grabber6** program, using RPi camera and USB camera ... " << endl;
     cout << "rev: 190717. \n" << endl;
     cout << "Uses the GPIO to get signal from IR sensor. Root privilege is required to run.\n" << endl;
 
+
+    // opencv objects.
+    //
 	Mat frameCam1;        // RPi cam Current frame read.   (1280x960)     OpenCV matrices (for frames)
 	Mat frameCam2;        // Web USB camera.
 	Mat prevFrame;        // Previous frame.
@@ -49,7 +138,6 @@ int main(int argCnt, char** args)
 	Mat frameCam1_cor;    // Corrected image; hist eq.
 	Mat frameCam2_bw;     // Monochrome image.
 	Mat frameCam2_cor;    // Corrected image; hist eq.
-
 
 	bool readyCam1 = false;
 	bool readyCam2 = false;
@@ -77,6 +165,19 @@ int main(int argCnt, char** args)
 	int deviceID_cam2 = 1;             // 1 = (will be USB Cam)
 	int apiID_cam2 = cv::CAP_ANY;      // 0 = autodetect default API
 
+	cout << "Starting thread to accept command messages for a client." << endl;
+
+    pthread_t processMsgThreadId;
+    struct args *threadArgs = (struct args *)( malloc(sizeof(struct args)) );
+
+    threadArgs->threadNum = 999;
+    threadArgs->run = true;          // Flag used to shutdown
+
+    int rc = pthread_create( &processMsgThreadId, NULL, getCmdThread, (void *)(threadArgs) );
+
+
+
+
     // Initialize GPIO and image sources.
     //
 	cout << "Initializing GPIO and image sources." << endl;
@@ -97,7 +198,6 @@ int main(int argCnt, char** args)
 		for (int i=0; i < argCnt; i++)
 		{
 			cout << "arg: " << args[i] << endl;
-
 		}
 
 		cap.set( CV_CAP_PROP_FORMAT, CV_8UC3);  // CV_8UC1, CV_8UC3
@@ -117,8 +217,6 @@ int main(int argCnt, char** args)
 		}
 		else readyCam1 = true;
 
-
-
 		cap2.open(deviceID_cam2);     // for USB Web camera (a CV item).
 		// check if we succeeded
 		if (!cap2.isOpened()) {
@@ -129,16 +227,18 @@ int main(int argCnt, char** args)
 
     }
     catch (cv::Exception& ex)
-        {
-        	const char* err_msg = ex.what();
-        	String  msgStr = ex.msg;
-        	cout << "!! Some unexpected Exception during init:" << err_msg << endl;
-        	cout << "   msg: " << msgStr << endl;
-        }
+	{
+		const char* err_msg = ex.what();
+		String  msgStr = ex.msg;
+		cout << "!! Some unexpected Exception during init:" << err_msg << endl;
+		cout << "   msg: " << msgStr << endl;
+	}
 
+    signal(15, raiseFlag);
+    signal(SIGINT, raiseFlag);
+    signal(2, raiseFlag);
 
-
-	// Loop to check IR sensor and grab images.
+	// Main Loop to check IR sensor and grab images.
     try
     {
 
@@ -149,12 +249,11 @@ int main(int argCnt, char** args)
 		time_t lastImageTime = time(NULL);
 		time_t currentTime = time(NULL);
 
-
 		bool useImageProc = false; // Use openCV image processing to detect movement.
 		bool useIRsensor = true;   // Use IR sensor to detect movement.
 
 
-		for (;;)
+		while (run)
 		{
 			currentTime = time(NULL);
 
@@ -273,6 +372,7 @@ int main(int argCnt, char** args)
 					if( !util.isHeadless()) imshow("Cam2 -- Contrast Equalization", frameCam2_cor);
 				}
 
+
 				line13High = gpioRead(13);   // GPIO13  IR sensor input line.  (used to trigger image save)
 
 				if (line13High)
@@ -323,10 +423,14 @@ int main(int argCnt, char** args)
 			//sleep(1);
 
 			waitKey(200);
-	//		if (cv::waitKey(500) >= 0)    // 200  ms delay.  Check and take image this often.
-	//			break;
-	//		}
+//			if (cv::waitKey(200) >= 0)    // 200  ms delay.  Check and take image this often.
+//			{
+//				break;
+//			}
+
+
 		} // End main for.
+
     }
     catch (cv::Exception& ex)
     {
@@ -339,6 +443,13 @@ int main(int argCnt, char** args)
     	cout << "   function: " << ex.func << endl ;
     	cout << "   what: " << ex.what() << endl ;
     }
+
+    // Shutdown
+    //
+    cout << "Shutting down." << endl;
+    run = false;
+	threadArgs->run = false;                  // Stop running threads gracefully
+	pthread_join(processMsgThreadId, NULL);   // Wait here until thread stops.
 
 
     gpioTerminate();

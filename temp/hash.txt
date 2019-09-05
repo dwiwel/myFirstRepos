@@ -1,3 +1,11 @@
+cmake_minimum_required (VERSION 3.0)
+project (foo)
+
+add_executable (first first.cpp)
+target_compile_options (first PRIVATE -std=c++11)
+target_compile_definitions (first PRIVATE BOOST_ERROR_CODE_HEADER_ONLY)
+target_link_libraries (first pthread)
+
 
 uint64_t constexpr mix(char m, uint64_t s)
  {

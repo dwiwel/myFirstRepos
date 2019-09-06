@@ -31,6 +31,10 @@ class Utils
         void testMe();
         bool isHeadless();
 
+         uint mix(char m, uint s);
+         uint hash(string str);
+         uint hash(const char * m);
+
     private:
 		int argCnt;
 	    bool headless;

@@ -28,28 +28,28 @@ The CXX compiler identification is GNU, found in "/home/pi/java_proj/gitHub/myFi
 Determining if the C compiler works passed with the following output:
 Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_f78b7/fast"
-/usr/bin/make -f CMakeFiles/cmTC_f78b7.dir/build.make CMakeFiles/cmTC_f78b7.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_229b5/fast"
+/usr/bin/make -f CMakeFiles/cmTC_229b5.dir/build.make CMakeFiles/cmTC_229b5.dir/build
 make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_f78b7.dir/testCCompiler.c.o
-/usr/bin/cc     -o CMakeFiles/cmTC_f78b7.dir/testCCompiler.c.o   -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp/testCCompiler.c
-Linking C executable cmTC_f78b7
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f78b7.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTC_f78b7.dir/testCCompiler.c.o  -o cmTC_f78b7 -rdynamic 
+Building C object CMakeFiles/cmTC_229b5.dir/testCCompiler.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_229b5.dir/testCCompiler.c.o   -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_229b5
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_229b5.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_229b5.dir/testCCompiler.c.o  -o cmTC_229b5 -rdynamic 
 make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
 
 
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_5989b/fast"
-/usr/bin/make -f CMakeFiles/cmTC_5989b.dir/build.make CMakeFiles/cmTC_5989b.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_ad8e6/fast"
+/usr/bin/make -f CMakeFiles/cmTC_ad8e6.dir/build.make CMakeFiles/cmTC_ad8e6.dir/build
 make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_5989b.dir/CMakeCCompilerABI.c.o
-/usr/bin/cc     -o CMakeFiles/cmTC_5989b.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.6/Modules/CMakeCCompilerABI.c
-Linking C executable cmTC_5989b
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5989b.dir/link.txt --verbose=1
-/usr/bin/cc      -v CMakeFiles/cmTC_5989b.dir/CMakeCCompilerABI.c.o  -o cmTC_5989b -rdynamic  
+Building C object CMakeFiles/cmTC_ad8e6.dir/CMakeCCompilerABI.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_ad8e6.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.6/Modules/CMakeCCompilerABI.c
+Linking C executable cmTC_ad8e6
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ad8e6.dir/link.txt --verbose=1
+/usr/bin/cc      -v CMakeFiles/cmTC_ad8e6.dir/CMakeCCompilerABI.c.o  -o cmTC_ad8e6 -rdynamic  
 Using built-in specs.
 COLLECT_GCC=/usr/bin/cc
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper
@@ -59,8 +59,8 @@ Thread model: posix
 gcc version 4.9.2 (Raspbian 4.9.2-10+deb8u2) 
 COMPILER_PATH=/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/
 LIBRARY_PATH=/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../:/lib/arm-linux-gnueabihf/:/lib/:/usr/lib/arm-linux-gnueabihf/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_5989b' '-rdynamic' '-march=armv6' '-mfloat-abi=hard' '-mfpu=vfp' '-mtls-dialect=gnu'
- /usr/lib/gcc/arm-linux-gnueabihf/4.9/collect2 -plugin /usr/lib/gcc/arm-linux-gnueabihf/4.9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper -plugin-opt=-fresolution=/tmp/cci61YOq.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X --hash-style=gnu -m armelf_linux_eabi -o cmTC_5989b /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crt1.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crti.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtbegin.o -L/usr/lib/gcc/arm-linux-gnueabihf/4.9 -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../.. -L/lib/arm-linux-gnueabihf -L/usr/lib/arm-linux-gnueabihf CMakeFiles/cmTC_5989b.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtend.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_ad8e6' '-rdynamic' '-march=armv6' '-mfloat-abi=hard' '-mfpu=vfp' '-mtls-dialect=gnu'
+ /usr/lib/gcc/arm-linux-gnueabihf/4.9/collect2 -plugin /usr/lib/gcc/arm-linux-gnueabihf/4.9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper -plugin-opt=-fresolution=/tmp/ccv43vmi.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X --hash-style=gnu -m armelf_linux_eabi -o cmTC_ad8e6 /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crt1.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crti.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtbegin.o -L/usr/lib/gcc/arm-linux-gnueabihf/4.9 -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../.. -L/lib/arm-linux-gnueabihf -L/usr/lib/arm-linux-gnueabihf CMakeFiles/cmTC_ad8e6.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtend.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crtn.o
 make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
 
 
@@ -68,14 +68,14 @@ Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_5989b/fast"]
-  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_5989b.dir/build.make CMakeFiles/cmTC_5989b.dir/build]
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_ad8e6/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_ad8e6.dir/build.make CMakeFiles/cmTC_ad8e6.dir/build]
   ignore line: [make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp']
-  ignore line: [Building C object CMakeFiles/cmTC_5989b.dir/CMakeCCompilerABI.c.o]
-  ignore line: [/usr/bin/cc     -o CMakeFiles/cmTC_5989b.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.6/Modules/CMakeCCompilerABI.c]
-  ignore line: [Linking C executable cmTC_5989b]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5989b.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/cc      -v CMakeFiles/cmTC_5989b.dir/CMakeCCompilerABI.c.o  -o cmTC_5989b -rdynamic  ]
+  ignore line: [Building C object CMakeFiles/cmTC_ad8e6.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/bin/cc     -o CMakeFiles/cmTC_ad8e6.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.6/Modules/CMakeCCompilerABI.c]
+  ignore line: [Linking C executable cmTC_ad8e6]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ad8e6.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/cc      -v CMakeFiles/cmTC_ad8e6.dir/CMakeCCompilerABI.c.o  -o cmTC_ad8e6 -rdynamic  ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/cc]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper]
@@ -85,13 +85,13 @@ Parsed C implicit link information from above output:
   ignore line: [gcc version 4.9.2 (Raspbian 4.9.2-10+deb8u2) ]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../:/lib/arm-linux-gnueabihf/:/lib/:/usr/lib/arm-linux-gnueabihf/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_5989b' '-rdynamic' '-march=armv6' '-mfloat-abi=hard' '-mfpu=vfp' '-mtls-dialect=gnu']
-  link line: [ /usr/lib/gcc/arm-linux-gnueabihf/4.9/collect2 -plugin /usr/lib/gcc/arm-linux-gnueabihf/4.9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper -plugin-opt=-fresolution=/tmp/cci61YOq.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X --hash-style=gnu -m armelf_linux_eabi -o cmTC_5989b /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crt1.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crti.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtbegin.o -L/usr/lib/gcc/arm-linux-gnueabihf/4.9 -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../.. -L/lib/arm-linux-gnueabihf -L/usr/lib/arm-linux-gnueabihf CMakeFiles/cmTC_5989b.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtend.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_ad8e6' '-rdynamic' '-march=armv6' '-mfloat-abi=hard' '-mfpu=vfp' '-mtls-dialect=gnu']
+  link line: [ /usr/lib/gcc/arm-linux-gnueabihf/4.9/collect2 -plugin /usr/lib/gcc/arm-linux-gnueabihf/4.9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper -plugin-opt=-fresolution=/tmp/ccv43vmi.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/ --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X --hash-style=gnu -m armelf_linux_eabi -o cmTC_ad8e6 /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crt1.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crti.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtbegin.o -L/usr/lib/gcc/arm-linux-gnueabihf/4.9 -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../.. -L/lib/arm-linux-gnueabihf -L/usr/lib/arm-linux-gnueabihf CMakeFiles/cmTC_ad8e6.dir/CMakeCCompilerABI.c.o -lgcc --as-needed -lgcc_s --no-as-needed -lc -lgcc --as-needed -lgcc_s --no-as-needed /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtend.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crtn.o]
     arg [/usr/lib/gcc/arm-linux-gnueabihf/4.9/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/lib/gcc/arm-linux-gnueabihf/4.9/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/cci61YOq.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccv43vmi.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -108,7 +108,7 @@ Parsed C implicit link information from above output:
     arg [-m] ==> ignore
     arg [armelf_linux_eabi] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_5989b] ==> ignore
+    arg [cmTC_ad8e6] ==> ignore
     arg [/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crt1.o] ==> ignore
     arg [/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crti.o] ==> ignore
     arg [/usr/lib/gcc/arm-linux-gnueabihf/4.9/crtbegin.o] ==> ignore
@@ -117,7 +117,7 @@ Parsed C implicit link information from above output:
     arg [-L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../..] ==> dir [/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../..]
     arg [-L/lib/arm-linux-gnueabihf] ==> dir [/lib/arm-linux-gnueabihf]
     arg [-L/usr/lib/arm-linux-gnueabihf] ==> dir [/usr/lib/arm-linux-gnueabihf]
-    arg [CMakeFiles/cmTC_5989b.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [CMakeFiles/cmTC_ad8e6.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [-lgcc] ==> lib [gcc]
     arg [--as-needed] ==> ignore
     arg [-lgcc_s] ==> lib [gcc_s]
@@ -148,14 +148,14 @@ Parsed C implicit link information from above output:
 Detecting C [-std=c11] compiler features compiled with the following output:
 Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_c9e85/fast"
-/usr/bin/make -f CMakeFiles/cmTC_c9e85.dir/build.make CMakeFiles/cmTC_c9e85.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_f194f/fast"
+/usr/bin/make -f CMakeFiles/cmTC_f194f.dir/build.make CMakeFiles/cmTC_f194f.dir/build
 make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_c9e85.dir/feature_tests.c.o
-/usr/bin/cc    -std=c11 -o CMakeFiles/cmTC_c9e85.dir/feature_tests.c.o   -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.c
-Linking C executable cmTC_c9e85
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c9e85.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTC_c9e85.dir/feature_tests.c.o  -o cmTC_c9e85 -rdynamic 
+Building C object CMakeFiles/cmTC_f194f.dir/feature_tests.c.o
+/usr/bin/cc    -std=c11 -o CMakeFiles/cmTC_f194f.dir/feature_tests.c.o   -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.c
+Linking C executable cmTC_f194f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f194f.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_f194f.dir/feature_tests.c.o  -o cmTC_f194f -rdynamic 
 make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
 
 
@@ -168,14 +168,14 @@ make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabbe
 Detecting C [-std=c99] compiler features compiled with the following output:
 Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_20b23/fast"
-/usr/bin/make -f CMakeFiles/cmTC_20b23.dir/build.make CMakeFiles/cmTC_20b23.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_347e0/fast"
+/usr/bin/make -f CMakeFiles/cmTC_347e0.dir/build.make CMakeFiles/cmTC_347e0.dir/build
 make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_20b23.dir/feature_tests.c.o
-/usr/bin/cc    -std=c99 -o CMakeFiles/cmTC_20b23.dir/feature_tests.c.o   -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.c
-Linking C executable cmTC_20b23
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_20b23.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTC_20b23.dir/feature_tests.c.o  -o cmTC_20b23 -rdynamic 
+Building C object CMakeFiles/cmTC_347e0.dir/feature_tests.c.o
+/usr/bin/cc    -std=c99 -o CMakeFiles/cmTC_347e0.dir/feature_tests.c.o   -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.c
+Linking C executable cmTC_347e0
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_347e0.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_347e0.dir/feature_tests.c.o  -o cmTC_347e0 -rdynamic 
 make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
 
 
@@ -188,14 +188,14 @@ make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabbe
 Detecting C [-std=c90] compiler features compiled with the following output:
 Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_d8359/fast"
-/usr/bin/make -f CMakeFiles/cmTC_d8359.dir/build.make CMakeFiles/cmTC_d8359.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_49a98/fast"
+/usr/bin/make -f CMakeFiles/cmTC_49a98.dir/build.make CMakeFiles/cmTC_49a98.dir/build
 make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_d8359.dir/feature_tests.c.o
-/usr/bin/cc    -std=c90 -o CMakeFiles/cmTC_d8359.dir/feature_tests.c.o   -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.c
-Linking C executable cmTC_d8359
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d8359.dir/link.txt --verbose=1
-/usr/bin/cc       CMakeFiles/cmTC_d8359.dir/feature_tests.c.o  -o cmTC_d8359 -rdynamic 
+Building C object CMakeFiles/cmTC_49a98.dir/feature_tests.c.o
+/usr/bin/cc    -std=c90 -o CMakeFiles/cmTC_49a98.dir/feature_tests.c.o   -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.c
+Linking C executable cmTC_49a98
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_49a98.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_49a98.dir/feature_tests.c.o  -o cmTC_49a98 -rdynamic 
 make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
 
 
@@ -206,28 +206,28 @@ make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabbe
 Determining if the CXX compiler works passed with the following output:
 Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_32667/fast"
-/usr/bin/make -f CMakeFiles/cmTC_32667.dir/build.make CMakeFiles/cmTC_32667.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_701c8/fast"
+/usr/bin/make -f CMakeFiles/cmTC_701c8.dir/build.make CMakeFiles/cmTC_701c8.dir/build
 make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_32667.dir/testCXXCompiler.cxx.o
-/usr/bin/c++      -o CMakeFiles/cmTC_32667.dir/testCXXCompiler.cxx.o -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
-Linking CXX executable cmTC_32667
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_32667.dir/link.txt --verbose=1
-/usr/bin/c++        CMakeFiles/cmTC_32667.dir/testCXXCompiler.cxx.o  -o cmTC_32667 -rdynamic 
+Building CXX object CMakeFiles/cmTC_701c8.dir/testCXXCompiler.cxx.o
+/usr/bin/c++      -o CMakeFiles/cmTC_701c8.dir/testCXXCompiler.cxx.o -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTC_701c8
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_701c8.dir/link.txt --verbose=1
+/usr/bin/c++        CMakeFiles/cmTC_701c8.dir/testCXXCompiler.cxx.o  -o cmTC_701c8 -rdynamic 
 make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
 
 
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_08949/fast"
-/usr/bin/make -f CMakeFiles/cmTC_08949.dir/build.make CMakeFiles/cmTC_08949.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_bb213/fast"
+/usr/bin/make -f CMakeFiles/cmTC_bb213.dir/build.make CMakeFiles/cmTC_bb213.dir/build
 make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_08949.dir/CMakeCXXCompilerABI.cpp.o
-/usr/bin/c++      -o CMakeFiles/cmTC_08949.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.6/Modules/CMakeCXXCompilerABI.cpp
-Linking CXX executable cmTC_08949
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_08949.dir/link.txt --verbose=1
-/usr/bin/c++       -v CMakeFiles/cmTC_08949.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_08949 -rdynamic  
+Building CXX object CMakeFiles/cmTC_bb213.dir/CMakeCXXCompilerABI.cpp.o
+/usr/bin/c++      -o CMakeFiles/cmTC_bb213.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.6/Modules/CMakeCXXCompilerABI.cpp
+Linking CXX executable cmTC_bb213
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bb213.dir/link.txt --verbose=1
+/usr/bin/c++       -v CMakeFiles/cmTC_bb213.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_bb213 -rdynamic  
 Using built-in specs.
 COLLECT_GCC=/usr/bin/c++
 COLLECT_LTO_WRAPPER=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper
@@ -237,8 +237,8 @@ Thread model: posix
 gcc version 4.9.2 (Raspbian 4.9.2-10+deb8u2) 
 COMPILER_PATH=/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/
 LIBRARY_PATH=/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../:/lib/arm-linux-gnueabihf/:/lib/:/usr/lib/arm-linux-gnueabihf/:/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_08949' '-rdynamic' '-shared-libgcc' '-march=armv6' '-mfloat-abi=hard' '-mfpu=vfp' '-mtls-dialect=gnu'
- /usr/lib/gcc/arm-linux-gnueabihf/4.9/collect2 -plugin /usr/lib/gcc/arm-linux-gnueabihf/4.9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper -plugin-opt=-fresolution=/tmp/cc56AiED.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/ --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X --hash-style=gnu -m armelf_linux_eabi -o cmTC_08949 /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crt1.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crti.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtbegin.o -L/usr/lib/gcc/arm-linux-gnueabihf/4.9 -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../.. -L/lib/arm-linux-gnueabihf -L/usr/lib/arm-linux-gnueabihf CMakeFiles/cmTC_08949.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtend.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_bb213' '-rdynamic' '-shared-libgcc' '-march=armv6' '-mfloat-abi=hard' '-mfpu=vfp' '-mtls-dialect=gnu'
+ /usr/lib/gcc/arm-linux-gnueabihf/4.9/collect2 -plugin /usr/lib/gcc/arm-linux-gnueabihf/4.9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper -plugin-opt=-fresolution=/tmp/cc5a2Rbj.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/ --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X --hash-style=gnu -m armelf_linux_eabi -o cmTC_bb213 /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crt1.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crti.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtbegin.o -L/usr/lib/gcc/arm-linux-gnueabihf/4.9 -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../.. -L/lib/arm-linux-gnueabihf -L/usr/lib/arm-linux-gnueabihf CMakeFiles/cmTC_bb213.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtend.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crtn.o
 make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
 
 
@@ -246,14 +246,14 @@ Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_08949/fast"]
-  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_08949.dir/build.make CMakeFiles/cmTC_08949.dir/build]
+  ignore line: [Run Build Command:"/usr/bin/make" "cmTC_bb213/fast"]
+  ignore line: [/usr/bin/make -f CMakeFiles/cmTC_bb213.dir/build.make CMakeFiles/cmTC_bb213.dir/build]
   ignore line: [make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp']
-  ignore line: [Building CXX object CMakeFiles/cmTC_08949.dir/CMakeCXXCompilerABI.cpp.o]
-  ignore line: [/usr/bin/c++      -o CMakeFiles/cmTC_08949.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.6/Modules/CMakeCXXCompilerABI.cpp]
-  ignore line: [Linking CXX executable cmTC_08949]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_08949.dir/link.txt --verbose=1]
-  ignore line: [/usr/bin/c++       -v CMakeFiles/cmTC_08949.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_08949 -rdynamic  ]
+  ignore line: [Building CXX object CMakeFiles/cmTC_bb213.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/usr/bin/c++      -o CMakeFiles/cmTC_bb213.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.6/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Linking CXX executable cmTC_bb213]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_bb213.dir/link.txt --verbose=1]
+  ignore line: [/usr/bin/c++       -v CMakeFiles/cmTC_bb213.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_bb213 -rdynamic  ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/bin/c++]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper]
@@ -263,13 +263,13 @@ Parsed CXX implicit link information from above output:
   ignore line: [gcc version 4.9.2 (Raspbian 4.9.2-10+deb8u2) ]
   ignore line: [COMPILER_PATH=/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/]
   ignore line: [LIBRARY_PATH=/usr/lib/gcc/arm-linux-gnueabihf/4.9/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/:/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../:/lib/arm-linux-gnueabihf/:/lib/:/usr/lib/arm-linux-gnueabihf/:/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_08949' '-rdynamic' '-shared-libgcc' '-march=armv6' '-mfloat-abi=hard' '-mfpu=vfp' '-mtls-dialect=gnu']
-  link line: [ /usr/lib/gcc/arm-linux-gnueabihf/4.9/collect2 -plugin /usr/lib/gcc/arm-linux-gnueabihf/4.9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper -plugin-opt=-fresolution=/tmp/cc56AiED.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/ --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X --hash-style=gnu -m armelf_linux_eabi -o cmTC_08949 /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crt1.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crti.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtbegin.o -L/usr/lib/gcc/arm-linux-gnueabihf/4.9 -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../.. -L/lib/arm-linux-gnueabihf -L/usr/lib/arm-linux-gnueabihf CMakeFiles/cmTC_08949.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtend.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_bb213' '-rdynamic' '-shared-libgcc' '-march=armv6' '-mfloat-abi=hard' '-mfpu=vfp' '-mtls-dialect=gnu']
+  link line: [ /usr/lib/gcc/arm-linux-gnueabihf/4.9/collect2 -plugin /usr/lib/gcc/arm-linux-gnueabihf/4.9/liblto_plugin.so -plugin-opt=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper -plugin-opt=-fresolution=/tmp/cc5a2Rbj.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/ --build-id --eh-frame-hdr -export-dynamic -dynamic-linker /lib/ld-linux-armhf.so.3 -X --hash-style=gnu -m armelf_linux_eabi -o cmTC_bb213 /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crt1.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crti.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtbegin.o -L/usr/lib/gcc/arm-linux-gnueabihf/4.9 -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf -L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../.. -L/lib/arm-linux-gnueabihf -L/usr/lib/arm-linux-gnueabihf CMakeFiles/cmTC_bb213.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/arm-linux-gnueabihf/4.9/crtend.o /usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crtn.o]
     arg [/usr/lib/gcc/arm-linux-gnueabihf/4.9/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/lib/gcc/arm-linux-gnueabihf/4.9/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/lib/gcc/arm-linux-gnueabihf/4.9/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/cc56AiED.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/cc5a2Rbj.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -286,7 +286,7 @@ Parsed CXX implicit link information from above output:
     arg [-m] ==> ignore
     arg [armelf_linux_eabi] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_08949] ==> ignore
+    arg [cmTC_bb213] ==> ignore
     arg [/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crt1.o] ==> ignore
     arg [/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../../arm-linux-gnueabihf/crti.o] ==> ignore
     arg [/usr/lib/gcc/arm-linux-gnueabihf/4.9/crtbegin.o] ==> ignore
@@ -295,7 +295,7 @@ Parsed CXX implicit link information from above output:
     arg [-L/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../..] ==> dir [/usr/lib/gcc/arm-linux-gnueabihf/4.9/../../..]
     arg [-L/lib/arm-linux-gnueabihf] ==> dir [/lib/arm-linux-gnueabihf]
     arg [-L/usr/lib/arm-linux-gnueabihf] ==> dir [/usr/lib/arm-linux-gnueabihf]
-    arg [CMakeFiles/cmTC_08949.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [CMakeFiles/cmTC_bb213.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
     arg [-lstdc++] ==> lib [stdc++]
     arg [-lm] ==> lib [m]
     arg [-lgcc_s] ==> lib [gcc_s]
@@ -324,14 +324,14 @@ Parsed CXX implicit link information from above output:
 Detecting CXX [-std=c++14] compiler features compiled with the following output:
 Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_aa7a1/fast"
-/usr/bin/make -f CMakeFiles/cmTC_aa7a1.dir/build.make CMakeFiles/cmTC_aa7a1.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_b8a62/fast"
+/usr/bin/make -f CMakeFiles/cmTC_b8a62.dir/build.make CMakeFiles/cmTC_b8a62.dir/build
 make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_aa7a1.dir/feature_tests.cxx.o
-/usr/bin/c++     -std=c++14 -o CMakeFiles/cmTC_aa7a1.dir/feature_tests.cxx.o -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_aa7a1
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_aa7a1.dir/link.txt --verbose=1
-/usr/bin/c++        CMakeFiles/cmTC_aa7a1.dir/feature_tests.cxx.o  -o cmTC_aa7a1 -rdynamic 
+Building CXX object CMakeFiles/cmTC_b8a62.dir/feature_tests.cxx.o
+/usr/bin/c++     -std=c++14 -o CMakeFiles/cmTC_b8a62.dir/feature_tests.cxx.o -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_b8a62
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_b8a62.dir/link.txt --verbose=1
+/usr/bin/c++        CMakeFiles/cmTC_b8a62.dir/feature_tests.cxx.o  -o cmTC_b8a62 -rdynamic 
 make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
 
 
@@ -397,14 +397,14 @@ make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabbe
 Detecting CXX [-std=c++11] compiler features compiled with the following output:
 Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_e1575/fast"
-/usr/bin/make -f CMakeFiles/cmTC_e1575.dir/build.make CMakeFiles/cmTC_e1575.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_85c47/fast"
+/usr/bin/make -f CMakeFiles/cmTC_85c47.dir/build.make CMakeFiles/cmTC_85c47.dir/build
 make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_e1575.dir/feature_tests.cxx.o
-/usr/bin/c++     -std=c++11 -o CMakeFiles/cmTC_e1575.dir/feature_tests.cxx.o -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_e1575
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e1575.dir/link.txt --verbose=1
-/usr/bin/c++        CMakeFiles/cmTC_e1575.dir/feature_tests.cxx.o  -o cmTC_e1575 -rdynamic 
+Building CXX object CMakeFiles/cmTC_85c47.dir/feature_tests.cxx.o
+/usr/bin/c++     -std=c++11 -o CMakeFiles/cmTC_85c47.dir/feature_tests.cxx.o -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_85c47
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_85c47.dir/link.txt --verbose=1
+/usr/bin/c++        CMakeFiles/cmTC_85c47.dir/feature_tests.cxx.o  -o cmTC_85c47 -rdynamic 
 make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
 
 
@@ -470,14 +470,14 @@ make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabbe
 Detecting CXX [-std=c++98] compiler features compiled with the following output:
 Change Dir: /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp
 
-Run Build Command:"/usr/bin/make" "cmTC_f5aab/fast"
-/usr/bin/make -f CMakeFiles/cmTC_f5aab.dir/build.make CMakeFiles/cmTC_f5aab.dir/build
+Run Build Command:"/usr/bin/make" "cmTC_d06b6/fast"
+/usr/bin/make -f CMakeFiles/cmTC_d06b6.dir/build.make CMakeFiles/cmTC_d06b6.dir/build
 make[1]: Entering directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_f5aab.dir/feature_tests.cxx.o
-/usr/bin/c++     -std=c++98 -o CMakeFiles/cmTC_f5aab.dir/feature_tests.cxx.o -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.cxx
-Linking CXX executable cmTC_f5aab
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f5aab.dir/link.txt --verbose=1
-/usr/bin/c++        CMakeFiles/cmTC_f5aab.dir/feature_tests.cxx.o  -o cmTC_f5aab -rdynamic 
+Building CXX object CMakeFiles/cmTC_d06b6.dir/feature_tests.cxx.o
+/usr/bin/c++     -std=c++98 -o CMakeFiles/cmTC_d06b6.dir/feature_tests.cxx.o -c /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/feature_tests.cxx
+Linking CXX executable cmTC_d06b6
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d06b6.dir/link.txt --verbose=1
+/usr/bin/c++        CMakeFiles/cmTC_d06b6.dir/feature_tests.cxx.o  -o cmTC_d06b6 -rdynamic 
 make[1]: Leaving directory '/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/CMakeTmp'
 
 

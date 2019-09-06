@@ -17,7 +17,7 @@
 //       190427  Testing. issues with sensor. 
 //       190712  Add second IR sensor.
 //       190828  motion app was causing an issue; only one a time.
-//       190902  Starting grabber6; interprocess messaging. 
+//       190905  Starting grabber6; interprocess messaging.
 
 #include <iostream>
 #include <stdio.h>
@@ -51,6 +51,7 @@ struct args
 {
 	int threadNum;
 	bool run;
+	String commandStr;
 
 };
 
@@ -65,29 +66,58 @@ void* getCmdThread(void *passedArg) {
    int tid = threadArgs->threadNum;
 
    int cmdCnt = 0;
+   bool serverRunning = false;
+
+   SocketServer server(54321);
 
    while (threadArgs->run)
    {
 	   SocketServer server(54321);
-	   cout << "Listening for a connection control client ..." << endl;
-	   server.listen();
-	   cmdCnt = 0;
 
-	   while (threadArgs->run)
+	   cout << "Listening for a new control client to connect ..." << endl;
+	   string rcvStr = "NULL";
+	   int retVal = server.listen();
+	   if (retVal == -1)
+	   {
+		   cout << "!Trouble initiating server at given listed port." << endl;
+		   serverRunning = false;
+	   }
+	   else
+	   {
+		   serverRunning = true;
+		   cout << "Client connected." << endl;
+	   }
+
+
+	   cmdCnt = 0;
+	   while ( (threadArgs->run) && serverRunning )
 	   {
 		   try
 		   {
-			   string rec = server.receive(1024);
-			   if (rec == "") break;
-			   if (rec == "EOF") break;
+			   rcvStr = "NULL";
+			   rcvStr = server.receive(1024);
+			  // rcvStr = rcvStr.toLowerCase();
+
+			   if (rcvStr == "err" || rcvStr == "eof")
+			   {
+				   cout << "!Error while rcv msg from client, or connection closed by client." << endl;
+				   break;
+			   }
+
 			   cmdCnt++;
 			   cout << "-->> Client cmd count:  " << cmdCnt << endl;
-			   cout << "Received from the client [" << rec << "]" << endl;
+			   cout << "Received from the client [" << rcvStr << "]" << endl;
 
-			   string message("The Server says thanks! I love you!");
+			   string message("Ack cmd: " + rcvStr);
+
 			   cout << "Echo back: [" << message << "]" << endl;
 			   int cnt = server.send(message);
-			   if (cnt < 0)  break;
+			   if (cnt < 0)  break;                    // Some error; reset listen.
+
+			   if (rcvStr.compare("takeimage") == 0 )  threadArgs->commandStr = "takeimage";
+			   else if (rcvStr.compare("err") == 0 )   threadArgs->commandStr = "err";
+			   else  threadArgs->commandStr = "\ngetCmdThread: unk command from client: " + rcvStr;
+
 
 		   }
 		   catch (exception *ex)
@@ -172,11 +202,10 @@ int main(int argCnt, char** args)
 
     threadArgs->threadNum = 999;
     threadArgs->run = true;          // Flag used to shutdown
+    threadArgs->commandStr = "null";
+
 
     int rc = pthread_create( &processMsgThreadId, NULL, getCmdThread, (void *)(threadArgs) );
-
-
-
 
     // Initialize GPIO and image sources.
     //
@@ -252,6 +281,10 @@ int main(int argCnt, char** args)
 		bool useImageProc = false; // Use openCV image processing to detect movement.
 		bool useIRsensor = true;   // Use IR sensor to detect movement.
 
+		// Commands, internal or from external client.
+		//
+		bool sendPicPing = false;
+		bool takeImageCmd = false;
 
 		while (run)
 		{
@@ -266,7 +299,12 @@ int main(int argCnt, char** args)
 			std::string timestr(buffer);
 		   // std::cout << timestr << ": ";
 
-			bool sendPicPing = false;
+			cout << "commandStr: " + threadArgs->commandStr << endl;
+
+			// Check for imcoming commands.
+			//
+	        if (threadArgs->commandStr == "takeimage") takeImageCmd = true;         // Cmd rcvd to take an image.
+
 			if ( (timeinfo->tm_hour == 12) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
 			{
 				sendPicPing = true;
@@ -406,8 +444,11 @@ int main(int argCnt, char** args)
 				// Take two sets for images after line13 stays high for two counts (~200ms)
 				//
 				// ####
-				if( ((line13cnt >= 1) && (line13cnt <= 2)) || sendPicPing )   // On count 1 and 2, take images.
+				if( ((line13cnt >= 1) && (line13cnt <= 2))
+						|| sendPicPing
+						|| takeImageCmd  )   // On count 1 and 2, take/save images, or on command.
 				{
+
 					std::cout << timestr << ": ";
 					cout << "---IR motion sensor detected activity; GPIO line13 ---" << endl;
 					if(readyCam2) if( !util.isHeadless()) imshow(" **Cam2 -- Saved frame", frameCam2 );
@@ -417,6 +458,10 @@ int main(int argCnt, char** args)
 
 					util.saveImageFile( frameCam2, "c2", line13cnt , timeDateStr);
 					util.saveImageFile( frameCam2_cor, "c2eq", line13cnt , timeDateStr);
+
+					takeImageCmd = false;
+					sendPicPing = false;
+
 				} // End if line 18 cnt
 			} // End if use IR sensor.
 

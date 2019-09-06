@@ -113,3 +113,22 @@ using namespace std;
         }
 
 
+        uint Utils::mix(char m, uint s)
+		{
+		return ((s<<7) + ~(s>>3)) + ~m;
+		}
+
+		uint Utils::hash(const char * m)
+		{
+			return (*m) ? mix(*m,hash(m+1)) : 0;
+		}
+
+		uint Utils::hash(string str)
+		{
+			string msg = str.c_str();
+			char *writeBuffer =  msg.data();    // Will make a null terminate string.
+
+			return( hash( writeBuffer ) );
+		}
+
+

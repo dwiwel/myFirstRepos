@@ -27,7 +27,7 @@ int SocketServer::listen(){
     this->socketfd = socket(AF_INET, SOCK_STREAM, 0);
     if (this->socketfd < 0){
     	perror("Socket Server: error opening socket.\n");
-    	return 1;
+    	return -1;
     }
     bzero((char *) &serverAddress, sizeof(serverAddress));
     serverAddress.sin_family = AF_INET;
@@ -35,7 +35,7 @@ int SocketServer::listen(){
     serverAddress.sin_port = htons(this->portNumber);
     if (bind(socketfd, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0){
     	perror("Socket Server: error on binding the socket.\n");
-    	return 1;
+    	return -1;
     }
     ::listen(this->socketfd, 5);
     socklen_t clientLength = sizeof(this->clientAddress);
@@ -44,14 +44,17 @@ int SocketServer::listen(){
     		&clientLength);
     if (this->clientSocketfd < 0){
     	perror("Socket Server: Failed to bind the client socket properly.\n");
-    	return 1;
+    	return -1;
     }
     return 0;
 }
 
 int SocketServer::send(std::string message){
-	const char *writeBuffer = message.data();
-	int length = message.length();
+
+	string msg = message.c_str();
+	char *writeBuffer =   msg.data();    // Will make a null terminate string.
+
+	int length = msg.length();
     int n = write(this->clientSocketfd, writeBuffer, length+1);
     if (n < 0){
        perror("Socket Server: error writing to server socket.");
@@ -64,15 +67,16 @@ int SocketServer::send(std::string message){
 
 string SocketServer::receive(int size=1024)
 {
-    char readBuffer[size];
+    char readBuffer[size] = "";
+
     int n = read(this->clientSocketfd, readBuffer, sizeof(readBuffer));
 
     if (n < 0){
        perror("Socket Server: error reading from server socket.");
-       return ("");
+       return ("ERR");
     }
     else if (n == 0){
-	  return ("EOF");
+	  return ("NULL");
 	}
     return string(readBuffer);
 }

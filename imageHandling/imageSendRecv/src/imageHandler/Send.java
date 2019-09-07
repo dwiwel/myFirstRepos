@@ -63,23 +63,61 @@ import java.io.DataInputStream;
 
 // Thread to receive instructions via SMS text messages.  Not currently used. 
 //
-class RecvTxtMsgThread extends Thread {        // Thread not currently used; using xbee callback for SMS
+class RcvGrabberMsgThread extends Thread {      
 	
 	public boolean run = true;           // To stop thread gracefully.
-	
-		
+	public InputStream inputStream;
+	public DataInputStream dataInputStream;
+	public Socket socket;
+	public boolean connected = true;
+			
 	public void run()	
 	{
-		System.out.format("\n**-- Starting RecvTxtMsgThread to read SMS text messages (N/A)...\n");
+		System.out.format("\n---- Starting RecGrabberMsgThread to read msgs from grabber ...\n");		
+
+		while (run)
+		{
+			System.out.println("----Checking for incoming msg from grabber, if connected.");
+			if ( true )
+			{
+				try 
+				{
+					if (socket != null)
+					{
+				        inputStream = socket.getInputStream();
+				        dataInputStream = new DataInputStream(inputStream);
+				        
+						if (dataInputStream.available() > 0 )
+						{				  
+							String incomingMsg;
+							incomingMsg = dataInputStream.readLine();
+							System.out.println("------- Incoming msg receive: " + incomingMsg );
+						}
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			// End connected while
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		// End while run.
 		
-		System.out.format("\n**--  RecvTxtMsgThread done. \n");
+		System.out.format("\n**--  RcvGrabberMsgThread done. \n");
 	}
 		
 }
 // end class RecvTxtMsgThread.
 
 
-// Thread to connect to grabber app for sending commands (to take image)
+
+// Thread to connect to grabber app, init connection. (for sending commands to take image)
 //
 class GrabberControlThread extends Thread
 {
@@ -92,18 +130,20 @@ class GrabberControlThread extends Thread
     private OutputStream outputStream = null;
     private InputStream inputStream = null;
     
-    private DataOutputStream dataOutputStream = null;  
-    private DataInputStream dataInputStream = null;
-    private Socket socket = null;
+    public DataOutputStream dataOutputStream = null;  
+    public DataInputStream dataInputStream = null;
+    public Socket socket = null;
     public String cmdStr = "NULL";
     
-	@SuppressWarnings("deprecation")
+	//@SuppressWarnings("deprecation")
 	public void run()	
-	{
+	{		
+		System.out.println("----in GrabberControlThread::run.");
+		
 		// Keep trying to connect to image grabber app (server side).
 		//
 		try
-		{
+		{		
 	    	while (run)
 	    	{	    		
 	    		if (!connected)
@@ -112,10 +152,10 @@ class GrabberControlThread extends Thread
 	    			{
 				        socket = new Socket(serverName, port);		      
 				        
-				        OutputStream outputStream = socket.getOutputStream();					      
+				        outputStream = socket.getOutputStream();					      
 				        dataOutputStream = new DataOutputStream(outputStream);
 				        
-				        InputStream inputStream = socket.getInputStream();
+				        inputStream = socket.getInputStream();
 				        dataInputStream = new DataInputStream(inputStream);
 				        connected = true;
 	    			}
@@ -125,32 +165,31 @@ class GrabberControlThread extends Thread
 	    				System.out.println("!GrabberControlTread, trouble with starting listen connection, ex:" + ex );    				 
 	    				// ex.printStackTrace();
 	    			}
-	    			
 	    		}	       
-	    		
-	    		if (dataInputStream.available() > 0)
-	    		{
-	    			System.out.println("--Incoming data available: " + dataInputStream.readLine());
-	    		}
-	    		
-	    		
+	    			    		
 	    		Thread.sleep(3000);
 	    	} 
-	    	// End run while
-    	   
-           System.out.println("GrabberControlThread: Closing socket and terminating.");
+	    	// End run while    	   	
+	    	
+           System.out.println("---GrabberControlThread: Closing socket and terminating.");
            if (connected) dataOutputStream.close(); // close the output stream when we're done.
            if (connected) dataInputStream.close(); // close the output stream when we're done.
-           socket.close();
+           socket.close();           
            if (connected) connected = false;
-	   
+           run = false;
+           
 		} catch (InterruptedException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			connected = false;           // cause a reconnect.
-			System.out.println("!GrabberControlThread, unexpected ex: " + e);
-		}  
-                    
+			System.out.println("!!GrabberControlThread, ex: " + e);
+		}  catch (Exception e)
+		{
+			System.out.println("!!GrabberControlThread, unexpected ex: " + e);		
+		}
+                  
+		System.out.println("---- End of run thread.");
+		System.out.println("---- End of run thread.");
 	} // end of run.
 	
 	
@@ -179,6 +218,7 @@ class GrabberControlThread extends Thread
 		else 
 		{
 			System.out.println("!GrabberControlThread:sendGrabberCommand, not yet connected to grabber."); 	
+			connected = false;
 		}
 	}
     	
@@ -193,7 +233,7 @@ class GrabberControlThread extends Thread
 //
 class Send {
   
-	static String serverName = "73.40.197.83";  // Default BlueJay Server IP; NY Cir router to Dev10.
+	static String serverName = "73.40.197.83";  // Default BlueJay Server IP; NY Cir router. Port fowared to Dev10.
 	//static String serverName = "10.0.0.39";  // Dev7.
 	                                   
     /* Constants */
@@ -203,7 +243,7 @@ class Send {
     // TODO Replace with the baud rate of your sender module.  
     private static final int BAUD_RATE = 921600;	// 115200  230400  921600 (need to set XBee Cellular using XCTU)
     
-    private static int SERVER_PORT = 8207;                 // Server's listen port. (on DEV7 web server)
+    private static int SERVER_PORT = 8207;                 // Server's receiver app listen port. (on DEV7 web server)
 
     private static final IPProtocol PROTOCOL_TCP = IPProtocol.TCP;
     
@@ -214,7 +254,7 @@ class Send {
     @SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
 
-    	System.out.format("\n-- Starting BlueJay imageSend app rev 190716A ...\n");
+    	System.out.format("\n-- Starting BlueJay imageSend app rev 1909nn...\n");
     	
         String inputImagePath = "";
         String backupImagePath = "";
@@ -265,25 +305,31 @@ class Send {
 //    	Thread.sleep(500);
 //    	out.write("B");
 //    	Thread.sleep(500);
-//    	serPort.close();
-    	
-    	RecvTxtMsgThread recvThread = new RecvTxtMsgThread();         // Thread to receive SMS txt messages.
-    	recvThread.start();
-    	
-    	
-    	GrabberControlThread grabberControlThread = new GrabberControlThread();         // Thread to receive SMS txt messages.
-    	grabberControlThread.start();
-      
+//    	serPort.close();    	
     	
        	//List<String> results = new ArrayList<String>();
     	
     	boolean run = true;
-    	boolean connected = false;   // Flag to indicate a connection reset; timeout, no ack msg, etc.
+    	boolean connected = false;   // Flag to indicate the XBee connection status; timeouted, no ack msg, etc.
+    	                             // false will cause a reconnection attempt.
      	
+    	GrabberControlThread grabberControlThread = new GrabberControlThread();  // Thread to receive SMS txt messages.
+    	grabberControlThread.run = run;
+    	grabberControlThread.start();
+    	
+    	RcvGrabberMsgThread recvThread = new RcvGrabberMsgThread();         // Thread to receive TCP msgs from grabber.
+    	recvThread.run = run;    	
+    	recvThread.start();
+    	recvThread.connected = grabberControlThread.connected;    	
+    	recvThread.socket = grabberControlThread.socket;
+    	
     	// loop continuously, checking for (new) files in the /data/images dir and sending those images to server side.
     	//
     	while (run)
-    	{	    	    				
+    	{	    	    		
+    		recvThread.connected = grabberControlThread.connected;
+    		recvThread.socket = grabberControlThread.socket;
+    		
 			File devFile0 = new File(TTY_PORT_0);
 			File devFile1 = new File(TTY_PORT_1);	    			
 		    	   		

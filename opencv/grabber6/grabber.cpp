@@ -17,7 +17,7 @@
 //       190427  Testing. issues with sensor. 
 //       190712  Add second IR sensor.
 //       190828  motion app was causing an issue; only one a time.
-//       190905  Starting grabber6; interprocess messaging.
+//       190907  grabber6; interprocess messaging.
 
 #include <iostream>
 #include <stdio.h>
@@ -312,18 +312,26 @@ int main(int argCnt, char** args)
 	        	cout << " >>>> External Command received to take image. \n";
 	        }
 
-			if ( (timeinfo->tm_hour == 12) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
-			{
-				sendPicPing = true;
-				std::cout << timestr << ": ";
-				cout << " Sending noon ping image.\n";
-			}
-			if ( (timeinfo->tm_hour == 0) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
-			{
-				sendPicPing = true;
-				std::cout << timestr << ": ";
-				cout << " Sending midnight ping image.\n";
-			}
+//			if ( (timeinfo->tm_hour == 12) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
+//			{
+//				sendPicPing = true;
+//				std::cout << timestr << ": ";
+//				cout << " Sending noon ping image.\n";
+//			}
+//			if ( (timeinfo->tm_hour == 0) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
+//			{
+//				sendPicPing = true;
+//				std::cout << timestr << ": ";
+//				cout << " Sending midnight ping image.\n";
+//			}
+
+			if (  (( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 )) || (( timeinfo->tm_min == 30 ) && ( timeinfo->tm_sec == 1 )) )
+				{
+					sendPicPing = true;
+					std::cout << timestr << ": ";
+					cout << " Sending half-hour ping image.\n";
+				}
+
 
 			try
 			{

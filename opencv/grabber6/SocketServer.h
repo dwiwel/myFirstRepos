@@ -8,14 +8,14 @@
 #ifndef SOCKETSERVER_H_
 #define SOCKETSERVER_H_
 
-
-
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <string>
 
+#include "SocketServer.h"
 
+using namespace std;
 
 class SocketServer {
 private:
@@ -30,6 +30,7 @@ public:
    virtual int listen();
    virtual int send(std::string message);
    virtual std::string receive(int size);
+   virtual int receive(char *readbuffer, int size);
    virtual ~SocketServer();
 };
 

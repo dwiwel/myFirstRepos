@@ -7,7 +7,6 @@
  */
 
 
-
 #include "SocketServer.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,10 +50,10 @@ int SocketServer::listen(){
 
 int SocketServer::send(std::string message){
 
-	string msg = message.c_str();
-	char *writeBuffer =   msg.data();    // Will make a null terminate string.
+	//string msg = message.c_str();  // Will make a null terminated string.
+	char *writeBuffer =  message.data();
 
-	int length = msg.length();
+	int length = message.length();
     int n = write(this->clientSocketfd, writeBuffer, length+1);
     if (n < 0){
        perror("Socket Server: error writing to server socket.");
@@ -67,9 +66,10 @@ int SocketServer::send(std::string message){
 
 string SocketServer::receive(int size=1024)
 {
-    char readBuffer[size] = "";
+    char readBuffer[size];
+    memset (readBuffer, 0, size);
 
-    int n = read(this->clientSocketfd, readBuffer, sizeof(readBuffer));
+    int n = read(this->clientSocketfd, readBuffer, size);
 
     if (n < 0){
        perror("Socket Server: error reading from server socket.");
@@ -80,6 +80,24 @@ string SocketServer::receive(int size=1024)
 	}
     return string(readBuffer);
 }
+
+
+// may not work.  added later.
+int SocketServer::receive(char *readBuffer, int size=1024)
+{
+	memset (readBuffer, 0, size);
+    int n = read(this->clientSocketfd, readBuffer, sizeof(readBuffer));
+
+    if (n < 0){
+       perror("SocketServer::receive: error reading from server socket.");
+       return -1;
+    }
+    else if (n == 0){
+	  return 0;
+	}
+    return n;
+}
+
 
 
 SocketServer::~SocketServer() {

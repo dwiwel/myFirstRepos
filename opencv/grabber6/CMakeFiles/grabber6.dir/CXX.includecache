@@ -27,6 +27,8 @@ netinet/in.h
 -
 string
 -
+SocketServer.h
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/SocketServer.h
 
 /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/grabber.cpp
 iostream

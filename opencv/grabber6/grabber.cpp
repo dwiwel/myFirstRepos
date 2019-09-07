@@ -68,14 +68,13 @@ void* getCmdThread(void *passedArg) {
    int cmdCnt = 0;
    bool serverRunning = false;
 
-   SocketServer server(54321);
+
 
    while (threadArgs->run)
    {
-	   SocketServer server(54321);
+	   SocketServer server(8210);      // This is for imageSend client to connect in.
 
 	   cout << "Listening for a new control client to connect ..." << endl;
-	   string rcvStr = "NULL";
 	   int retVal = server.listen();
 	   if (retVal == -1)
 	   {
@@ -88,15 +87,20 @@ void* getCmdThread(void *passedArg) {
 		   cout << "Client connected." << endl;
 	   }
 
-
 	   cmdCnt = 0;
+	   char readBuffer[1024] = "";
 	   while ( (threadArgs->run) && serverRunning )
 	   {
 		   try
 		   {
-			   rcvStr = "NULL";
-			   rcvStr = server.receive(1024);
-			  // rcvStr = rcvStr.toLowerCase();
+			   string rcvStr = server.receive(1024);
+			   //rcvStr = rcvStr.toLowerCase();
+
+//			   server.receive(readBuffer, 1024);
+//			   rcvStr = string(readBuffer);
+
+				//string msg = message.c_str();
+				//char *writeBuffer =   msg.data();    // Will make a null terminate string.
 
 			   if (rcvStr == "err" || rcvStr == "eof")
 			   {
@@ -157,7 +161,6 @@ int main(int argCnt, char** args)
     cout << "rev: 190717. \n" << endl;
     cout << "Uses the GPIO to get signal from IR sensor. Root privilege is required to run.\n" << endl;
 
-
     // opencv objects.
     //
 	Mat frameCam1;        // RPi cam Current frame read.   (1280x960)     OpenCV matrices (for frames)
@@ -203,7 +206,6 @@ int main(int argCnt, char** args)
     threadArgs->threadNum = 999;
     threadArgs->run = true;          // Flag used to shutdown
     threadArgs->commandStr = "null";
-
 
     int rc = pthread_create( &processMsgThreadId, NULL, getCmdThread, (void *)(threadArgs) );
 
@@ -263,9 +265,9 @@ int main(int argCnt, char** args)
 		cout << "   msg: " << msgStr << endl;
 	}
 
-    signal(15, raiseFlag);
-    signal(SIGINT, raiseFlag);
-    signal(2, raiseFlag);
+    //signal(15, raiseFlag);
+    //signal(SIGINT, raiseFlag);
+    //signal(2, raiseFlag);
 
 	// Main Loop to check IR sensor and grab images.
     try
@@ -299,11 +301,16 @@ int main(int argCnt, char** args)
 			std::string timestr(buffer);
 		   // std::cout << timestr << ": ";
 
-			cout << "commandStr: " + threadArgs->commandStr << endl;
+			//cout << "commandStr: " + threadArgs->commandStr << endl;
 
-			// Check for imcoming commands.
+			// Check for incoming commands (from socket reading thread above).
 			//
-	        if (threadArgs->commandStr == "takeimage") takeImageCmd = true;         // Cmd rcvd to take an image.
+	        if (threadArgs->commandStr == "takeimage")
+	        {
+	        	takeImageCmd = true;         // Cmd rcvd to take an image.
+	        	threadArgs->commandStr = ">>>>> ack takeimage";
+	        	cout << " >>>> External Command received to take image. \n";
+	        }
 
 			if ( (timeinfo->tm_hour == 12) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
 			{
@@ -443,7 +450,6 @@ int main(int argCnt, char** args)
 
 				// Take two sets for images after line13 stays high for two counts (~200ms)
 				//
-				// ####
 				if( ((line13cnt >= 1) && (line13cnt <= 2))
 						|| sendPicPing
 						|| takeImageCmd  )   // On count 1 and 2, take/save images, or on command.
@@ -459,7 +465,7 @@ int main(int argCnt, char** args)
 					util.saveImageFile( frameCam2, "c2", line13cnt , timeDateStr);
 					util.saveImageFile( frameCam2_cor, "c2eq", line13cnt , timeDateStr);
 
-					takeImageCmd = false;
+					takeImageCmd = false;      // Command has been executed.
 					sendPicPing = false;
 
 				} // End if line 18 cnt

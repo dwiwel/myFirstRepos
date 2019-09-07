@@ -14,6 +14,7 @@
 // 181227 Adding command line arg for server's IP address.
 // 190715B Testing. Cleanup.
 // 190717 Added SMS receiver, for future commands. 
+// 190996 Adding feature to execute commands via SMS.  
 
 package imageHandler;
 
@@ -28,6 +29,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
+import java.io.InputStream;
+
+
 import java.net.*;
 
 import java.net.Inet4Address;
@@ -45,6 +49,7 @@ import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,15 +57,18 @@ import java.util.List;
 import java.nio.file.CopyOption.*;
 import java.nio.file.StandardCopyOption.*;
 
-
-
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.DataInputStream;
 
 // Thread to receive instructions via SMS text messages.  Not currently used. 
 //
 class RecvTxtMsgThread extends Thread {        // Thread not currently used; using xbee callback for SMS
 	
+	public boolean run = true;           // To stop thread gracefully.
 	
-	public void run()
+		
+	public void run()	
 	{
 		System.out.format("\n**-- Starting RecvTxtMsgThread to read SMS text messages (N/A)...\n");
 		
@@ -68,6 +76,115 @@ class RecvTxtMsgThread extends Thread {        // Thread not currently used; usi
 	}
 		
 }
+// end class RecvTxtMsgThread.
+
+
+// Thread to connect to grabber app for sending commands (to take image)
+//
+class GrabberControlThread extends Thread
+{
+	
+    public String serverName = "localhost";
+    public int port = 8210;                     // Server listen port, on grabber
+    public boolean connected = false;
+    public boolean run = true;
+    
+    private OutputStream outputStream = null;
+    private InputStream inputStream = null;
+    
+    private DataOutputStream dataOutputStream = null;  
+    private DataInputStream dataInputStream = null;
+    private Socket socket = null;
+    public String cmdStr = "NULL";
+    
+	@SuppressWarnings("deprecation")
+	public void run()	
+	{
+		// Keep trying to connect to image grabber app (server side).
+		//
+		try
+		{
+	    	while (run)
+	    	{	    		
+	    		if (!connected)
+	    		{
+	    			try
+	    			{
+				        socket = new Socket(serverName, port);		      
+				        
+				        OutputStream outputStream = socket.getOutputStream();					      
+				        dataOutputStream = new DataOutputStream(outputStream);
+				        
+				        InputStream inputStream = socket.getInputStream();
+				        dataInputStream = new DataInputStream(inputStream);
+				        connected = true;
+	    			}
+	    			catch (Exception ex)
+	    			{
+	    				connected = false;
+	    				System.out.println("!GrabberControlTread, trouble with starting listen connection, ex:" + ex );    				 
+	    				// ex.printStackTrace();
+	    			}
+	    			
+	    		}	       
+	    		
+	    		if (dataInputStream.available() > 0)
+	    		{
+	    			System.out.println("--Incoming data available: " + dataInputStream.readLine());
+	    		}
+	    		
+	    		
+	    		Thread.sleep(3000);
+	    	} 
+	    	// End run while
+    	   
+           System.out.println("GrabberControlThread: Closing socket and terminating.");
+           if (connected) dataOutputStream.close(); // close the output stream when we're done.
+           if (connected) dataInputStream.close(); // close the output stream when we're done.
+           socket.close();
+           if (connected) connected = false;
+	   
+		} catch (InterruptedException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			connected = false;           // cause a reconnect.
+			System.out.println("!GrabberControlThread, unexpected ex: " + e);
+		}  
+                    
+	} // end of run.
+	
+	
+	public void sendGrabberCommand (String cmdStr) 
+	{		
+		//String cmdStrVal = cmdStr;
+		//byte bytesVal[] = cmdStrVal.getBytes(cmdStrVal);
+		
+		if (connected)
+		{	        
+	        try 
+	        {
+	        	System.out.println("\nSending command to grabber: " + cmdStr);
+	        		        	
+	        	byte buffer[] = cmdStr.getBytes();   // This works !!!
+	        	dataOutputStream.write(buffer);	         
+			}
+	        catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				System.out.println("!!!!Some trouble in sendGrabberCommand to grabber: " + e);
+				e.printStackTrace();
+				connected = false;           // should cause a reconnect attempt.
+			} 	        
+		}
+		else 
+		{
+			System.out.println("!GrabberControlThread:sendGrabberCommand, not yet connected to grabber."); 	
+		}
+	}
+    	
+}    
+// end class GrabberControlThread.     
+        
 
 
 
@@ -86,7 +203,7 @@ class Send {
     // TODO Replace with the baud rate of your sender module.  
     private static final int BAUD_RATE = 921600;	// 115200  230400  921600 (need to set XBee Cellular using XCTU)
     
-    private static int SERVER_PORT = 8207;                 // Server's listen port. (on DEV7)
+    private static int SERVER_PORT = 8207;                 // Server's listen port. (on DEV7 web server)
 
     private static final IPProtocol PROTOCOL_TCP = IPProtocol.TCP;
     
@@ -153,6 +270,11 @@ class Send {
     	RecvTxtMsgThread recvThread = new RecvTxtMsgThread();         // Thread to receive SMS txt messages.
     	recvThread.start();
     	
+    	
+    	GrabberControlThread grabberControlThread = new GrabberControlThread();         // Thread to receive SMS txt messages.
+    	grabberControlThread.start();
+      
+    	
        	//List<String> results = new ArrayList<String>();
     	
     	boolean run = true;
@@ -192,7 +314,8 @@ class Send {
 	   	 	    	
 	   	    		   	MySMSReceiveListener listener =  new MySMSReceiveListener();
 	   	    		   	listener.myDevice = myDevice;	   	    		   	
-	   	    			myDevice.addSMSListener(listener);     // cb for incoming msgs.
+	   	    			myDevice.addSMSListener(listener);     // cb for incoming data msgs.
+	   	    			listener.grabberThread = grabberControlThread;
 	   				
 	   	    			System.out.println("\n>> Waiting for SMS...");
 	   	    			
@@ -235,8 +358,7 @@ class Send {
     	    	    	connected = false;     // not connected yet, so try to connected again.
     	    	    	
     	    	    	System.out.println("!! TTY_USB Device file does not exist. Is device connected? ");
-    	    	    	Thread.sleep(1000);
-    	    	    	break;
+    	    	    	Thread.sleep(1000);    	    	  
     	    	    }
 		   		}
     	    	catch (XBeeException e) 
@@ -245,14 +367,12 @@ class Send {
     			    System.out.println(" !! Error opening ZigBee cellular myDevice: exc: " + e.getMessage() + "\n");
     			    System.out.println("\n     StackTrace: ");
     			    e.printStackTrace();
-    			    break;
+    			  
 		   		}
 	    	} // End if !connected.
     		
-    		
-    		
-    		
-    		
+    		    		
+    		grabberControlThread.sendGrabberCommand( "ping" );   //####    	
     		
 		    System.out.println("\n>> Checking for existance of new image files, make connection to server ... ");
     		File[] files = new File("/data/images").listFiles();
@@ -579,7 +699,7 @@ class Send {
     	
     	recvThread.stop();    	
     	
-        System.out.println("\n---- End of BluJay Producer Client execution.");
+        System.out.println("\n---- End of BlueJay Producer Client execution.");
 
     }
 }

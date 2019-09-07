@@ -1,0 +1,266 @@
+11:14:06 **** Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+13:31:36 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+13:32:01 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+13:32:14 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+13:33:47 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+13:34:23 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+13:34:41 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+13:35:44 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+13:38:10 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+13:39:15 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+05:15:38 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+05:16:31 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+05:17:01 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+05:17:40 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+08:13:09 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+/home/pi/java_proj/gitHub/exploringrpi/chp12/clientserver/client.cpp: In function ‘int main(int, char**)’:
+/home/pi/java_proj/gitHub/exploringrpi/chp12/clientserver/client.cpp:16:11: error: ‘run’ was not declared in this scope
+    while (run == true)
+           ^
+CMakeFiles/client.dir/build.make:62: recipe for target 'CMakeFiles/client.dir/client.cpp.o' failed
+make[2]: *** [CMakeFiles/client.dir/client.cpp.o] Error 1
+CMakeFiles/Makefile2:67: recipe for target 'CMakeFiles/client.dir/all' failed
+make[1]: *** [CMakeFiles/client.dir/all] Error 2
+Makefile:83: recipe for target 'all' failed
+make: *** [all] Error 2
+08:13:39 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+08:14:53 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+08:17:02 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+08:23:11 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Building CXX object CMakeFiles/client.dir/network/SocketClient.cpp.o
+[100%] Linking CXX executable client
+[100%] Built target client
+08:32:34 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+08:34:40 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+08:35:38 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+08:36:18 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+08:37:52 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+08:38:40 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+08:39:47 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+08:42:00 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+08:46:10 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+/home/pi/java_proj/gitHub/exploringrpi/chp12/clientserver/client.cpp: In function ‘int main(int, char**)’:
+/home/pi/java_proj/gitHub/exploringrpi/chp12/clientserver/client.cpp:43:12: error: ‘sleep’ was not declared in this scope
+     sleep(2);
+            ^
+make[2]: *** [CMakeFiles/client.dir/client.cpp.o] Error 1
+CMakeFiles/client.dir/build.make:62: recipe for target 'CMakeFiles/client.dir/client.cpp.o' failed
+CMakeFiles/Makefile2:67: recipe for target 'CMakeFiles/client.dir/all' failed
+make[1]: *** [CMakeFiles/client.dir/all] Error 2
+make: *** [all] Error 2
+Makefile:83: recipe for target 'all' failed
+08:48:00 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Building CXX object CMakeFiles/client.dir/network/SocketClient.cpp.o
+[100%] Linking CXX executable client
+[100%] Built target client
+08:48:12 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+08:49:49 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+08:50:47 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+08:51:59 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+/home/pi/java_proj/gitHub/exploringrpi/chp12/clientserver/client.cpp: In function ‘int main(int, char**)’:
+/home/pi/java_proj/gitHub/exploringrpi/chp12/clientserver/client.cpp:45:32: error: expression cannot be used as a function
+     if (sc.isClientConnected()() ) sc.disconnectFromServer();
+                                ^
+CMakeFiles/client.dir/build.make:62: recipe for target 'CMakeFiles/client.dir/client.cpp.o' failed
+CMakeFiles/Makefile2:67: recipe for target 'CMakeFiles/client.dir/all' failed
+Makefile:83: recipe for target 'all' failed
+make[2]: *** [CMakeFiles/client.dir/client.cpp.o] Error 1
+make[1]: *** [CMakeFiles/client.dir/all] Error 2
+make: *** [all] Error 2
+08:52:18 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+08:53:10 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+08:54:30 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+10:25:35 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+10:30:29 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+10:31:16 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+10:37:08 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+10:37:47 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+10:38:08 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+10:57:28 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/network/SocketClient.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+10:59:13 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+11:01:18 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/network/SocketClient.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+11:03:25 **** Incremental Build of configuration Default for project client ****
+make all 
+[100%] Built target client
+06:03:56 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/network/SocketClient.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+06:06:14 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/network/SocketClient.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+06:12:40 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Building CXX object CMakeFiles/client.dir/network/SocketClient.cpp.o
+[100%] Linking CXX executable client
+[100%] Built target client
+06:17:22 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+/home/pi/java_proj/gitHub/exploringrpi/chp12/clientserver/client.cpp: In function ‘int main(int, char**)’:
+/home/pi/java_proj/gitHub/exploringrpi/chp12/clientserver/client.cpp:45:79: error: expected ‘;’ before ‘}’ token
+      if (rcvStr == "ERR" )  {connected = false; break;} else {connected = true};
+                                                                               ^
+CMakeFiles/client.dir/build.make:62: recipe for target 'CMakeFiles/client.dir/client.cpp.o' failed
+make[2]: *** [CMakeFiles/client.dir/client.cpp.o] Error 1
+CMakeFiles/Makefile2:67: recipe for target 'CMakeFiles/client.dir/all' failed
+Makefile:83: recipe for target 'all' failed
+make[1]: *** [CMakeFiles/client.dir/all] Error 2
+make: *** [all] Error 2
+06:19:26 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client

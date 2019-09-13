@@ -51,12 +51,18 @@ int SocketServer::listen(){
 int SocketServer::send(std::string message){
 
 	//string msg = message.c_str();  // Will make a null terminated string.
-	char *writeBuffer =  message.data();
+	//char *writeBuffer =  message.data();
 
-	int length = message.length();
-    int n = write(this->clientSocketfd, writeBuffer, length+1);
+	string msg = message.c_str();
+	msg.append("\n");                      // Needs null to work right.
+	int length = msg.length();
+
+	char *writeBuffer =  msg.data();
+
+    int n = write(this->clientSocketfd, writeBuffer, length);      // ????
+
     if (n < 0){
-       perror("Socket Server: error writing to server socket.");
+       perror("Socket Server: error writing to client socket.");
        return n;
     }
     return n;
@@ -72,31 +78,32 @@ string SocketServer::receive(int size=1024)
     int n = read(this->clientSocketfd, readBuffer, size);
 
     if (n < 0){
-       perror("Socket Server: error reading from server socket.");
+       perror("Socket Server: error reading from client socket.");
        return ("ERR");
     }
     else if (n == 0){
 	  return ("NULL");
 	}
+
     return string(readBuffer);
 }
 
 
 // may not work.  added later.
-int SocketServer::receive(char *readBuffer, int size=1024)
-{
-	memset (readBuffer, 0, size);
-    int n = read(this->clientSocketfd, readBuffer, sizeof(readBuffer));
-
-    if (n < 0){
-       perror("SocketServer::receive: error reading from server socket.");
-       return -1;
-    }
-    else if (n == 0){
-	  return 0;
-	}
-    return n;
-}
+//int SocketServer::receive(char *readBuffer, int size=1024)
+//{
+//	memset (readBuffer, 0, size);
+//    int n = read(this->clientSocketfd, readBuffer, sizeof(readBuffer));
+//
+//    if (n < 0){
+//       perror("SocketServer::receive: error reading from server socket.");
+//       return -1;
+//    }
+//    else if (n == 0){
+//	  return 0;
+//	}
+//    return n;
+//}
 
 
 

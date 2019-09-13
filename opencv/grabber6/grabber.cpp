@@ -10,7 +10,7 @@
 //       171201. grabber4; using Raspberry Pi NoIR camera V2
 //       171231, Working here, clean up. Adding GPIO for PIR sensor.
 //       180905. Minor modes, timing, image size.
-//       180916, Added Web cam, changed heartbeat image timeing.
+//       180916, Added Web cam, changed heartbeat image timing.
 //       181028-31  Cam not displaying image, fixed.
 //       181205   Working here now.
 //       190325  Added headless feature.
@@ -18,6 +18,7 @@
 //       190712  Add second IR sensor.
 //       190828  motion app was causing an issue; only one a time.
 //       190907  grabber6; interprocess messaging.
+//       190909  Fixes if one or both cameras are disconnected.
 
 #include <iostream>
 #include <stdio.h>
@@ -99,8 +100,8 @@ void* getCmdThread(void *passedArg) {
 //			   server.receive(readBuffer, 1024);
 //			   rcvStr = string(readBuffer);
 
-				//string msg = message.c_str();
-				//char *writeBuffer =   msg.data();    // Will make a null terminate string.
+				//string msg = rcvStr.c_str();        // Will make a null terminate string.
+				//char *writeBuffer =   msg.data();
 
 			   if (rcvStr == "err" || rcvStr == "eof")
 			   {
@@ -184,8 +185,8 @@ int main(int argCnt, char** args)
 
 	//--- INITIALIZE VIDEOCAPTURE
 	//VideoCapture cap1;
-	raspicam::RaspiCam_Cv cap;                          // Capture item, RPi on-board camera, use raspicam lib
-	cv::VideoCapture cap2 =  cv::VideoCapture();        // USB Web camera.
+	raspicam::RaspiCam_Cv cap1;                          // Capture item, RPi on-board camera, use raspicam lib
+	cv::VideoCapture cap2 =  cv::VideoCapture();         // USB Web camera.
 
 	// open the default camera using default API
 	// cap.open(0);  // for openCV
@@ -231,10 +232,10 @@ int main(int argCnt, char** args)
 			cout << "arg: " << args[i] << endl;
 		}
 
-		cap.set( CV_CAP_PROP_FORMAT, CV_8UC3);  // CV_8UC1, CV_8UC3
+		cap1.set( CV_CAP_PROP_FORMAT, CV_8UC3);  // CV_8UC1, CV_8UC3
 		cap2.set( CV_CAP_PROP_FORMAT, CV_8UC3);  // CV_8UC1, CV_8UC3
 
-		if (!cap.open())  	    // Capture device raspicam
+		if (!cap1.open())  	    // Capture device raspicam
 		{
 			cout << "!!ERROR! Trouble opening capture device camera #1, RPi camera.\n";
 			readyCam1 = false;
@@ -242,8 +243,8 @@ int main(int argCnt, char** args)
 		else readyCam1 = true;
 
 		// check if we succeeded
-		if (!cap.isOpened()) {
-			cout << "ERROR! Unable to open camera #1, RPi camera.\n";
+		if (!cap1.isOpened()) {
+			cout << "!!ERROR! Unable to open camera #1, RPi camera.\n";
 			readyCam1 = false;
 		}
 		else readyCam1 = true;
@@ -272,7 +273,6 @@ int main(int argCnt, char** args)
 	// Main Loop to check IR sensor and grab images.
     try
     {
-
 		//--- GRAB AND WRITE LOOP
 		cout << "\n-- Running my little grabber loop ...\n" << endl ;
 			 // << "Press any key to terminate" << endl;
@@ -308,8 +308,8 @@ int main(int argCnt, char** args)
 	        if (threadArgs->commandStr == "takeimage")
 	        {
 	        	takeImageCmd = true;         // Cmd rcvd to take an image.
-	        	threadArgs->commandStr = ">>>>> ack takeimage";
-	        	cout << " >>>> External Command received to take image. \n";
+	        	threadArgs->commandStr = ">ack takeimage";
+	        	cout << " > External Command received to take image. \n";
 	        }
 
 //			if ( (timeinfo->tm_hour == 12) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
@@ -331,14 +331,12 @@ int main(int argCnt, char** args)
 					std::cout << timestr << ": ";
 					cout << " Sending half-hour ping image.\n";
 				}
-
-
 			try
 			{
 				if (readyCam1)
 				{
-					cap.grab();
-					cap.retrieve(frameCam1);
+					cap1.grab();
+					cap1.retrieve(frameCam1);
 				}
 
 				if (readyCam2)
@@ -356,28 +354,48 @@ int main(int argCnt, char** args)
 				cout << "   msg: " << msgStr << endl;
 			}
 
-
 			//Size size(1280, 960);
 			Size size(640, 480);
 			//Size size(1920, 1080);
-			if (readyCam1) resize( frameCam1, frameCam1, size );     // Resizes the native frame for transmission.
-			if (readyCam2) resize( frameCam2, frameCam2, size );
+
+			try
+			{
+				if (readyCam1) resize( frameCam1, frameCam1, size );     // Resizes the native frame for transmission.
+			}
+			catch (cv::Exception& ex)
+			{
+				cout << "! Exception during resize of image1. ex: " << ex.what() << endl;
+				readyCam1 = false;
+			}
+
+			try
+			{
+				if (readyCam2) resize( frameCam2, frameCam2, size );    // Resizes the native frame for transmission.
+			}
+
+			catch (cv::Exception& ex )
+			{
+//				cout << "! Exception during resize of image2. ex: " << ex.what() << endl;
+//				readyCam2 = false;
+			}
+
 
 			// show live and wait for a key with timeout long enough to show images
-			if (!frameCam1.empty() )
+			if (frameCam1.empty() )
 			{
-				// This is good.
+				std::cout << timestr << ": ";
+				cout << "WARNING! Blank frame grabbed from Cam1.\n";
+
 			}
 
 			// check if we succeeded
-			if (frameCam1.empty())
+			if (frameCam2.empty())
 			{
-//				std::cout << timestr << ": ";
-//				cout << "ERROR! Blank frame grabbed from Cam1\n";
-				//break;
+				std::cout << timestr << ": ";
+				cout << "WARNING! Blank frame grabbed from Cam2.\n";
 			}
 
-			if( !util.isHeadless())
+			if( !util.isHeadless())                           // Only show image if monitor to be present.
 			{
 				if (readyCam1) imshow("Cam1 -- RPi Live", frameCam1 );
 				if (readyCam2) imshow("Cam2 -- USB Live", frameCam2 );
@@ -425,7 +443,6 @@ int main(int argCnt, char** args)
 					if( !util.isHeadless()) imshow("Cam2 -- Contrast Equalization", frameCam2_cor);
 				}
 
-
 				line13High = gpioRead(13);   // GPIO13  IR sensor input line.  (used to trigger image save)
 
 				if (line13High)
@@ -441,7 +458,7 @@ int main(int argCnt, char** args)
 					//cout << " -- Line 13 low" << endl;
 				}
 
-				int line19High = gpioRead(19);   // GPIO19  IR sensor input line, 2nd sensor.
+				int line19High = gpioRead(19);   // GPIO19  IR sensor input line, 2nd sensor. (not currently used.)
 
 				if (line19High)
 				{
@@ -462,19 +479,24 @@ int main(int argCnt, char** args)
 						|| sendPicPing
 						|| takeImageCmd  )   // On count 1 and 2, take/save images, or on command.
 				{
-
 					std::cout << timestr << ": ";
 					cout << "---IR motion sensor detected activity; GPIO line13 ---" << endl;
 					if(readyCam2) if( !util.isHeadless()) imshow(" **Cam2 -- Saved frame", frameCam2 );
 
 					string timeDateStr = util.getDateTimeStr();
-				    util.saveImageFile( frameCam1, "c1", line13cnt , timeDateStr);
 
-					util.saveImageFile( frameCam2, "c2", line13cnt , timeDateStr);
-					util.saveImageFile( frameCam2_cor, "c2eq", line13cnt , timeDateStr);
+					if (readyCam1)
+					{
+						util.saveImageFile( frameCam1, "c1", line13cnt , timeDateStr);
+					}
+					if (readyCam2)
+					{
+						util.saveImageFile( frameCam2, "c2", line13cnt , timeDateStr);
+						util.saveImageFile( frameCam2_cor, "c2eq", line13cnt , timeDateStr);
+					}
 
-					takeImageCmd = false;      // Command has been executed.
-					sendPicPing = false;
+					takeImageCmd = false;      // Internal commands has been executed.
+					sendPicPing = false;       //
 
 				} // End if line 18 cnt
 			} // End if use IR sensor.
@@ -487,16 +509,14 @@ int main(int argCnt, char** args)
 //				break;
 //			}
 
-
-		} // End main for.
-
+		}
+		// End main for.
     }
     catch (cv::Exception& ex)
     {
-    	cout << "!! Some unexpected Exception occured ..." << endl;
     	const char* err_msg = ex.what();
     	String  msgStr = ex.msg;
-    	cout << "!! Some unexpected Exception:" << err_msg << endl;
+    	cout << "!!! Some very unexpected Exception:" << err_msg << endl;
     	cout << "   msg: " << ex.msg << endl;
     	cout << "   file: " << ex.file << endl;
     	cout << "   function: " << ex.func << endl ;

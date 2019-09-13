@@ -14,7 +14,9 @@
 // 181227 Adding command line arg for server's IP address.
 // 190715B Testing. Cleanup.
 // 190717 Added SMS receiver, for future commands. 
-// 190996 Adding feature to execute commands via SMS.  
+// 190906 Adding feature to execute commands via SMS. 
+// 190908 Fixed bug to handle if connection/power to Xbee lost.
+// 190910 Bug receiving inter-process message from grabber.
 
 package imageHandler;
 
@@ -31,9 +33,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.io.InputStream;
 
-
 import java.net.*;
-
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 
@@ -42,6 +42,7 @@ import com.digi.xbee.api.connection.serial.SerialPortRxTx;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.models.IPMessage;
 import com.digi.xbee.api.models.IPProtocol;
+import com.digi.xbee.api.models.PowerLevel;
 
 import java.io.BufferedWriter;
 import java.io.Console;
@@ -60,24 +61,30 @@ import java.nio.file.StandardCopyOption.*;
 import java.io.DataOutputStream;
 import java.io.InputStream;
 import java.io.DataInputStream;
+import java.util.Scanner;
 
-// Thread to receive instructions via SMS text messages.  Not currently used. 
+
+// Thread to receive IP msgs from grabber; acks. 
 //
 class RcvGrabberMsgThread extends Thread {      
 	
 	public boolean run = true;           // To stop thread gracefully.
 	public InputStream inputStream;
 	public DataInputStream dataInputStream;
+	
+	public Scanner scanner;
 	public Socket socket;
 	public boolean connected = true;
 			
+	@SuppressWarnings("deprecation")
 	public void run()	
 	{
 		System.out.format("\n---- Starting RecGrabberMsgThread to read msgs from grabber ...\n");		
 
+		byte[] buffer = new byte[1024];
 		while (run)
 		{
-			System.out.println("----Checking for incoming msg from grabber, if connected.");
+			System.out.println("-----------Checking for incoming msg from grabber, if connected.");
 			if ( true )
 			{
 				try 
@@ -86,13 +93,24 @@ class RcvGrabberMsgThread extends Thread {
 					{
 				        inputStream = socket.getInputStream();
 				        dataInputStream = new DataInputStream(inputStream);
-				        
-						if (dataInputStream.available() > 0 )
-						{				  
-							String incomingMsg;
-							incomingMsg = dataInputStream.readLine();
-							System.out.println("------- Incoming msg receive: " + incomingMsg );
+				        				        
+				        scanner = new Scanner(inputStream);
+						
+						if (dataInputStream.available() > 0 )							
+						{	
+							System.out.println("-----------Data is available. Reading ...");
+							//String incomingMsg = dataInputStream.readLine();     // ##### Seems to block here. 
+							//String incomingMsg = buffer.toString();
+							//String incomingMsg = dataInputStream.readLine();  
+							//int incomingMsgLen = inputStream.read(buffer);    // last tested; something comes over.
+																					
+							System.out.println("------- Incoming msg receive: " + scanner.nextLine() );
+							
+							//System.out.println("------- Incoming msg receive: " + buffer.toString()  + "  Length: " + incomingMsgLen );
+							//System.out.println("------- Incoming msg receive: " + incomingMsg  + "  Length: " + incomingMsg.length() );						
 						}
+						// in.close();  !! Don't close in Scanner. 
+						
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -120,19 +138,20 @@ class RcvGrabberMsgThread extends Thread {
 // Thread to connect to grabber app, init connection. (for sending commands to take image)
 //
 class GrabberControlThread extends Thread
-{
-	
+{	
     public String serverName = "localhost";
-    public int port = 8210;                     // Server listen port, on grabber
+    public int port = 8210;                     // Server side's listen port (grabber app)
     public boolean connected = false;
     public boolean run = true;
     
-    private OutputStream outputStream = null;
-    private InputStream inputStream = null;
-    
+    public Socket socket = null;    
+    public OutputStream outputStream = null;
+    public InputStream inputStream = null;    
     public DataOutputStream dataOutputStream = null;  
     public DataInputStream dataInputStream = null;
-    public Socket socket = null;
+    public Scanner scanner = null;
+    
+    
     public String cmdStr = "NULL";
     
 	//@SuppressWarnings("deprecation")
@@ -157,6 +176,9 @@ class GrabberControlThread extends Thread
 				        
 				        inputStream = socket.getInputStream();
 				        dataInputStream = new DataInputStream(inputStream);
+				        				        
+				        scanner = new Scanner(inputStream);
+				        
 				        connected = true;
 	    			}
 	    			catch (Exception ex)
@@ -165,8 +187,8 @@ class GrabberControlThread extends Thread
 	    				System.out.println("!GrabberControlTread, trouble with starting listen connection, ex:" + ex );    				 
 	    				// ex.printStackTrace();
 	    			}
-	    		}	       
-	    			    		
+	    		}	       	    			 
+	    		sendGrabberCommand("ping");          	    		
 	    		Thread.sleep(3000);
 	    	} 
 	    	// End run while    	   	
@@ -189,14 +211,15 @@ class GrabberControlThread extends Thread
 		}
                   
 		System.out.println("---- End of run thread.");
-		System.out.println("---- End of run thread.");
 	} // end of run.
 	
 	
-	public void sendGrabberCommand (String cmdStr) 
+	public void sendGrabberCommand (String cmdStr)   
 	{		
 		//String cmdStrVal = cmdStr;
 		//byte bytesVal[] = cmdStrVal.getBytes(cmdStrVal);
+		
+		cmdStr.concat("\n");
 		
 		if (connected)
 		{	        
@@ -240,7 +263,8 @@ class Send {
     // TODO Replace with the serial port where your sender module is connected to.
     private static String TTY_PORT_0 = "/dev/ttyUSB0";             // USB port to XBee Cellular kit.
     private static String TTY_PORT_1 = "/dev/ttyUSB1";   
-    // TODO Replace with the baud rate of your sender module.  
+    private static String TTY_PORT_2 = "/dev/ttyUSB2";   
+        
     private static final int BAUD_RATE = 921600;	// 115200  230400  921600 (need to set XBee Cellular using XCTU)
     
     private static int SERVER_PORT = 8207;                 // Server's receiver app listen port. (on DEV7 web server)
@@ -322,6 +346,7 @@ class Send {
     	recvThread.start();
     	recvThread.connected = grabberControlThread.connected;    	
     	recvThread.socket = grabberControlThread.socket;
+    	//recvThread.inputStream = grabberContr
     	
     	// loop continuously, checking for (new) files in the /data/images dir and sending those images to server side.
     	//
@@ -332,101 +357,93 @@ class Send {
     		
 			File devFile0 = new File(TTY_PORT_0);
 			File devFile1 = new File(TTY_PORT_1);	    			
-		    	   		
-    		if (!connected)    // connection requested.
-	   		{
+			File devFile2 = new File(TTY_PORT_2);
+			
+    		if (!connected)    // new/reset connection requested.
+	   		{	   	    
     		   	try	    		   	
-    	    	{			    	
-    	    	    if (devFile0.exists())    // TTY Port 0  may be on port 0 or 1
+    	    	{
+    		   		if (myDevice != null)            
+    		   	    {
+    		   	    	if (myDevice.isOpen())
+    	   	    		{    		   	    		
+    	   	    			myDevice.close();			    		   	    			
+    	   	    		}				    		   	    	
+    		   	    }	    		   	    
+   		   		
+    	    	    if (devFile0.exists())    // TTY Port 0; /dev/ttyUSB0  (may be on port 0 or 1)  
     	    	    {
 	    		   		System.out.println(">> Attempting new connection to XBee Cellular device via TTY_PORT_0 ... ");
-    		   	    	
-	       		   	    if (myDevice != null)            
-	    		   	    {
-	    		   	    	if (myDevice.isOpen())
-    		   	    		{			    
-    		   	    			myDevice.stopListening();
-    		   	    			myDevice.close();			    		   	    			
-    		   	    		}				    		   	    	
-	    		   	    }
-	       		   	    
+    		   	    	     		   	    
 	       		   	    myDevice = null;
-	    	        	myDevice = new CellularDevice (TTY_PORT_0, BAUD_RATE);
-	    	        	
-	    	            myDevice.open();
-	   	    			myDevice.setReceiveTimeout(6000);       // was 12 seconds.
-	   	    
-	   	    		   	connected = true;	  // Connection to XBee cellular is ready.
-	   	 	    	
-	   	    		   	MySMSReceiveListener listener =  new MySMSReceiveListener();
-	   	    		   	listener.myDevice = myDevice;	   	    		   	
-	   	    			myDevice.addSMSListener(listener);     // cb for incoming data msgs.
-	   	    			listener.grabberThread = grabberControlThread;
-	   				
-	   	    			System.out.println("\n>> Waiting for SMS...");
-	   	    			
-						//myDevice.reset();
-	    	            // myDevice.setSendTimeout(1000);
-	    	           // myDevice.setParameter(parameter, parameterValue)
-	    	            //String parameter = null;
-	    	            //myDevice.getParameter(parameter);
+	    	        	myDevice = new CellularDevice (TTY_PORT_0, BAUD_RATE);	   	   
+	   	    		   	connected = true;	         // Connection to XBee cellular is ready.
     	    	    }
-    	    	    else if (devFile1.exists())
+    	    	    else if (devFile1.exists())      // TTY Port 1; /dev/ttyUSB1  (may be on port 0 or 1)  
     	    	    {
 	    		   		System.out.println(" Attempting new connecting to XBee Cellular device via TTY_PORT_1 ... ");
-	    		   	    if (myDevice != null)
-	    		   	    {
-	    		   	    	if (myDevice.isOpen())
-	    		   	    		{			    
-	    		   	    			myDevice.stopListening();
-	    		   	    			myDevice.close();			    		   	    			
-	    		   	    		}
-	    		   	    }
-	    		   	    
+	    		   			  		   	   
 	    		   	    myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_1, BAUD_RATE);
-	    	        	
-	    	            myDevice.open();
-	   	    			myDevice.setReceiveTimeout(6000);       // was 12 seconds.
-	    	          			    
-	   	    		   	connected = true;	  // Connection to XBee cellular is ready.
-		   	 	    	
-	   	    		   	MySMSReceiveListener listener =  new MySMSReceiveListener();
-	   	    		   	listener.myDevice = myDevice;	   	    		   	
-	   	    			myDevice.addSMSListener(listener);     // cb for incoming msgs.
-	   				
-	   	    			System.out.println("\n>> Waiting for SMS...");
-	    	            //myDevice.reset();
-	    	            //myDevice.setParameter(parameter, parameterValue)
+	    	        	connected = true;	  // Connection to XBee cellular is ready.
+    	    	    }
+      	    	    else if (devFile2.exists())      // TTY Port 2; /dev/ttyUSB2  (may be on port 0 or 1 or 2)  
+    	    	    {
+	    		   		System.out.println(" Attempting new connecting to XBee Cellular device via TTY_PORT_2 ... ");
+	    		   			  		   	   
+	    		   	    myDevice = null;
+	    	        	myDevice = new CellularDevice (TTY_PORT_2, BAUD_RATE);
+	    	        	connected = true;	  // Connection to XBee cellular is ready.
     	    	    }
     	    	    else
     	    	    {
     	    	    	connected = false;     // not connected yet, so try to connected again.
     	    	    	
-    	    	    	System.out.println("!! TTY_USB Device file does not exist. Is device connected? ");
+    	    	    	System.out.println("!! TTY_USBn Device file does not exist. Is device connected and powered on? ");
     	    	    	Thread.sleep(1000);    	    	  
     	    	    }
-		   		}
-    	    	catch (XBeeException e) 
+    	    	    
+       			    if ( connected )     // just connected now; open the device and make settings.
+	    		   	{
+			            myDevice.open();
+			    		myDevice.setReceiveTimeout(6000);                 // was 12 seconds.		 	 	    
+			    		
+//						byte[] value = {0};   // 1 for yes, 0 for no.  
+//						myDevice.setParameter("AM", value );                // Airplane mode.
+//						System.out.println (" ------ Powering Xbee RF on (Airplane mode off).");
+					    		
+						MySMSReceiveListener listener =  new MySMSReceiveListener();
+						listener.myDevice = myDevice;	   	    		   	
+						myDevice.addSMSListener(listener);                // cb incoming for SMS text messages.
+									
+						listener.grabberThread = grabberControlThread;
+													
+						//myDevice.reset();
+						// myDevice.setSendTimeout(1000);
+						// myDevice.setParameter(parameter, parameterValue)
+						//String parameter = null;
+						//myDevice.getParameter(parameter);
+											
+						System.out.println("\n>> Connected okay to XBee, waiting for SMS, process any image files ...");
+	    		   	}			
+    			}		   	
+    	    	catch (Exception e) 
     			{
     	    		connected = false;
-    			    System.out.println(" !! Error opening ZigBee cellular myDevice: exc: " + e.getMessage() + "\n");
-    			    System.out.println("\n     StackTrace: ");
-    			    e.printStackTrace();
-    			  
-		   		}
-	    	} // End if !connected.
+    			    System.out.println(" !! Error opening ZigBee cellular myDevice: exc: " + e.getMessage());
+    			    System.out.println("    StackTrace: ");
+    			    e.printStackTrace();      			  
+    			}    	     
+    		   	// 
+	    	} // End if !connected.    		       		
+			
+    		//grabberControlThread.sendGrabberCommand( "ping" );  
     		
-    		    		
-    		grabberControlThread.sendGrabberCommand( "ping" );   //####    	
-    		
-		    System.out.println("\n>> Checking for existance of new image files, make connection to server ... ");
+		    System.out.println("\n>> Checking for existance of new image files ...");
     		File[] files = new File("/data/images").listFiles();
     		
-    		//ArrayList<File> fileList = new ArrayList<File>(Arrays.asList(files));    		    	
-    		//fileList.sort(c);
+    		System.out.println ("  Number of image files now present: " + files.length );
     		
-    		System.out.println ("  Number of files now present: " + files.length );
 //    		if (files.length == 0)
 //    		{
 //    			byte[] value = {1};    			     // Plane mode on; power off.
@@ -445,11 +462,17 @@ class Send {
 //        			System.out.println ("  Powering Xbee RF ON.");
 //    			}
 //    		}
-    				
+
+    		
     		int fileCnt = 0;
     		for (File file : files)    // For each file in the /data/image dir.
 	    	{
-    			
+    			if (!connected) break;
+    							
+//				byte[] value1 = {0};   // 1 for yes, 0 for no.  
+//				myDevice.setParameter("AM", value1 );                // Airplane mode.
+//				System.out.println ("----- Powering Xbee RF on (Airplane mode off)");
+								
 	    		if (file.isFile())
 	    		{	    
 	    			fileCnt++;
@@ -462,15 +485,24 @@ class Send {
 	    	   			Thread.sleep(1000);
 	    	   			break;	    	   		
 	    	   		}
-	    		   		    	   			    	
-	    		   	if (!myDevice.isOpen() || !myDevice.isConnected() )
-    		   		{
-	    		   		System.out.println("-- WARNING: Device is not open and/or not connected to Internet.  ");
-    		   			connected = false;             
-    		   			break;
-    		   		}	
-	    		   			    			
-	    		   	
+	    	   		
+	    		   	try
+	    		   	{
+		    		   	if (!myDevice.isOpen() || !myDevice.isConnected() )     // May be a timeout issue here. 
+	    		   		{
+		    		   		System.out.println("-- WARNING: Device is not open and/or not connected to Internet.  ");
+	    		   			connected = false;             
+	    		   			break;
+	    		   		}	
+	    			}
+			        catch (Exception e)
+			        {			        	  
+			        	 System.out.println("!! May have lost connection to XBee device. ex: " + e.getMessage() + "\n");			       
+			        	 e.printStackTrace();
+			        	 connected = false;    // will try to reconnected.
+			        	 break;
+			        }
+			        
 	    			fileName = file.getName();
 	    			System.out.format(">> Next Image file to be processed: '%s'\n", fileName) ;
 	    			inputImagePath = "/data/images/" + fileName;
@@ -501,7 +533,6 @@ class Send {
 			       
 			        	if (!myDevice.isConnected()) System.out.println(" WARNING: Device not connected to Internet.");
 			        
-			        	
 			        	myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),  // This will open socket connection to server, and			        	
 				                SERVER_PORT, PROTOCOL_TCP, "X".getBytes());                     // send beginning of msg indicator 'X'.		        	
 			        	
@@ -523,8 +554,7 @@ class Send {
 				        connected = true;
 			        }
 			        catch (Exception e)
-			        {
-			        	   
+			        {			        	  
 			        	 System.out.println("!! Can't connect to server or Trouble sending msg header " +
 			        	 		"\n!! and/or image metadata. exc: " + e.getMessage() + "\n");			       
 			        	 e.printStackTrace();

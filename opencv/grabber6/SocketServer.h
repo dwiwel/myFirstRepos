@@ -30,7 +30,7 @@ public:
    virtual int listen();
    virtual int send(std::string message);
    virtual std::string receive(int size);
-   virtual int receive(char *readbuffer, int size);
+   //virtual int receive(char *readbuffer, int size);
    virtual ~SocketServer();
 };
 

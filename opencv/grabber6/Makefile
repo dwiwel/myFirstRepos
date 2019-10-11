@@ -123,6 +123,33 @@ grabber6/fast:
 	$(MAKE) -f CMakeFiles/grabber6.dir/build.make CMakeFiles/grabber6.dir/build
 .PHONY : grabber6/fast
 
+GPIO.o: GPIO.cpp.o
+
+.PHONY : GPIO.o
+
+# target to build an object file
+GPIO.cpp.o:
+	$(MAKE) -f CMakeFiles/grabber6.dir/build.make CMakeFiles/grabber6.dir/GPIO.cpp.o
+.PHONY : GPIO.cpp.o
+
+GPIO.i: GPIO.cpp.i
+
+.PHONY : GPIO.i
+
+# target to preprocess a source file
+GPIO.cpp.i:
+	$(MAKE) -f CMakeFiles/grabber6.dir/build.make CMakeFiles/grabber6.dir/GPIO.cpp.i
+.PHONY : GPIO.cpp.i
+
+GPIO.s: GPIO.cpp.s
+
+.PHONY : GPIO.s
+
+# target to generate assembly for a file
+GPIO.cpp.s:
+	$(MAKE) -f CMakeFiles/grabber6.dir/build.make CMakeFiles/grabber6.dir/GPIO.cpp.s
+.PHONY : GPIO.cpp.s
+
 SocketServer.o: SocketServer.cpp.o
 
 .PHONY : SocketServer.o
@@ -213,6 +240,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... grabber6"
+	@echo "... GPIO.o"
+	@echo "... GPIO.i"
+	@echo "... GPIO.s"
 	@echo "... SocketServer.o"
 	@echo "... SocketServer.i"
 	@echo "... SocketServer.s"

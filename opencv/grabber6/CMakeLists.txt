@@ -14,7 +14,7 @@ find_package( raspicam REQUIRED )
 find_package( OpenCV REQUIRED )
 
 add_compile_options ( "-g"  "-fpermissive" )
-add_executable(grabber6  grabber.cpp utils.cpp SocketServer.cpp )
+add_executable(grabber6  grabber.cpp utils.cpp SocketServer.cpp GPIO.cpp )
 
 #target_link_libraries( grabber6 ${raspicam_CV_LIBS} pigpio pthread ${FREETYPE_LIBRARIES} )
 target_link_libraries( grabber6 ${raspicam_CV_LIBS} pigpio pthread  )

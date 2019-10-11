@@ -4,6 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
+  "/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/GPIO.cpp" "/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/grabber6.dir/GPIO.cpp.o"
   "/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/SocketServer.cpp" "/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/grabber6.dir/SocketServer.cpp.o"
   "/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/grabber.cpp" "/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/grabber6.dir/grabber.cpp.o"
   "/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/utils.cpp" "/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/CMakeFiles/grabber6.dir/utils.cpp.o"

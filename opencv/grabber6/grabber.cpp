@@ -19,6 +19,9 @@
 //       190828  motion app was causing an issue; only one a time.
 //       190907  grabber6; interprocess messaging.
 //       190909  Fixes if one or both cameras are disconnected.
+//       190913  minor.
+//       191008  Changed to using GPIO line 13 IR motion sensor.
+//       191010  Trying GPIO class from book.
 
 #include <iostream>
 #include <stdio.h>
@@ -35,6 +38,8 @@
 
 #include "utils.hh"
 #include "SocketServer.h"
+
+
 
 #define SIGHUP  1   /* Hangup the process */
 #define SIGINT  2   /* Interrupt the process */
@@ -75,11 +80,11 @@ void* getCmdThread(void *passedArg) {
    {
 	   SocketServer server(8210);      // This is for imageSend client to connect in.
 
-	   cout << "Listening for a new control client to connect ..." << endl;
+	   cout << "Listening for a new control client to connect in ..." << endl;
 	   int retVal = server.listen();
 	   if (retVal == -1)
 	   {
-		   cout << "!Trouble initiating server at given listed port." << endl;
+		   cout << "!Trouble listening server at given listed port." << endl;
 		   serverRunning = false;
 	   }
 	   else
@@ -155,16 +160,18 @@ void raiseFlag(int signum)
 }
 
 
+
+
 int main(int argCnt, char** args)
 {
 
     cout << "Starting my little **grabber6** program, using RPi camera and USB camera ... " << endl;
     cout << "rev: 190717. \n" << endl;
-    cout << "Uses the GPIO to get signal from IR sensor. Root privilege is required to run.\n" << endl;
+    cout << "Uses the GPIO lines to get signal from IR sensors. Root privilege is required to run.\n" << endl;
 
     // opencv objects.
     //
-	Mat frameCam1;        // RPi cam Current frame read.   (1280x960)     OpenCV matrices (for frames)
+	Mat frameCam1;        // RPi cam Current frame read; IR camera   (1280x960)     OpenCV matrices (for frames)
 	Mat frameCam2;        // Web USB camera.
 	Mat prevFrame;        // Previous frame.
 	Mat saveFrame;        // Frame to be saved to disk.
@@ -176,7 +183,7 @@ int main(int argCnt, char** args)
 	bool readyCam1 = false;
 	bool readyCam2 = false;
 
-	bool line13High = false;      //
+	bool line13High = false;       //
 	bool line19High = false;
 	int line13cnt = 0;             // Count of consecutive line 13 highs.
 	int line19cnt = 0;             // Count of consecutive line 19 highs.
@@ -325,11 +332,11 @@ int main(int argCnt, char** args)
 //				cout << " Sending midnight ping image.\n";
 //			}
 
-			if (  (( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 )) || (( timeinfo->tm_min == 30 ) && ( timeinfo->tm_sec == 1 )) )
+			if (  (( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 )) || (( timeinfo->tm_min == 1 ) && ( timeinfo->tm_sec == 1 )) )
 				{
 					sendPicPing = true;
 					std::cout << timestr << ": ";
-					cout << " Sending half-hour ping image.\n";
+					cout << " --- Sending hourly ping image ...\n";
 				}
 			try
 			{
@@ -384,15 +391,15 @@ int main(int argCnt, char** args)
 			if (frameCam1.empty() )
 			{
 				std::cout << timestr << ": ";
-				cout << "WARNING! Blank frame grabbed from Cam1.\n";
+				cout << "WARNING! Blank frame grabbed from Cam1; raspicam\n";
 
 			}
 
 			// check if we succeeded
 			if (frameCam2.empty())
 			{
-				std::cout << timestr << ": ";
-				cout << "WARNING! Blank frame grabbed from Cam2.\n";
+				//std::cout << timestr << ": ";
+				//cout << "WARNING! Blank frame grabbed from Cam2; Webcam. \n";
 			}
 
 			if( !util.isHeadless())                           // Only show image if monitor to be present.
@@ -428,7 +435,22 @@ int main(int argCnt, char** args)
 
 			if (useIRsensor)
 			{
-				// Apply hist eq on image.
+				// Apply hist eq on image to cam1 image; IR Cam.
+				//
+				if (readyCam1)
+				{
+					cvtColor(frameCam1, frameCam1_bw, CV_RGB2GRAY);
+
+					//Ptr<CLAHE> clahe = cv::createCLAHE(double clipLimit = 40.0, Size tileGridSize = Size(8, 8));
+					Ptr<CLAHE> clahe = cv::createCLAHE(10.0, Size(8, 8));
+					//clahe->setClipLimit( 1.5 );
+					clahe->apply(frameCam1_bw, frameCam1_cor);
+					//equalizeHist(frameCam1_bw, frameCam1_cor);
+					if( !util.isHeadless()) imshow("Cam1 -- BW ", frameCam1_bw);
+					if( !util.isHeadless()) imshow("Cam1 -- Contrast Equalization", frameCam1_cor);
+				}
+
+				// Apply hist eq on image to cam2 image; Web Cam.
 				//
 				if (readyCam2)
 				{
@@ -443,7 +465,10 @@ int main(int argCnt, char** args)
 					if( !util.isHeadless()) imshow("Cam2 -- Contrast Equalization", frameCam2_cor);
 				}
 
+
 				line13High = gpioRead(13);   // GPIO13  IR sensor input line.  (used to trigger image save)
+				waitKey(2);
+				line19High = gpioRead(19);   // GPIO19  IR sensor input line, 2nd sensor. (currently used.)
 
 				if (line13High)
 				{
@@ -458,8 +483,6 @@ int main(int argCnt, char** args)
 					//cout << " -- Line 13 low" << endl;
 				}
 
-				int line19High = gpioRead(19);   // GPIO19  IR sensor input line, 2nd sensor. (not currently used.)
-
 				if (line19High)
 				{
 					line19cnt++;
@@ -473,32 +496,37 @@ int main(int argCnt, char** args)
 					//cout << " -- Line 19 low" << endl;
 				}
 
-				// Take two sets for images after line13 stays high for two counts (~200ms)
+				// Take two sets for images after GPIO line19 (and line13) goes high.
 				//
-				if( ((line13cnt >= 1) && (line13cnt <= 2))
+				if( (   (line19cnt >= 1) && (line19cnt <= 2)
+				      && (line13cnt >= 1) && (line13cnt <= 2)
+					)
 						|| sendPicPing
-						|| takeImageCmd  )   // On count 1 and 2, take/save images, or on command.
+						|| takeImageCmd  )   // On count 1 and 2, take/save images.
 				{
 					std::cout << timestr << ": ";
-					cout << "---IR motion sensor detected activity; GPIO line13 ---" << endl;
+					cout << "----------IR motion sensor detected activity; GPIO line19 and line13 high ------" << endl;
+
+					if(readyCam1) if( !util.isHeadless()) imshow(" **Cam1 -- Saved frame", frameCam1 );
 					if(readyCam2) if( !util.isHeadless()) imshow(" **Cam2 -- Saved frame", frameCam2 );
 
 					string timeDateStr = util.getDateTimeStr();
 
 					if (readyCam1)
 					{
-						util.saveImageFile( frameCam1, "c1", line13cnt , timeDateStr);
+						util.saveImageFile( frameCam1, "c1", line19cnt , timeDateStr);
+						util.saveImageFile( frameCam1_cor, "c1eq", line19cnt , timeDateStr);
 					}
 					if (readyCam2)
 					{
-						util.saveImageFile( frameCam2, "c2", line13cnt , timeDateStr);
-						util.saveImageFile( frameCam2_cor, "c2eq", line13cnt , timeDateStr);
+						util.saveImageFile( frameCam2, "c2", line19cnt , timeDateStr);
+						util.saveImageFile( frameCam2_cor, "c2eq", line19cnt , timeDateStr);
 					}
 
-					takeImageCmd = false;      // Internal commands has been executed.
+					takeImageCmd = false;      // Internal commands has been executed; clear flags.
 					sendPicPing = false;       //
 
-				} // End if line 18 cnt
+				} // End if line 19 (18) cnt
 			} // End if use IR sensor.
 
 			//sleep(1);

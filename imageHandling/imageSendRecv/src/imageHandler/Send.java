@@ -17,6 +17,7 @@
 // 190906 Adding feature to execute commands via SMS. 
 // 190908 Fixed bug to handle if connection/power to Xbee lost.
 // 190910 Bug receiving inter-process message from grabber.
+// 190913 Info SMS messages to phone.
 
 package imageHandler;
 
@@ -64,13 +65,14 @@ import java.io.DataInputStream;
 import java.util.Scanner;
 
 
-// Thread to receive IP msgs from grabber; acks. 
+// Thread to receive IP msgs from grabber; acks, info
 //
 class RcvGrabberMsgThread extends Thread {      
 	
 	public boolean run = true;           // To stop thread gracefully.
 	public InputStream inputStream;
 	public DataInputStream dataInputStream;
+	
 	
 	public Scanner scanner;
 	public Socket socket;
@@ -184,7 +186,7 @@ class GrabberControlThread extends Thread
 	    			catch (Exception ex)
 	    			{
 	    				connected = false;
-	    				System.out.println("!GrabberControlTread, trouble with starting listen connection, ex:" + ex );    				 
+	    				System.out.println("!GrabberControlThread, trouble with starting listen connection, ex:" + ex );    				 
 	    				// ex.printStackTrace();
 	    			}
 	    		}	       	    			 

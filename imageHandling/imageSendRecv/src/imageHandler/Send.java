@@ -362,20 +362,23 @@ class Send {
 			File devFile2 = new File(TTY_PORT_2);
 			
     		if (!connected)    // new/reset connection requested.
-	   		{	   	    
+	   		{	   	  
+    			System.out.println(">>>>>>>>>>>>>>>>>>>  Attempting new connecting to XBee cellular device >>>>>>>>>");
     		   	try	    		   	
     	    	{
     		   		if (myDevice != null)            
     		   	    {
+    		   			myDevice.setReceiveTimeout(2000);
+    		   			
     		   	    	if (myDevice.isOpen())
-    	   	    		{    		   	    		
-    	   	    			myDevice.close();			    		   	    			
+    	   	    		{    	    		   	        		   	    		
+    	   	    			// myDevice.close();			     // !!!! May hang here if USB is pulled from XBee.  		   	    			
     	   	    		}				    		   	    	
     		   	    }	    		   	    
    		   		
     	    	    if (devFile0.exists())    // TTY Port 0; /dev/ttyUSB0  (may be on port 0 or 1)  
     	    	    {
-	    		   		System.out.println(">> Attempting new connection to XBee Cellular device via TTY_PORT_0 ... ");
+	    		   		System.out.println(">>>>>>> Attempting new connection to XBee Cellular device via TTY_PORT_0 ... ");
     		   	    	     		   	    
 	       		   	    myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_0, BAUD_RATE);	   	   
@@ -383,7 +386,7 @@ class Send {
     	    	    }
     	    	    else if (devFile1.exists())      // TTY Port 1; /dev/ttyUSB1  (may be on port 0 or 1)  
     	    	    {
-	    		   		System.out.println(" Attempting new connecting to XBee Cellular device via TTY_PORT_1 ... ");
+	    		   		System.out.println(">>>>>>>  Attempting new connecting to XBee Cellular device via TTY_PORT_1 ... ");
 	    		   			  		   	   
 	    		   	    myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_1, BAUD_RATE);
@@ -391,7 +394,7 @@ class Send {
     	    	    }
       	    	    else if (devFile2.exists())      // TTY Port 2; /dev/ttyUSB2  (may be on port 0 or 1 or 2)  
     	    	    {
-	    		   		System.out.println(" Attempting new connecting to XBee Cellular device via TTY_PORT_2 ... ");
+	    		   		System.out.println(" >>>>>>> Attempting new connecting to XBee Cellular device via TTY_PORT_2 ... ");
 	    		   			  		   	   
 	    		   	    myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_2, BAUD_RATE);
@@ -401,13 +404,23 @@ class Send {
     	    	    {
     	    	    	connected = false;     // not connected yet, so try to connected again.
     	    	    	
-    	    	    	System.out.println("!! TTY_USBn Device file does not exist. Is device connected and powered on? ");
+    	    	    	System.out.println("!!!!! TTY_USBn Device file does not exist. Is device connected and powered on? ");
     	    	    	Thread.sleep(1000);    	    	  
     	    	    }
     	    	    
        			    if ( connected )     // just connected now; open the device and make settings.
 	    		   	{
-			            myDevice.open();
+       			    	try
+       			    	{
+       			    		myDevice.setReceiveTimeout(3000); 
+       			    		myDevice.open();
+       			    	}
+       			    	catch (XBeeException e)
+       			    	{
+       	    	    		connected = false;
+       	    			    System.out.println(" !!!! Trouble opening XBee Cellular Device. ex: " + e.getMessage());
+       			    	}
+       			    	
 			    		myDevice.setReceiveTimeout(6000);                 // was 12 seconds.		 	 	    
 			    		
 //						byte[] value = {0};   // 1 for yes, 0 for no.  
@@ -428,7 +441,8 @@ class Send {
 											
 						System.out.println("\n>> Connected okay to XBee, waiting for SMS, process any image files ...");
 	    		   	}			
-    			}		   	
+    			}
+    		   	
     	    	catch (Exception e) 
     			{
     	    		connected = false;
@@ -668,7 +682,7 @@ class Send {
 			        			System.out.println("\n     StackTrace: ");
 					        	ex.printStackTrace();
 			        			connected = false;  
-			        		    break;               // Restart connection
+			        		    break;               // Restart connection attempts
 			        		}
 			        	  
 			        		
@@ -762,11 +776,12 @@ class Send {
 	    		Thread.sleep(10);   		
 	    	} // End for (File file : files)
     	
-    		System.out.println("\n--Done attempt to send any available new images in image directory.");
+    		System.out.println("\n-----Done attempt to send any available new images in image directory.");
     		
     		Thread.sleep(2000);     // was 2000 Check for new files every two seconds, or resend what's still there.
     	} // End while run.
-    	    	
+    	
+    	System.out.println("\n--------------------------------------- End of main run thread. ");    	
     	
         //outputStream.flush();
         //System.out.println("Flushed: " + System.currentTimeMillis());

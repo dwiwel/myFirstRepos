@@ -22,8 +22,6 @@
 //       190913  minor.
 //       191008  Changed to using GPIO line 13 IR motion sensor.
 //       191010  Trying GPIO class from book.
-//       191016  Mod to AND both IO lines
-//       191024  RFI issue testing.
 
 #include <iostream>
 #include <stdio.h>
@@ -36,7 +34,7 @@
 
 #include <opencv2/opencv.hpp>         // opencv lib for image processing
 #include <raspicam/raspicam_cv.h>     // lib for accessing raspberry pi onboard camera.
-//#include <pigpio.h>                   // lib for accessing raspberry pi GPIO lines.
+#include <pigpio.h>                   // lib for accessing raspberry pi GPIO lines.
 
 #include "utils.hh"
 #include "SocketServer.h"
@@ -123,12 +121,12 @@ void* getCmdThread(void *passedArg) {
 			   }
 
 			   cmdCnt++;
-			   //cout << "-->> Client cmd count:  " << cmdCnt << endl;
-			   //cout << "Received from the client [" << rcvStr << "]" << endl;
+			   cout << "-->> Client cmd count:  " << cmdCnt << endl;
+			   cout << "Received from the client [" << rcvStr << "]" << endl;
 
 			   string message("Ack cmd: " + rcvStr);
 
-			   //cout << "Echo back: [" << message << "]" << endl;
+			   cout << "Echo back: [" << message << "]" << endl;
 			   int cnt = server.send(message);
 			   if (cnt < 0)  break;                    // Some error; reset listen.
 
@@ -170,13 +168,13 @@ void raiseFlag(int signum)
 
 
 
-//----------------------------------------------------------------------
+
 
 int main(int argCnt, char** args)
 {
 
     cout << "Starting my little **grabber6** program, using RPi camera and USB camera ... " << endl;
-    cout << "rev: 191024+. \n" << endl;
+    cout << "rev: 190717. \n" << endl;
     cout << "Uses the GPIO lines to get signal from IR sensors. Root privilege is required to run.\n" << endl;
 
     // opencv objects.
@@ -195,12 +193,15 @@ int main(int argCnt, char** args)
 
 	bool line13High = false;       //
 	bool line19High = false;
-	bool lineBothHigh =false;
 	int line13cnt = 0;             // Count of consecutive line 13 highs.
 	int line19cnt = 0;             // Count of consecutive line 19 highs.
-	int lineBothCnt = 0;
 
 	Utils util;
+
+
+//	GPIO outGPIO(17), inGPIO(27);    // pin 11 and pin 13        //#######################
+//	inGPIO.setDirection(INPUT);      // basic input example
+//	cout << "The input state is: "<< inGPIO.getValue() << endl;
 
 	//--- INITIALIZE VIDEOCAPTURE
 	//VideoCapture cap1;
@@ -233,28 +234,14 @@ int main(int argCnt, char** args)
     //
 	cout << "Initializing GPIO and image sources." << endl;
 
-
-
-	GPIO inGPIO_1(13);    // pin 11 and pin 13        //#######################
-	GPIO inGPIO_2(19);
     try
     {
-//		if (gpioInitialise() < 0)          // #### GPIO is used for the IR motion detector (disabled at this time)
-//		{
-//			cout << "!! Trouble starting GPIO functions!!" << endl;
-//		}
-//		gpioSetMode(18, PI_INPUT);    // Line GPIO18 is for input; pull down.
-//		gpioSetMode(19, PI_INPUT);    // Line GPIO19 is for input; pull down.
-//
-//
-
-
-		inGPIO_1.setDirection(INPUT);      // basic input example
-		inGPIO_2.setDirection(INPUT);      // basic input example
-		cout << "The input state of line1 is: "<< inGPIO_1.getValue() << endl;
-		cout << "The input state of line2 is: "<< inGPIO_2.getValue() << endl;
-
-
+		if (gpioInitialise() < 0)          // GPIO is used for the IR motion detector (disabled at this time)
+		{
+			cout << "!! Trouble starting GPIO functions!!" << endl;
+		}
+		gpioSetMode(18, PI_INPUT);    // Line GPIO18 is for input; pull down.
+		gpioSetMode(19, PI_INPUT);    // Line GPIO19 is for input; pull down.
 
 		util.initApp(argCnt, args);
 
@@ -331,8 +318,10 @@ int main(int argCnt, char** args)
 			time (&currentTime);
 			timeinfo = localtime(&currentTime);
 			strftime(buffer,sizeof(buffer),"%Y%m%d_%H%M%S",timeinfo);
-			std::string timestr(buffer);           // Event date-time stamp.
+			std::string timestr(buffer);
+		   // std::cout << timestr << ": ";
 
+			//cout << "commandStr: " + threadArgs->commandStr << endl;
 
 			// Check for incoming commands (from socket reading thread above).
 			//
@@ -343,28 +332,25 @@ int main(int argCnt, char** args)
 	        	cout << " > External Command received to take image. \n";
 	        }
 
-	        if ( (timeinfo->tm_hour == 12) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
-			{
-				sendPicPing = true;
-				std::cout << timestr << ": ";
-				cout << " S--------------------------------- Sending noon ping image.\n";
-			}
-			if ( (timeinfo->tm_hour == 0) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
-			{
-				sendPicPing = true;
-				std::cout << timestr << ": ";
-				cout << " --------------------------------- Sending midnight ping image.\n";
-			}
-//
-//			if (  (( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 0 )) || (( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 )) )
+//			if ( (timeinfo->tm_hour == 12) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
 //			{
 //				sendPicPing = true;
 //				std::cout << timestr << ": ";
-//				cout << " ---------------------- Sending hourly ping image ... \n";
+//				cout << " Sending noon ping image.\n";
+//			}
+//			if ( (timeinfo->tm_hour == 0) && ( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 ))
+//			{
+//				sendPicPing = true;
+//				std::cout << timestr << ": ";
+//				cout << " Sending midnight ping image.\n";
 //			}
 
-			string timeDateStr_image = util.getDateTimeStr();          // Image Date Time Stamp
-
+			if (  (( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 0 )) || (( timeinfo->tm_min == 0 ) && ( timeinfo->tm_sec == 1 )) )
+				{
+					sendPicPing = true;
+					std::cout << timestr << ": ";
+					cout << " ------------- Sending hourly ping image ... \n";
+				}
 			try
 			{
 				if (readyCam1)
@@ -394,7 +380,7 @@ int main(int argCnt, char** args)
 
 			try
 			{
-				if (readyCam1) resize( frameCam1, frameCam1, size );     // ###Resizes the native frame for transmission.
+				if (readyCam1) resize( frameCam1, frameCam1, size );     // Resizes the native frame for transmission.
 			}
 			catch (cv::Exception& ex)
 			{
@@ -404,7 +390,7 @@ int main(int argCnt, char** args)
 
 			try
 			{
-				if (readyCam2) resize( frameCam2, frameCam2, size );    // ### Resizes the native frame for transmission.
+				if (readyCam2) resize( frameCam2, frameCam2, size );    // Resizes the native frame for transmission.
 			}
 			catch (cv::Exception& ex )
 			{
@@ -487,23 +473,11 @@ int main(int argCnt, char** args)
 					if( !util.isHeadless()) imshow("Cam2 -- BW ", frameCam2_bw);
 					if( !util.isHeadless()) imshow("Cam2 -- Contrast Equalization", frameCam2_cor);
 				}
-//                                 #############################
-//				line13High = gpioRead(13);   // GPIO13  IR sensor input line.  (used to trigger image save)
-//				waitKey(2);
-//				line19High = gpioRead(19);   // GPIO19  IR sensor input line, 2nd sensor. (currently used.)
 
-				line13High = inGPIO_1.getValue();
-				//waitKey(2);
-				line19High = inGPIO_2.getValue();
-				lineBothHigh = line13High && line19High;
 
-				if(lineBothHigh)
-				{
-					lineBothCnt++;
-					std::cout << timestr << ": ";
-					cout << "-- **** Line BOTH HIGH;" << " count=" << lineBothCnt << endl;
-				}
-				else lineBothCnt = 0;
+				line13High = gpioRead(13);   // GPIO13  IR sensor input line.  (used to trigger image save)
+				waitKey(2);
+				line19High = gpioRead(19);   // GPIO19  IR sensor input line, 2nd sensor. (currently used.)
 
 				if (line13High)
 				{
@@ -531,33 +505,31 @@ int main(int argCnt, char** args)
 					//cout << " -- Line 19 low" << endl;
 				}
 
-				// Take two sets for images after GPIO line13 (and/or line19) goes high.
-				// On count 1 and 2, take/save images.
+				// Take two sets for images after GPIO line19 (and line13) goes high.
 				//
-//				if( (   (line19cnt >= 1) && (line19cnt <= 2)
-//				      && (line13cnt >= 1) && (line13cnt <= 2)
-//					)
-				if ( ((line13cnt >= 1) && (line13cnt <= 2))
+				if( (   (line19cnt >= 1) && (line19cnt <= 2)
+				      && (line13cnt >= 1) && (line13cnt <= 2)
+					)
 						|| sendPicPing
-						|| takeImageCmd
-				   )
+						|| takeImageCmd  )   // On count 1 and 2, take/save images.
 				{
 					std::cout << timestr << ": ";
-					cout << "----------***************** IR motion sensor detected activity; GPIO line13 high, or commanded to take ------" << endl;
-					//cout << "---------- ******** IR motion sensor detected activity or commanded to save image  ------" << endl;
+					cout << "----------IR motion sensor detected activity; GPIO line19 and line13 high ------" << endl;
 
 					if(readyCam1) if( !util.isHeadless()) imshow(" **Cam1 -- Saved frame", frameCam1 );
 					if(readyCam2) if( !util.isHeadless()) imshow(" **Cam2 -- Saved frame", frameCam2 );
 
+					string timeDateStr = util.getDateTimeStr();
+
 					if (readyCam1)
 					{
-						util.saveImageFile( frameCam1, "c1", line13cnt , timeDateStr_image);
-						util.saveImageFile( frameCam1_cor, "c1eq", line13cnt , timeDateStr_image);
+						util.saveImageFile( frameCam1, "c1", line19cnt , timeDateStr);
+						util.saveImageFile( frameCam1_cor, "c1eq", line19cnt , timeDateStr);
 					}
 					if (readyCam2)
 					{
-						util.saveImageFile( frameCam2, "c2", line13cnt , timeDateStr_image);
-						util.saveImageFile( frameCam2_cor, "c2eq", line13cnt , timeDateStr_image);
+						util.saveImageFile( frameCam2, "c2", line19cnt , timeDateStr);
+						util.saveImageFile( frameCam2_cor, "c2eq", line19cnt , timeDateStr);
 					}
 
 					takeImageCmd = false;      // Internal commands has been executed; clear flags.
@@ -568,7 +540,7 @@ int main(int argCnt, char** args)
 
 			//sleep(1);
 
-			waitKey(300);
+			waitKey(200);
 //			if (cv::waitKey(200) >= 0)    // 200  ms delay.  Check and take image this often.
 //			{
 //				break;
@@ -596,7 +568,7 @@ int main(int argCnt, char** args)
 	pthread_join(processMsgThreadId, NULL);   // Wait here until thread stops.
 
 
-   //  gpioTerminate();
+    gpioTerminate();
     // the camera will be deinitialized automatically in VideoCapture destructor
     cout << "Little grabber stopped. End of execution.  Enjoy the day!\n";
     return 0;

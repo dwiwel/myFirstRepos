@@ -8,6 +8,7 @@ CMakeFiles/grabber6.dir/SocketServer.cpp.o
  /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/SocketServer.cpp
  /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/SocketServer.h
 CMakeFiles/grabber6.dir/grabber.cpp.o
+ /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/GPIO.h
  /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/SocketServer.h
  /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/grabber.cpp
  /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/utils.hh
@@ -137,7 +138,6 @@ CMakeFiles/grabber6.dir/grabber.cpp.o
  /usr/local/include/opencv2/xfeatures2d.hpp
  /usr/local/include/opencv2/xfeatures2d/cuda.hpp
  /usr/local/include/opencv2/xfeatures2d/nonfree.hpp
- /usr/local/include/pigpio.h
  /usr/local/include/raspicam/raspicam_cv.h
 CMakeFiles/grabber6.dir/utils.cpp.o
  /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/utils.cpp

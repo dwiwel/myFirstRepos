@@ -7,6 +7,7 @@ CMakeFiles/grabber6.dir/GPIO.cpp.o: GPIO.h
 CMakeFiles/grabber6.dir/SocketServer.cpp.o: SocketServer.cpp
 CMakeFiles/grabber6.dir/SocketServer.cpp.o: SocketServer.h
 
+CMakeFiles/grabber6.dir/grabber.cpp.o: GPIO.h
 CMakeFiles/grabber6.dir/grabber.cpp.o: SocketServer.h
 CMakeFiles/grabber6.dir/grabber.cpp.o: grabber.cpp
 CMakeFiles/grabber6.dir/grabber.cpp.o: utils.hh
@@ -136,7 +137,6 @@ CMakeFiles/grabber6.dir/grabber.cpp.o: /usr/local/include/opencv2/videostab/wobb
 CMakeFiles/grabber6.dir/grabber.cpp.o: /usr/local/include/opencv2/xfeatures2d.hpp
 CMakeFiles/grabber6.dir/grabber.cpp.o: /usr/local/include/opencv2/xfeatures2d/cuda.hpp
 CMakeFiles/grabber6.dir/grabber.cpp.o: /usr/local/include/opencv2/xfeatures2d/nonfree.hpp
-CMakeFiles/grabber6.dir/grabber.cpp.o: /usr/local/include/pigpio.h
 CMakeFiles/grabber6.dir/grabber.cpp.o: /usr/local/include/raspicam/raspicam_cv.h
 
 CMakeFiles/grabber6.dir/utils.cpp.o: utils.cpp

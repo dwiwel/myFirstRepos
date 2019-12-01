@@ -107,7 +107,7 @@ using namespace std;
             //strftime(buffer,sizeof(buffer),"%d-%m-%Y %I:%M:%S",timeinfo);
             strftime(buffer,sizeof(buffer),"%Y%m%d_%H%M%S",timeinfo);
             std::string str(buffer);            
-            std::cout << str << endl;
+            // std::cout << str << endl;
 
           return str;
         }

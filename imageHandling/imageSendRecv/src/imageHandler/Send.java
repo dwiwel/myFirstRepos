@@ -14,6 +14,10 @@
 // 181227 Adding command line arg for server's IP address.
 // 190715B Testing. Cleanup.
 // 190717 Added SMS receiver, for future commands. 
+// 190906 Adding feature to execute commands via SMS. 
+// 190908 Fixed bug to handle if connection/power to Xbee lost.
+// 190910 Bug receiving inter-process message from grabber.
+// 190913 Info SMS messages to phone.
 
 package imageHandler;
 
@@ -28,8 +32,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
-import java.net.*;
+import java.io.InputStream;
 
+import java.net.*;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 
@@ -38,6 +43,7 @@ import com.digi.xbee.api.connection.serial.SerialPortRxTx;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.models.IPMessage;
 import com.digi.xbee.api.models.IPProtocol;
+import com.digi.xbee.api.models.PowerLevel;
 
 import java.io.BufferedWriter;
 import java.io.Console;
@@ -45,6 +51,7 @@ import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,22 +59,197 @@ import java.util.List;
 import java.nio.file.CopyOption.*;
 import java.nio.file.StandardCopyOption.*;
 
+import java.io.DataOutputStream;
+import java.io.InputStream;
+import java.io.DataInputStream;
+import java.util.Scanner;
 
 
-
-// Thread to receive instructions via SMS text messages.  Not currently used. 
+// Thread to receive IP msgs from grabber; acks, info
 //
-class RecvTxtMsgThread extends Thread {
+class RcvGrabberMsgThread extends Thread {      
+	
+	public boolean run = true;           // To stop thread gracefully.
+	public InputStream inputStream;
+	public DataInputStream dataInputStream;
 	
 	
-	public void run()
+	public Scanner scanner;
+	public Socket socket;
+	public boolean connected = true;
+			
+	@SuppressWarnings("deprecation")
+	public void run()	
 	{
-		System.out.format("\n**-- Starting RecvTxtMsgThread to read SMS text messages ...\n");
+		System.out.format("\n---- Starting RecGrabberMsgThread to read msgs from grabber ...\n");		
+
+		byte[] buffer = new byte[1024];
+		while (run)
+		{
+			System.out.println("-----------Checking for incoming msg from grabber, if connected.");
+			if ( true )
+			{
+				try 
+				{
+					if (socket != null)
+					{
+				        inputStream = socket.getInputStream();
+				        dataInputStream = new DataInputStream(inputStream);
+				        				        
+				        scanner = new Scanner(inputStream);
+						
+						if (dataInputStream.available() > 0 )							
+						{	
+							System.out.println("-----------Data is available. Reading ...");
+							//String incomingMsg = dataInputStream.readLine();     // ##### Seems to block here. 
+							//String incomingMsg = buffer.toString();
+							//String incomingMsg = dataInputStream.readLine();  
+							//int incomingMsgLen = inputStream.read(buffer);    // last tested; something comes over.
+																					
+							System.out.println("------- Incoming msg receive: " + scanner.nextLine() );
+							
+							//System.out.println("------- Incoming msg receive: " + buffer.toString()  + "  Length: " + incomingMsgLen );
+							//System.out.println("------- Incoming msg receive: " + incomingMsg  + "  Length: " + incomingMsg.length() );						
+						}
+						// in.close();  !! Don't close in Scanner. 
+						
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			// End connected while
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		// End while run.
 		
-		System.out.format("\n**--  RecvTxtMsgThread done. \n");
+		System.out.format("\n**--  RcvGrabberMsgThread done. \n");
 	}
 		
 }
+// end class RecvTxtMsgThread.
+
+
+
+// Thread to connect to grabber app, init connection. (for sending commands to take image)
+//
+class GrabberControlThread extends Thread
+{	
+    public String serverName = "localhost";
+    public int port = 8210;                     // Server side's listen port (grabber app)
+    public boolean connected = false;
+    public boolean run = true;
+    
+    public Socket socket = null;    
+    public OutputStream outputStream = null;
+    public InputStream inputStream = null;    
+    public DataOutputStream dataOutputStream = null;  
+    public DataInputStream dataInputStream = null;
+    public Scanner scanner = null;
+    
+    
+    public String cmdStr = "NULL";
+    
+	//@SuppressWarnings("deprecation")
+	public void run()	
+	{		
+		System.out.println("----in GrabberControlThread::run.");
+		
+		// Keep trying to connect to image grabber app (server side).
+		//
+		try
+		{		
+	    	while (run)
+	    	{	    		
+	    		if (!connected)
+	    		{
+	    			try
+	    			{
+				        socket = new Socket(serverName, port);		      
+				        
+				        outputStream = socket.getOutputStream();					      
+				        dataOutputStream = new DataOutputStream(outputStream);
+				        
+				        inputStream = socket.getInputStream();
+				        dataInputStream = new DataInputStream(inputStream);
+				        				        
+				        scanner = new Scanner(inputStream);
+				        
+				        connected = true;
+	    			}
+	    			catch (Exception ex)
+	    			{
+	    				connected = false;
+	    				System.out.println("!GrabberControlThread, trouble with starting listen connection, ex:" + ex );    				 
+	    				// ex.printStackTrace();
+	    			}
+	    		}	       	    			 
+	    		sendGrabberCommand("ping");          	    		
+	    		Thread.sleep(3000);
+	    	} 
+	    	// End run while    	   	
+	    	
+           System.out.println("---GrabberControlThread: Closing socket and terminating.");
+           if (connected) dataOutputStream.close(); // close the output stream when we're done.
+           if (connected) dataInputStream.close(); // close the output stream when we're done.
+           socket.close();           
+           if (connected) connected = false;
+           run = false;
+           
+		} catch (InterruptedException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			connected = false;           // cause a reconnect.
+			System.out.println("!!GrabberControlThread, ex: " + e);
+		}  catch (Exception e)
+		{
+			System.out.println("!!GrabberControlThread, unexpected ex: " + e);		
+		}
+                  
+		System.out.println("---- End of run thread.");
+	} // end of run.
+	
+	
+	public void sendGrabberCommand (String cmdStr)   
+	{		
+		//String cmdStrVal = cmdStr;
+		//byte bytesVal[] = cmdStrVal.getBytes(cmdStrVal);
+		
+		cmdStr.concat("\n");
+		
+		if (connected)
+		{	        
+	        try 
+	        {
+	        	System.out.println("\nSending command to grabber: " + cmdStr);
+	        		        	
+	        	byte buffer[] = cmdStr.getBytes();   // This works !!!
+	        	dataOutputStream.write(buffer);	         
+			}
+	        catch (IOException e) 
+			{
+				// TODO Auto-generated catch block
+				System.out.println("!!!!Some trouble in sendGrabberCommand to grabber: " + e);
+				e.printStackTrace();
+				connected = false;           // should cause a reconnect attempt.
+			} 	        
+		}
+		else 
+		{
+			System.out.println("!GrabberControlThread:sendGrabberCommand, not yet connected to grabber."); 	
+			connected = false;
+		}
+	}
+    	
+}    
+// end class GrabberControlThread.     
+        
 
 
 
@@ -76,17 +258,18 @@ class RecvTxtMsgThread extends Thread {
 //
 class Send {
   
-	static String serverName = "73.40.197.83";  // Default BlueJay Server IP; NY Cir router to Dev10.
+	static String serverName = "73.40.197.83";  // Default BlueJay Server IP; NY Cir router. Port fowared to Dev10.
 	//static String serverName = "10.0.0.39";  // Dev7.
 	                                   
     /* Constants */
     // TODO Replace with the serial port where your sender module is connected to.
     private static String TTY_PORT_0 = "/dev/ttyUSB0";             // USB port to XBee Cellular kit.
     private static String TTY_PORT_1 = "/dev/ttyUSB1";   
-    // TODO Replace with the baud rate of your sender module.  
+    private static String TTY_PORT_2 = "/dev/ttyUSB2";   
+        
     private static final int BAUD_RATE = 921600;	// 115200  230400  921600 (need to set XBee Cellular using XCTU)
     
-    private static int SERVER_PORT = 8207;                 // Server's listen port. (on DEV7)
+    private static int SERVER_PORT = 8207;                 // Server's receiver app listen port. (on DEV7 web server)
 
     private static final IPProtocol PROTOCOL_TCP = IPProtocol.TCP;
     
@@ -97,7 +280,7 @@ class Send {
     @SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
 
-    	System.out.format("\n-- Starting BlueJay imageSend app rev 190716A ...\n");
+    	System.out.format("\n-- Starting BlueJay imageSend app rev 1909nn...\n");
     	
         String inputImagePath = "";
         String backupImagePath = "";
@@ -148,107 +331,135 @@ class Send {
 //    	Thread.sleep(500);
 //    	out.write("B");
 //    	Thread.sleep(500);
-//    	serPort.close();
-    	
-    	RecvTxtMsgThread recvThread = new RecvTxtMsgThread();         // Thread to receive SMS txt messages.
-    	recvThread.start();
+//    	serPort.close();    	
     	
        	//List<String> results = new ArrayList<String>();
     	
     	boolean run = true;
-    	boolean connected = false;   // Flag to indicate a connection reset; timeout, no ack msg, etc.
+    	boolean connected = false;   // Flag to indicate the XBee connection status; timeouted, no ack msg, etc.
+    	                             // false will cause a reconnection attempt.
      	
+    	GrabberControlThread grabberControlThread = new GrabberControlThread();  // Thread to receive SMS txt messages.
+    	grabberControlThread.run = run;
+    	grabberControlThread.start();
+    	
+    	RcvGrabberMsgThread recvThread = new RcvGrabberMsgThread();         // Thread to receive TCP msgs from grabber.
+    	recvThread.run = run;    	
+    	recvThread.start();
+    	recvThread.connected = grabberControlThread.connected;    	
+    	recvThread.socket = grabberControlThread.socket;
+    	//recvThread.inputStream = grabberContr
+    	
     	// loop continuously, checking for (new) files in the /data/images dir and sending those images to server side.
     	//
     	while (run)
-    	{	    	    				
+    	{	    	    		
+    		recvThread.connected = grabberControlThread.connected;
+    		recvThread.socket = grabberControlThread.socket;
+    		
 			File devFile0 = new File(TTY_PORT_0);
 			File devFile1 = new File(TTY_PORT_1);	    			
-		    	   		
-    		if (!connected)    // connection requested.
-	   		{
+			File devFile2 = new File(TTY_PORT_2);
+			
+    		if (!connected)    // new/reset connection requested.
+	   		{	   	  
+    			System.out.println(">>>>>>>>>>>>>>>>>>>  Attempting new connecting to XBee cellular device >>>>>>>>>");
     		   	try	    		   	
-    	    	{			    	
-    	    	    if (devFile0.exists())    // TTY Port 0
+    	    	{
+    		   		if (myDevice != null)            
+    		   	    {
+    		   			myDevice.setReceiveTimeout(2000);
+    		   			
+    		   	    	if (myDevice.isOpen())
+    	   	    		{    	    		   	        		   	    		
+    	   	    			// myDevice.close();			     // !!!! May hang here if USB is pulled from XBee.  		   	    			
+    	   	    		}				    		   	    	
+    		   	    }	    		   	    
+   		   		
+    	    	    if (devFile0.exists())    // TTY Port 0; /dev/ttyUSB0  (may be on port 0 or 1)  
     	    	    {
-	    		   		System.out.println(">> Attempting new connection to XBee Cellular device via TTY_PORT_0 ... ");
-    		   	    	
-	       		   	    if (myDevice != null)            
-	    		   	    {
-	    		   	    	if (myDevice.isOpen())
-    		   	    		{			    
-    		   	    			myDevice.stopListening();
-    		   	    			myDevice.close();			    		   	    			
-    		   	    		}				    		   	    	
-	    		   	    }
-	       		   	    
+	    		   		System.out.println(">>>>>>> Attempting new connection to XBee Cellular device via TTY_PORT_0 ... ");
+    		   	    	     		   	    
 	       		   	    myDevice = null;
-	    	        	myDevice = new CellularDevice (TTY_PORT_0, BAUD_RATE);
-	    	        	
-	    	            myDevice.open();
-	   	    			myDevice.setReceiveTimeout(6000);       // was 12 seconds.
-	   	    
-	   	    		   	connected = true;	  // Connection to XBee cellular is ready.
-	   	 	    	
-	   	    		   	MySMSReceiveListener listener =  new MySMSReceiveListener();
-	   	    		   	listener.myDevice = myDevice;	   	    		   	
-	   	    			myDevice.addSMSListener(listener);     // cb for incoming msgs.
-	   				
-	   	    			System.out.println("\n>> Waiting for SMS...");
-	   	    			
-						//myDevice.reset();
-	    	            // myDevice.setSendTimeout(1000);
-	    	           // myDevice.setParameter(parameter, parameterValue)
-	    	            //String parameter = null;
-	    	            //myDevice.getParameter(parameter);
+	    	        	myDevice = new CellularDevice (TTY_PORT_0, BAUD_RATE);	   	   
+	   	    		   	connected = true;	         // Connection to XBee cellular is ready.
     	    	    }
-    	    	    else if (devFile1.exists())
+    	    	    else if (devFile1.exists())      // TTY Port 1; /dev/ttyUSB1  (may be on port 0 or 1)  
     	    	    {
-	    		   		System.out.println(" Attempting new connecting to XBee Cellular device via TTY_PORT_1 ... ");
-	    		   	    if (myDevice != null)
-	    		   	    {
-	    		   	    	if (myDevice.isOpen())
-	    		   	    		{			    
-	    		   	    			myDevice.stopListening();
-	    		   	    			myDevice.close();			    		   	    			
-	    		   	    		}
-	    		   	    }
-	    		   	    
+	    		   		System.out.println(">>>>>>>  Attempting new connecting to XBee Cellular device via TTY_PORT_1 ... ");
+	    		   			  		   	   
 	    		   	    myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_1, BAUD_RATE);
-	    	        	
-	    	            myDevice.open();
-	   	    			myDevice.setReceiveTimeout(6000);       // was 12 seconds.
-	    	          			    	    		   	    			
-	    	            //myDevice.reset();
-	    	            //myDevice.setParameter(parameter, parameterValue)
+	    	        	connected = true;	  // Connection to XBee cellular is ready.
+    	    	    }
+      	    	    else if (devFile2.exists())      // TTY Port 2; /dev/ttyUSB2  (may be on port 0 or 1 or 2)  
+    	    	    {
+	    		   		System.out.println(" >>>>>>> Attempting new connecting to XBee Cellular device via TTY_PORT_2 ... ");
+	    		   			  		   	   
+	    		   	    myDevice = null;
+	    	        	myDevice = new CellularDevice (TTY_PORT_2, BAUD_RATE);
+	    	        	connected = true;	  // Connection to XBee cellular is ready.
     	    	    }
     	    	    else
     	    	    {
-    	    	    	connected = false;     // try to connected again.
-    	    	    	System.out.println("!! TTY_USB Device file does not exist. Is device connected? ");
-    	    	    	Thread.sleep(1000);
-    	    	    	break;
+    	    	    	connected = false;     // not connected yet, so try to connected again.
+    	    	    	
+    	    	    	System.out.println("!!!!! TTY_USBn Device file does not exist. Is device connected and powered on? ");
+    	    	    	Thread.sleep(1000);    	    	  
     	    	    }
-		   		}
-    	    	catch (XBeeException e) 
+    	    	    
+       			    if ( connected )     // just connected now; open the device and make settings.
+	    		   	{
+       			    	try
+       			    	{
+       			    		myDevice.setReceiveTimeout(3000); 
+       			    		myDevice.open();
+       			    	}
+       			    	catch (XBeeException e)
+       			    	{
+       	    	    		connected = false;
+       	    			    System.out.println(" !!!! Trouble opening XBee Cellular Device. ex: " + e.getMessage());
+       			    	}
+       			    	
+			    		myDevice.setReceiveTimeout(6000);                 // was 12 seconds.		 	 	    
+			    		
+//						byte[] value = {0};   // 1 for yes, 0 for no.  
+//						myDevice.setParameter("AM", value );                // Airplane mode.
+//						System.out.println (" ------ Powering Xbee RF on (Airplane mode off).");
+					    		
+						MySMSReceiveListener listener =  new MySMSReceiveListener();
+						listener.myDevice = myDevice;	   	    		   	
+						myDevice.addSMSListener(listener);                // cb incoming for SMS text messages.
+									
+						listener.grabberThread = grabberControlThread;
+													
+						//myDevice.reset();
+						// myDevice.setSendTimeout(1000);
+						// myDevice.setParameter(parameter, parameterValue)
+						//String parameter = null;
+						//myDevice.getParameter(parameter);
+											
+						System.out.println("\n>> Connected okay to XBee, waiting for SMS, process any image files ...");
+	    		   	}			
+    			}
+    		   	
+    	    	catch (Exception e) 
     			{
     	    		connected = false;
-    			    System.out.println(" !! Error opening ZigBee cellular myDevice: exc: " + e.getMessage() + "\n");
-    			    System.out.println("\n     StackTrace: ");
-    			    e.printStackTrace();
-    			    break;
-		   		}
-	    	} // End if !connected.
+    			    System.out.println(" !! Error opening ZigBee cellular myDevice: exc: " + e.getMessage());
+    			    System.out.println("    StackTrace: ");
+    			    e.printStackTrace();      			  
+    			}    	     
+    		   	// 
+	    	} // End if !connected.    		       		
+			
+    		//grabberControlThread.sendGrabberCommand( "ping" );  
     		
-    		
-		    System.out.println("\n>> Checking for existance of new image files, make connection to server ... ");
+		    System.out.println("\n>> Checking for existance of new image files ...");
     		File[] files = new File("/data/images").listFiles();
     		
-    		//ArrayList<File> fileList = new ArrayList<File>(Arrays.asList(files));    		    	
-    		//fileList.sort(c);
+    		System.out.println ("  Number of image files now present: " + files.length );
     		
-    		System.out.println ("  Number of files now present: " + files.length );
 //    		if (files.length == 0)
 //    		{
 //    			byte[] value = {1};    			     // Plane mode on; power off.
@@ -267,11 +478,17 @@ class Send {
 //        			System.out.println ("  Powering Xbee RF ON.");
 //    			}
 //    		}
-    				
+
+    		
     		int fileCnt = 0;
     		for (File file : files)    // For each file in the /data/image dir.
 	    	{
-    			
+    			if (!connected) break;
+    							
+//				byte[] value1 = {0};   // 1 for yes, 0 for no.  
+//				myDevice.setParameter("AM", value1 );                // Airplane mode.
+//				System.out.println ("----- Powering Xbee RF on (Airplane mode off)");
+								
 	    		if (file.isFile())
 	    		{	    
 	    			fileCnt++;
@@ -284,15 +501,24 @@ class Send {
 	    	   			Thread.sleep(1000);
 	    	   			break;	    	   		
 	    	   		}
-	    		   		    	   			    	
-	    		   	if (!myDevice.isOpen() || !myDevice.isConnected() )
-    		   		{
-	    		   		System.out.println("-- WARNING: Device is not open and/or not connected to Internet.  ");
-    		   			connected = false;             
-    		   			break;
-    		   		}	
-	    		   			    			
-	    		   	
+	    	   		
+	    		   	try
+	    		   	{
+		    		   	if (!myDevice.isOpen() || !myDevice.isConnected() )     // May be a timeout issue here. 
+	    		   		{
+		    		   		System.out.println("-- WARNING: Device is not open and/or not connected to Internet.  ");
+	    		   			connected = false;             
+	    		   			break;
+	    		   		}	
+	    			}
+			        catch (Exception e)
+			        {			        	  
+			        	 System.out.println("!! May have lost connection to XBee device. ex: " + e.getMessage() + "\n");			       
+			        	 e.printStackTrace();
+			        	 connected = false;    // will try to reconnected.
+			        	 break;
+			        }
+			        
 	    			fileName = file.getName();
 	    			System.out.format(">> Next Image file to be processed: '%s'\n", fileName) ;
 	    			inputImagePath = "/data/images/" + fileName;
@@ -323,7 +549,6 @@ class Send {
 			       
 			        	if (!myDevice.isConnected()) System.out.println(" WARNING: Device not connected to Internet.");
 			        
-			        	
 			        	myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),  // This will open socket connection to server, and			        	
 				                SERVER_PORT, PROTOCOL_TCP, "X".getBytes());                     // send beginning of msg indicator 'X'.		        	
 			        	
@@ -345,8 +570,7 @@ class Send {
 				        connected = true;
 			        }
 			        catch (Exception e)
-			        {
-			        	   
+			        {			        	  
 			        	 System.out.println("!! Can't connect to server or Trouble sending msg header " +
 			        	 		"\n!! and/or image metadata. exc: " + e.getMessage() + "\n");			       
 			        	 e.printStackTrace();
@@ -458,7 +682,7 @@ class Send {
 			        			System.out.println("\n     StackTrace: ");
 					        	ex.printStackTrace();
 			        			connected = false;  
-			        		    break;               // Restart connection
+			        		    break;               // Restart connection attempts
 			        		}
 			        	  
 			        		
@@ -552,11 +776,12 @@ class Send {
 	    		Thread.sleep(10);   		
 	    	} // End for (File file : files)
     	
-    		System.out.println("\n--Done attempt to send any available new images in image directory.");
+    		System.out.println("\n-----Done attempt to send any available new images in image directory.");
     		
     		Thread.sleep(2000);     // was 2000 Check for new files every two seconds, or resend what's still there.
     	} // End while run.
-    	    	
+    	
+    	System.out.println("\n--------------------------------------- End of main run thread. ");    	
     	
         //outputStream.flush();
         //System.out.println("Flushed: " + System.currentTimeMillis());
@@ -567,7 +792,7 @@ class Send {
     	
     	recvThread.stop();    	
     	
-        System.out.println("\n---- End of BluJay Producer Client execution.");
+        System.out.println("\n---- End of BlueJay Producer Client execution.");
 
     }
 }

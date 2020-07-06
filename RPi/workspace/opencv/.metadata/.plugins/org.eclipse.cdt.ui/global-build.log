@@ -1471,3 +1471,257 @@ Scanning dependencies of target grabber4
 [ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
 [ 66%] Linking CXX executable grabber4
 [100%] Built target grabber4
+03:44:13 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+04:45:30 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+13:44:41 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+13:45:37 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+13:46:13 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+19:21:12 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+19:34:41 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+04:57:38 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+04:58:11 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+04:58:32 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+05:24:46 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+05:26:47 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+05:29:30 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+21:00:10 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+12:31:26 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+12:50:14 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+14:10:21 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+14:11:10 **** Clean-only build of configuration Default for project grabber4 ****
+make clean 
+14:11:16 **** Build of configuration Default for project grabber4 ****
+make all 
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Building CXX object CMakeFiles/grabber4.dir/utils.cpp.o
+[100%] Linking CXX executable grabber4
+[100%] Built target grabber4
+20:09:13 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp: In function ‘int main(int, char**)’:
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp:28:19: error: cannot call member function ‘void Utils::testMe()’ without object
+     Utils::testMe();
+                   ^
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp:81:49: error: cannot call member function ‘void Utils::saveImageFile(cv::Mat)’ without object
+                 Utils::saveImageFile( saveFrame );
+                                                 ^
+make[2]: *** [CMakeFiles/grabber4.dir/grabber.cpp.o] Error 1
+CMakeFiles/grabber4.dir/build.make:62: recipe for target 'CMakeFiles/grabber4.dir/grabber.cpp.o' failed
+make[1]: *** [CMakeFiles/grabber4.dir/all] Error 2
+CMakeFiles/Makefile2:67: recipe for target 'CMakeFiles/grabber4.dir/all' failed
+make: *** [all] Error 2
+Makefile:83: recipe for target 'all' failed
+20:09:50 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+12:00:08 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+12:00:54 **** Clean-only build of configuration Default for project grabber4 ****
+make clean 
+12:00:57 **** Build of configuration Default for project grabber4 ****
+make all 
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Building CXX object CMakeFiles/grabber4.dir/utils.cpp.o
+[100%] Linking CXX executable grabber4
+[100%] Built target grabber4
+12:01:31 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+12:03:30 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+12:04:26 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+12:07:33 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp: In function ‘int main(int, char**)’:
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp:336:5: warning: exception of type ‘cv::Exception’ will be caught
+     catch (Exception& ex)
+     ^
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp:329:5: warning:    by earlier handler for ‘cv::Exception’
+     catch (cv::Exception& ex)
+     ^
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+12:08:35 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+17:58:13 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+18:02:35 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+18:04:45 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+18:11:21 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+19:42:45 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+19:58:07 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+19:58:18 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+19:58:20 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+19:58:31 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+19:59:02 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+20:01:29 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+20:01:31 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+20:03:08 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+20:06:42 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+20:07:21 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+20:50:12 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+20:50:21 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+20:50:22 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+20:51:52 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp: In function ‘int main(int, char**)’:
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp:106:17: error: ‘deviceID_cam1’ was not declared in this scope
+   if (!cap.open(deviceID_cam1) )       // Capture device raspicam
+                 ^
+make[2]: *** [CMakeFiles/grabber4.dir/grabber.cpp.o] Error 1
+make[1]: *** [CMakeFiles/grabber4.dir/all] Error 2
+CMakeFiles/grabber4.dir/build.make:62: recipe for target 'CMakeFiles/grabber4.dir/grabber.cpp.o' failed
+make: *** [all] Error 2
+CMakeFiles/Makefile2:67: recipe for target 'CMakeFiles/grabber4.dir/all' failed
+Makefile:83: recipe for target 'all' failed
+20:56:35 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp: In function ‘int main(int, char**)’:
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp:106:30: error: no matching function for call to ‘raspicam::RaspiCam_Cv::open(int&)’
+   if (!cap.open(deviceID_cam1) )       // Capture device raspicam
+                              ^
+/home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp:106:30: note: candidate is:
+In file included from /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4/grabber.cpp:29:0:
+/usr/local/include/raspicam/raspicam_cv.h:60:14: note: bool raspicam::RaspiCam_Cv::open()
+         bool open ( void );
+              ^
+/usr/local/include/raspicam/raspicam_cv.h:60:14: note:   candidate expects 0 arguments, 1 provided
+make[2]: *** [CMakeFiles/grabber4.dir/grabber.cpp.o] Error 1
+make[1]: *** [CMakeFiles/grabber4.dir/all] Error 2
+CMakeFiles/grabber4.dir/build.make:62: recipe for target 'CMakeFiles/grabber4.dir/grabber.cpp.o' failed
+make: *** [all] Error 2
+CMakeFiles/Makefile2:67: recipe for target 'CMakeFiles/grabber4.dir/all' failed
+Makefile:83: recipe for target 'all' failed
+20:59:47 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+Scanning dependencies of target grabber4
+[ 33%] Building CXX object CMakeFiles/grabber4.dir/grabber.cpp.o
+[ 66%] Linking CXX executable grabber4
+[100%] Built target grabber4
+21:00:36 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+05:22:58 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4
+11:34:48 **** Incremental Build of configuration Default for project grabber4 ****
+make all 
+[100%] Built target grabber4

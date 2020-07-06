@@ -1,0 +1,51 @@
+#include <iostream>
+#include <time.h>
+#include <unistd.h>  // for sleep
+
+#include "network/SocketClient.h"
+using namespace std;
+using namespace exploringRPi;
+
+int main(int argc, char *argv[]){
+   if(argc!=2){
+      cout << "Incorrect usage: " << endl;
+      cout << "   client server_name" << endl;
+      return 2;
+   }
+   cout << "Starting RPi Client Example" << endl;
+   SocketClient sc(argv[1], 54321);
+
+   bool run = true;
+   while (run == true)
+   {
+	   string commandStr("");
+	   string rcvStr("");
+	   cout << "Connect to server ..." << endl;
+	   int ret = sc.connectToServer();
+
+	   bool connected;
+	   if (ret == -1) connected = false; else connected = true;
+
+	   while ( (commandStr != "STOP") && connected )
+	   {
+		   cout << "Enter command: ";
+		   getline( cin, commandStr);
+
+		   cout << "Sending [" << commandStr << "]" << endl;
+		   ret = sc.send(commandStr);
+		   if (ret == -1) connected = false; else connected = true;
+
+		   cout << "Waiting for response ..." << endl;
+		   rcvStr = "";
+		   rcvStr = sc.receive(1024);
+		   if (rcvStr == "ERR" )  connected = false; else connected = true;
+		   cout << "Received [" << rcvStr << "]" << endl;
+	   }
+
+	   cout << "Disconnect from server." << endl;
+	   if (sc.isClientConnected() ) sc.disconnectFromServer();
+	   sleep(2);
+   }
+
+   cout << "End of RPi Client Example" << endl;
+}

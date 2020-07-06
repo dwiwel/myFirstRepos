@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config date="1509832497631" transient="false" version="3.0">
+	<site updateable="true" url="platform:/base/" enabled="true" policy="USER-EXCLUDE">
+		<feature id="org.eclipse.equinox.p2.extras.feature" version="1.1.0.dist-7A6FEcBpDPWGofGLmS7BA7" url="features/org.eclipse.equinox.p2.extras.feature_1.1.0.dist-7A6FEcBpDPWGofGLmS7BA7/">
+		</feature>
+		<feature id="org.eclipse.equinox.p2.core.feature" version="1.1.0.dist-829FFneFKlR6A96" url="features/org.eclipse.equinox.p2.core.feature_1.1.0.dist-829FFneFKlR6A96/">
+		</feature>
+		<feature id="org.eclipse.help" version="1.4.1.dist-8v7oFRvFCmSPZkILLj597H" url="features/org.eclipse.help_1.4.1.dist-8v7oFRvFCmSPZkILLj597H/" plugin-identifier="org.eclipse.help.base">
+		</feature>
+		<feature id="org.eclipse.equinox.p2.user.ui" version="2.2.0.dist-62DG8ltB_LdNsDxGEh7m9FbLOK8" url="features/org.eclipse.equinox.p2.user.ui_2.2.0.dist-62DG8ltB_LdNsDxGEh7m9FbLOK8/">
+		</feature>
+		<feature id="org.eclipse.rcp" version="3.8.1.dist-8LA2GODFTJUDJ21934" url="features/org.eclipse.rcp_3.8.1.dist-8LA2GODFTJUDJ21934/">
+		</feature>
+		<feature id="org.eclipse.platform" version="3.8.1.dist-A8F8_IVSG4VZSDmg7oLVfBs5JohYFyJZcMPL9" url="features/org.eclipse.platform_3.8.1.dist-A8F8_IVSG4VZSDmg7oLVfBs5JohYFyJZcMPL9/">
+		</feature>
+		<feature id="org.eclipse.cvs" version="1.3.200.dist-7B79FJJ9exZ_" url="features/org.eclipse.cvs_1.3.200.dist-7B79FJJ9exZ_/">
+		</feature>
+		<feature id="org.eclipse.equinox.p2.rcp.feature" version="1.1.0.dist-785EoAUkcjGofGLmS7BA7" url="features/org.eclipse.equinox.p2.rcp.feature_1.1.0.dist-785EoAUkcjGofGLmS7BA7/">
+		</feature>
+	</site>
+	<site updateable="true" url="file:/home/pi/.eclipse/org.eclipse.platform_3.8_155965261/" enabled="true" policy="USER-EXCLUDE">
+		<feature id="org.eclipse.cdt.msw" version="1.0.0.201202111925" url="features/org.eclipse.cdt.msw_1.0.0.201202111925/">
+		</feature>
+	</site>
+	<site updateable="true" url="file:dropins/sdk/" enabled="true" policy="USER-EXCLUDE">
+		<feature id="org.eclipse.equinox.p2.core.feature.source" version="1.1.0.dist-829FFneFKlR6A96" url="features/org.eclipse.equinox.p2.core.feature.source_1.1.0.dist-829FFneFKlR6A96/">
+		</feature>
+		<feature id="org.eclipse.platform.source" version="3.8.1.dist-A8F8_IVSG4VZSDmg7oLVfBs5JohYFyJZcMPL9" url="features/org.eclipse.platform.source_3.8.1.dist-A8F8_IVSG4VZSDmg7oLVfBs5JohYFyJZcMPL9/">
+		</feature>
+		<feature id="org.eclipse.rcp.source" version="3.8.1.dist-8LA2GODFTJUDJ21934" url="features/org.eclipse.rcp.source_3.8.1.dist-8LA2GODFTJUDJ21934/">
+		</feature>
+		<feature id="org.eclipse.equinox.p2.extras.feature.source" version="1.1.0.dist-7A6FEcBpDPWGofGLmS7BA7" url="features/org.eclipse.equinox.p2.extras.feature.source_1.1.0.dist-7A6FEcBpDPWGofGLmS7BA7/">
+		</feature>
+		<feature id="org.eclipse.license" version="1.0.0.dist" url="features/org.eclipse.license_1.0.0.dist/">
+		</feature>
+		<feature id="org.eclipse.cvs.source" version="1.3.200.dist-7B79FJJ9exZ_" url="features/org.eclipse.cvs.source_1.3.200.dist-7B79FJJ9exZ_/">
+		</feature>
+		<feature id="org.eclipse.pde" version="3.8.1.dist-7c7vFiyFALX8A" url="features/org.eclipse.pde_3.8.1.dist-7c7vFiyFALX8A/">
+		</feature>
+		<feature id="org.eclipse.equinox.p2.rcp.feature.source" version="1.1.0.dist-785EoAUkcjGofGLmS7BA7" url="features/org.eclipse.equinox.p2.rcp.feature.source_1.1.0.dist-785EoAUkcjGofGLmS7BA7/">
+		</feature>
+		<feature id="org.eclipse.equinox.p2.user.ui.source" version="2.2.0.dist-62DG8ltB_LdNsDxGEh7m9FbLOK8" url="features/org.eclipse.equinox.p2.user.ui.source_2.2.0.dist-62DG8ltB_LdNsDxGEh7m9FbLOK8/">
+		</feature>
+		<feature id="org.eclipse.pde.source" version="3.8.1.dist-7c7vFiyFALX8A" url="features/org.eclipse.pde.source_3.8.1.dist-7c7vFiyFALX8A/">
+		</feature>
+		<feature id="org.eclipse.help.source" version="1.4.1.dist-8v7oFRvFCmSPZkILLj597H" url="features/org.eclipse.help.source_1.4.1.dist-8v7oFRvFCmSPZkILLj597H/">
+		</feature>
+		<feature id="org.eclipse.jdt.source" version="3.8.1.dist-8-8nFqrFFgQGJ" url="features/org.eclipse.jdt.source_3.8.1.dist-8-8nFqrFFgQGJ/">
+		</feature>
+		<feature id="org.eclipse.sdk" version="3.8.1.dist-7Q85DOBoMDElVYJXaEcz0e0aY6Tnt0Ra0eDROJ9IBeOgk" url="features/org.eclipse.sdk_3.8.1.dist-7Q85DOBoMDElVYJXaEcz0e0aY6Tnt0Ra0eDROJ9IBeOgk/">
+		</feature>
+	</site>
+	<site updateable="true" url="file:../../share/eclipse/dropins/jdt/" enabled="true" policy="USER-EXCLUDE">
+		<feature id="org.eclipse.jdt" version="3.8.1.dist-8-8nFqrFFgQGJ" url="features/org.eclipse.jdt_3.8.1.dist-8-8nFqrFFgQGJ/">
+		</feature>
+	</site>
+	<site updateable="true" url="file:../../share/eclipse/dropins/cdt/eclipse/" enabled="true" policy="USER-EXCLUDE">
+		<feature id="org.eclipse.cdt.platform" version="8.5.0.dist" url="features/org.eclipse.cdt.platform_8.5.0.dist/">
+		</feature>
+		<feature id="org.eclipse.cdt.debug.ui.memory" version="8.5.0.dist" url="features/org.eclipse.cdt.debug.ui.memory_8.5.0.dist/">
+		</feature>
+		<feature id="org.eclipse.cdt.testsrunner.feature" version="8.5.0.dist" url="features/org.eclipse.cdt.testsrunner.feature_8.5.0.dist/">
+		</feature>
+		<feature id="org.eclipse.cdt.gnu.dsf" version="8.5.0.dist" url="features/org.eclipse.cdt.gnu.dsf_8.5.0.dist/">
+		</feature>
+		<feature id="org.eclipse.cdt.visualizer" version="8.5.0.dist" url="features/org.eclipse.cdt.visualizer_8.5.0.dist/">
+		</feature>
+		<feature id="org.eclipse.cdt.native" version="8.5.0.dist" url="features/org.eclipse.cdt.native_8.5.0.dist/">
+		</feature>
+		<feature id="org.eclipse.cdt.gnu.build" version="8.5.0.dist" url="features/org.eclipse.cdt.gnu.build_8.5.0.dist/">
+		</feature>
+		<feature id="org.eclipse.cdt.gdb" version="8.5.0.dist" url="features/org.eclipse.cdt.gdb_8.5.0.dist/">
+		</feature>
+		<feature id="org.eclipse.cdt.gnu.multicorevisualizer" version="8.5.0.dist" url="features/org.eclipse.cdt.gnu.multicorevisualizer_8.5.0.dist/">
+		</feature>
+		<feature id="org.eclipse.cdt.gnu.debug" version="8.5.0.dist" url="features/org.eclipse.cdt.gnu.debug_8.5.0.dist/">
+		</feature>
+		<feature id="org.eclipse.cdt.build.crossgcc" version="8.5.0.dist" url="features/org.eclipse.cdt.build.crossgcc_8.5.0.dist/">
+		</feature>
+	</site>
+</config>

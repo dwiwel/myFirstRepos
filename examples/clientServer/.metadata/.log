@@ -1,0 +1,47 @@
+!SESSION 2019-09-03 11:03:07.473 -----------------------------------------------
+eclipse.buildId=debbuild
+java.version=1.8.0_65
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=arm, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk
+
+!ENTRY org.eclipse.osgi 2 1 2019-09-03 11:04:26.234
+!MESSAGE NLS unused message: ConvertTargetAction_No_Converter in: org.eclipse.cdt.managedbuilder.internal.ui.Messages
+!SESSION 2019-09-03 11:07:06.408 -----------------------------------------------
+eclipse.buildId=debbuild
+java.version=1.8.0_65
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=arm, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk
+
+!ENTRY org.eclipse.osgi 2 1 2019-09-03 11:08:12.988
+!MESSAGE NLS unused message: ConvertTargetAction_No_Converter in: org.eclipse.cdt.managedbuilder.internal.ui.Messages
+
+!ENTRY org.eclipse.core.resources 4 77 2019-09-03 11:09:27.753
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2019-09-03 11:09:27.753
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2019-09-03 11:09:27.753
+!MESSAGE /home/pi/java_proj/gitHub/myFirstRepos/examples/clientServer overlaps the workspace location: /home/pi/java_proj/gitHub/myFirstRepos/examples/clientServer
+
+!ENTRY org.eclipse.core.resources 4 77 2019-09-03 11:09:49.694
+!MESSAGE Invalid project description.
+!SUBENTRY 1 unknown 0 0 2019-09-03 11:09:49.695
+!MESSAGE OK
+!SUBENTRY 1 org.eclipse.core.resources 4 77 2019-09-03 11:09:49.695
+!MESSAGE /home/pi/java_proj/gitHub/myFirstRepos/examples/clientServer overlaps the workspace location: /home/pi/java_proj/gitHub/myFirstRepos/examples/clientServer
+
+!ENTRY org.eclipse.cdt.core.native 4 0 2019-09-03 11:12:11.528
+!MESSAGE no spawner in java.library.path
+
+!ENTRY org.eclipse.cdt.core 1 0 2019-09-03 11:12:27.801
+!MESSAGE Indexed 'client' (8 sources, 149 headers) in 13.1 sec: 11,192 declarations; 17,541 references; 0 unresolved inclusions; 0 syntax errors; 2 unresolved names (0.007%)
+!SESSION 2019-09-05 10:49:50.279 -----------------------------------------------
+eclipse.buildId=debbuild
+java.version=1.8.0_65
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=arm, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk
+
+!ENTRY org.eclipse.core.resources 2 10035 2019-09-05 10:50:28.221
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.

@@ -1,0 +1,9 @@
+06:19:26 **** Incremental Build of configuration Default for project client ****
+make all 
+Scanning dependencies of target client
+[ 33%] Building CXX object CMakeFiles/client.dir/client.cpp.o
+[ 66%] Linking CXX executable client
+[100%] Built target client
+
+06:19:27 Build Finished (took 1s.580ms)
+

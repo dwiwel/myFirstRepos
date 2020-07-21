@@ -18,6 +18,7 @@
 // 190908 Fixed bug to handle if connection/power to Xbee lost.
 // 190910 Bug receiving inter-process message from grabber.
 // 190913 Info SMS messages to phone.
+// 200720 Bug: stops reading and/or sending images.  ?Some thread ?
 
 package imageHandler;
 
@@ -86,7 +87,7 @@ class RcvGrabberMsgThread extends Thread {
 		byte[] buffer = new byte[1024];
 		while (run)
 		{
-			System.out.println("-----------Checking for incoming msg from grabber, if connected.");
+			//System.out.println("-----------Checking for incoming msg from grabber, if connected.");
 			if ( true )
 			{
 				try 
@@ -227,7 +228,7 @@ class GrabberControlThread extends Thread
 		{	        
 	        try 
 	        {
-	        	System.out.println("\nSending command to grabber: " + cmdStr);
+	        	//System.out.println("\nSending command to grabber: " + cmdStr);
 	        		        	
 	        	byte buffer[] = cmdStr.getBytes();   // This works !!!
 	        	dataOutputStream.write(buffer);	         
@@ -336,7 +337,7 @@ class Send {
        	//List<String> results = new ArrayList<String>();
     	
     	boolean run = true;
-    	boolean connected = false;   // Flag to indicate the XBee connection status; timeouted, no ack msg, etc.
+    	boolean connected = false;   // Flag to indicate the XBee connection status; timed outed, no ack msg, etc.
     	                             // false will cause a reconnection attempt.
      	
     	GrabberControlThread grabberControlThread = new GrabberControlThread();  // Thread to receive SMS txt messages.
@@ -372,7 +373,7 @@ class Send {
     		   			
     		   	    	if (myDevice.isOpen())
     	   	    		{    	    		   	        		   	    		
-    	   	    			// myDevice.close();			     // !!!! May hang here if USB is pulled from XBee.  		   	    			
+    	   	    			myDevice.close();			     // !!!! May hang here if USB is pulled from XBee.  		   	    			
     	   	    		}				    		   	    	
     		   	    }	    		   	    
    		   		
@@ -411,14 +412,15 @@ class Send {
        			    if ( connected )     // just connected now; open the device and make settings.
 	    		   	{
        			    	try
-       			    	{
-       			    		myDevice.setReceiveTimeout(3000); 
+       			    	{       			    		
        			    		myDevice.open();
+       			    		myDevice.setReceiveTimeout(2000);
        			    	}
        			    	catch (XBeeException e)
        			    	{
        	    	    		connected = false;
        	    			    System.out.println(" !!!! Trouble opening XBee Cellular Device. ex: " + e.getMessage());
+       	   		    
        			    	}
        			    	
 			    		myDevice.setReceiveTimeout(6000);                 // was 12 seconds.		 	 	    
@@ -439,14 +441,14 @@ class Send {
 						//String parameter = null;
 						//myDevice.getParameter(parameter);
 											
-						System.out.println("\n>> Connected okay to XBee, waiting for SMS, process any image files ...");
+						System.out.println("\n>> Waiting for cmd msgs, via XBee SMS texts ...");
 	    		   	}			
     			}
     		   	
     	    	catch (Exception e) 
     			{
     	    		connected = false;
-    			    System.out.println(" !! Error opening ZigBee cellular myDevice: exc: " + e.getMessage());
+    			    System.out.println(" !! ERROR opening ZigBee cellular myDevice: exc: " + e.getMessage());
     			    System.out.println("    StackTrace: ");
     			    e.printStackTrace();      			  
     			}    	     
@@ -483,7 +485,11 @@ class Send {
     		int fileCnt = 0;
     		for (File file : files)    // For each file in the /data/image dir.
 	    	{
-    			if (!connected) break;
+    			if (!connected) 
+    				{
+    					System.out.println("! WARNING: Cellular Device is not connected yet.");
+    					break;    				
+    				}
     							
 //				byte[] value1 = {0};   // 1 for yes, 0 for no.  
 //				myDevice.setParameter("AM", value1 );                // Airplane mode.
@@ -491,14 +497,15 @@ class Send {
 								
 	    		if (file.isFile())
 	    		{	    
-	    			fileCnt++;
+	    			
 	    	   		
 	    	   		// Only proceed if device is open and connected to Internet;
 	    	   		//
 	    	   		if (myDevice == null )
 	    	   		{
 	    	   			connected = false;
-	    	   			Thread.sleep(1000);
+	    	   			System.out.println("! WARNING: myDevice not yet initialized.");
+	    	   			Thread.sleep(2000);
 	    	   			break;	    	   		
 	    	   		}
 	    	   		
@@ -506,7 +513,7 @@ class Send {
 	    		   	{
 		    		   	if (!myDevice.isOpen() || !myDevice.isConnected() )     // May be a timeout issue here. 
 	    		   		{
-		    		   		System.out.println("-- WARNING: Device is not open and/or not connected to Internet.  ");
+		    		   		System.out.println("! WARNING: Device is not open and/or not connected to Internet.  ");
 	    		   			connected = false;             
 	    		   			break;
 	    		   		}	
@@ -526,7 +533,8 @@ class Send {
 	    			//outputImagePathThumb = "/data/images/thumb_" + fileName;
 	    			fileNameInBytes = fileName.getBytes();
 	    		    fileNameLen = fileNameInBytes.length;
-	    		    			    	
+	    		    fileCnt++;
+	    		    
 			        // Send size of filename string and then send image file to receiver side
 			        //
 			        byte[] sizeOfFilename = ByteBuffer.allocate(4).putInt(fileNameLen).array();

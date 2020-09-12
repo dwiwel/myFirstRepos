@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="jars_extra/android-sdk-5.1.1.jar"/>
-	<classpathentry kind="lib" path="jars_extra/android-sdk-addon-3.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars_extra/android-sdk-5.1.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="jars_extra/android-sdk-addon-3.jar"/>
 	<classpathentry kind="lib" path="jars_extra/rxtx-1.7.jar"/>
 	<classpathentry kind="lib" path="jars_extra/rxtx-2.2.jar"/>
 	<classpathentry kind="lib" path="jars_extra/RXTXcomm-1.7.jar"/>

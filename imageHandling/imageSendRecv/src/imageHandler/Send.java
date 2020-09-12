@@ -18,7 +18,7 @@
 // 190908 Fixed bug to handle if connection/power to Xbee lost.
 // 190910 Bug receiving inter-process message from grabber.
 // 190913 Info SMS messages to phone.
-// 200720 Bug: stops reading and/or sending images.  ?Some thread ?
+// 200720 Bug: stops reading and/or sending images.  ?Some thread ?  It's okay.  
 
 package imageHandler;
 

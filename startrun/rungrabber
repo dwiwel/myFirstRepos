@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber4
+./grabber4 | tee /home/pi/Desktop/grabber_log.txt 2>&1 
+
+

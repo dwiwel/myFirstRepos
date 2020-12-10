@@ -1,0 +1,13 @@
+#! /bin/bash 
+
+echo "Running script to move images from /data dir to Piwigo page of Web Server."
+sleep 2
+
+while [ true ]
+do
+	echo "-- Moving image files to Piwigo based Web server."
+	perl ~/startrun/piwigo_import_tree.pl --user=photouser --password=7614Lex --directory=/data/images --base_url="http://127.0.0.1/piwigo"
+	sleep 1;
+done
+
+

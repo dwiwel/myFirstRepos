@@ -1,0 +1,8 @@
+#! /bin/bash
+
+end=$((SECONDS+3))
+while [ $SECONDS -lt $end ]; do
+	perl piwigo_import_tree.pl --user=don --password=7614Lexington --directory=/data/images --base_url="http://127.0.0.1/piwigo"
+done
+
+

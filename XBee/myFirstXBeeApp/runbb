@@ -1,0 +1,15 @@
+<<<<<<< HEAD
+#!/bin/sh
+
+~/ejdk1.8.0_131/linux_arm_sflt/jre/bin/java -Djava.library.path=/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/native/Linux/arm7l -Dfile.encoding=UTF-8 -classpath /home/dwiwel/java_proj/XBee/myFirstXBeeApp/bin:/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/xbee-java-library-1.2.0.jar:/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/slf4j-api-1.7.12.jar:/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/slf4j-nop-1.7.12.jar:/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/rxtx-1.7.jar:/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs com.digi.xbee.example.MainApp /dev/ttyUSB1 73.40.197.83 11010
+
+
+sleep 2
+=======
+#!/bin/sh
+
+~/ejdk1.8.0_131/linux_arm_sflt/jre/bin/java -Djava.library.path=/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/native/Linux/arm7l -Dfile.encoding=UTF-8 -classpath /home/dwiwel/java_proj/XBee/myFirstXBeeApp/bin:/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/xbee-java-library-1.2.0.jar:/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/slf4j-api-1.7.12.jar:/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/slf4j-nop-1.7.12.jar:/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs/rxtx-1.7.jar:/home/dwiwel/java_proj/XBee/XBeeJavaLib_XBJL-1.2.0/XBJL-1.2.0/extra-libs com.digi.xbee.example.MainApp /dev/ttyUSB1 73.40.197.83 11010
+
+
+sleep 2
+>>>>>>> bfc92b836a02d9ee1331989282de10f7752ca9e2

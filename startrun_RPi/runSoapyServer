@@ -1,0 +1,3 @@
+cd /media/pi/ExtendA/home/pi/SoapyRemote/build/server
+./SoapySDRServer --bind 
+

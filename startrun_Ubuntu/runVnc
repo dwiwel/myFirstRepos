@@ -1,0 +1,5 @@
+#!/bin/bash
+ x11vnc -autoport 5902 -display :0 -forever -rfbauth ~/.vnc/passwd &
+
+
+

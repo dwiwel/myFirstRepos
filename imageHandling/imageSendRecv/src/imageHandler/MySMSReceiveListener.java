@@ -1,3 +1,7 @@
+//
+// rev: 210710  Added invalid command reply to SMS client (cell phone txt msg)
+
+
 package imageHandler;
 
 import java.io.IOException;
@@ -15,16 +19,18 @@ public class MySMSReceiveListener implements ISMSReceiveListener {
 	
 	String cmdStr = null;
 	
+	public String phoneNum;
+	
 	@Override
 	public void smsReceived(SMSMessage smsMessage) {
 		// TODO Auto-generated method stub
 		String msgIn = smsMessage.getData();
-		String phoneNum = smsMessage.getPhoneNumber();
+		phoneNum = smsMessage.getPhoneNumber();     // phone num of Cell phone sending message.
 		
 		System.out.format(">>Received SMS from %s >> '%s' \n", phoneNum, msgIn);
 		
 		try {
-			myDevice.sendSMSAsync(smsMessage.getPhoneNumber(), "BlueJay Ack: \n" + msgIn);
+			myDevice.sendSMSAsync(phoneNum, "BlueJay Ack: \n" + msgIn);
 			
 		} catch (TimeoutException e) {
 			System.out.println("!Trouble with sendSMSAsync #1, timeout: " + e );			
@@ -62,6 +68,21 @@ public class MySMSReceiveListener implements ISMSReceiveListener {
 				e.printStackTrace();
 			}
 		}
+		else 
+		{
+			try {
+				myDevice.sendSMSAsync( phoneNum, "INVALID Cmd rcvd! " );
+			
+			} catch (TimeoutException e) {
+				// TODO Auto-generated catch block
+				System.out.println("!Trouble with sendSMSAsync #1, timeout: " + e );
+				e.printStackTrace();
+			} catch (XBeeException e) {
+				// TODO Auto-generated catch block
+				System.out.println("!Trouble with sendSMSAsync #2, Xbee: " + e );
+				e.printStackTrace();		
+			}
+		}	
 	}	
 	
 }

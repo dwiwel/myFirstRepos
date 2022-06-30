@@ -18,7 +18,7 @@
 // 190908 Fixed bug to handle if connection/power to Xbee lost.
 // 190910 Bug receiving inter-process message from grabber.
 // 190913 Info SMS messages to phone.
-// 200720 Bug: stops reading and/or sending images.  ?Some thread ?  It's okay.  
+// 210720 Bug: stops reading and/or sending images.  ?Some thread ?  It's okay.  
 
 package imageHandler;
 
@@ -36,11 +36,10 @@ import java.io.OutputStream;
 import java.io.InputStream;
 
 import java.net.*;
-import java.net.Inet4Address;
-import java.net.UnknownHostException;
 
 import com.digi.xbee.api.CellularDevice;
 import com.digi.xbee.api.connection.serial.SerialPortRxTx;
+import com.digi.xbee.api.exceptions.TimeoutException;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.models.IPMessage;
 import com.digi.xbee.api.models.IPProtocol;
@@ -79,9 +78,13 @@ class RcvGrabberMsgThread extends Thread {
 	public Socket socket;
 	public boolean connected = true;
 			
+	public String phoneNum;
+	 
 	@SuppressWarnings("deprecation")
 	public void run()	
 	{
+		
+		
 		System.out.format("\n---- Starting RecGrabberMsgThread to read msgs from grabber ...\n");		
 
 		byte[] buffer = new byte[1024];
@@ -259,7 +262,7 @@ class GrabberControlThread extends Thread
 //
 class Send {
   
-	static String serverName = "73.40.197.83";  // Default BlueJay Server IP; NY Cir router. Port fowared to Dev10.
+	static String serverName = "73.174.230.49";  // Default BlueJay Server IP; NY Cir router. Port fowared to Dev10.
 	//static String serverName = "10.0.0.39";  // Dev7.
 	                                   
     /* Constants */
@@ -432,9 +435,9 @@ class Send {
 						MySMSReceiveListener listener =  new MySMSReceiveListener();
 						listener.myDevice = myDevice;	   	    		   	
 						myDevice.addSMSListener(listener);                // cb incoming for SMS text messages.
-									
-						listener.grabberThread = grabberControlThread;
-													
+						
+						listener.grabberThread = grabberControlThread;				
+						
 						//myDevice.reset();
 						// myDevice.setSendTimeout(1000);
 						// myDevice.setParameter(parameter, parameterValue)
@@ -442,6 +445,20 @@ class Send {
 						//myDevice.getParameter(parameter);
 											
 						System.out.println("\n>> Waiting for cmd msgs, via XBee SMS texts ...");
+						
+						try {
+							myDevice.sendSMSAsync("7039636672", "BlueJay imageSend process started at New York Cir.");
+							
+						} catch (TimeoutException e) {
+							System.out.println("!Trouble with sendSMSAsync #1, timeout: " + e );			
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (XBeeException e) {
+							// TODO Auto-generated catch block
+							System.out.println("!Trouble with sendSMSAsync #2, XBee: " + e );
+							e.printStackTrace();
+						}
+						
 	    		   	}			
     			}
     		   	
@@ -777,8 +794,8 @@ class Send {
 			        {
 			        	file.renameTo(new File(backupImagePath));
 			        	System.out.println("-- Done sending file to server.\n");
-			        }
-			        if (fileCnt == 1) myDevice.sendSMSAsync("7039636672", "BlueJay Detection: " + fileName);      // Send alert txt msg.	
+			        }			      
+			        if (fileCnt == 1) myDevice.sendSMSAsync("7039636672", "BlueJay Detection: " + fileName);      // Send alert txt msg.
 	    		} // End if file is a file.    		
 	    		
 	    		Thread.sleep(10);   		

@@ -18,7 +18,10 @@
 // 190908 Fixed bug to handle if connection/power to Xbee lost.
 // 190910 Bug receiving inter-process message from grabber.
 // 190913 Info SMS messages to phone.
-// 210720 Bug: stops reading and/or sending images.  ?Some thread ?  It's okay.  
+// 210720 Bug: stops reading and/or sending images.  ?Some thread ?  It's okay. 
+// 220703 Working here.  Fixing coms disruption issued for USB to LTE cell device.
+
+
 
 package imageHandler;
 
@@ -82,12 +85,10 @@ class RcvGrabberMsgThread extends Thread {
 	 
 	@SuppressWarnings("deprecation")
 	public void run()	
-	{
-		
-		
+	{	
 		System.out.format("\n---- Starting RecGrabberMsgThread to read msgs from grabber ...\n");		
 
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[1024]; 
 		while (run)
 		{
 			//System.out.println("-----------Checking for incoming msg from grabber, if connected.");
@@ -262,7 +263,7 @@ class GrabberControlThread extends Thread
 //
 class Send {
   
-	static String serverName = "73.174.230.49";  // Default BlueJay Server IP; NY Cir router. Port fowared to Dev10.
+	static String serverName = "73.174.230.49";  // Default BlueJay Server IP; NY Cir router. Port fowarded to Dev10 (Ubuntu).
 	//static String serverName = "10.0.0.39";  // Dev7.
 	                                   
     /* Constants */
@@ -340,8 +341,10 @@ class Send {
        	//List<String> results = new ArrayList<String>();
     	
     	boolean run = true;
+    	boolean starting = true;
     	boolean connected = false;   // Flag to indicate the XBee connection status; timed outed, no ack msg, etc.
-    	                             // false will cause a reconnection attempt.
+    	                             // false will cause a reconnection attempt.  (may be connected, but not open)
+    	boolean opened = false;
      	
     	GrabberControlThread grabberControlThread = new GrabberControlThread();  // Thread to receive SMS txt messages.
     	grabberControlThread.run = run;
@@ -365,34 +368,42 @@ class Send {
 			File devFile1 = new File(TTY_PORT_1);	    			
 			File devFile2 = new File(TTY_PORT_2);
 			
-    		if (!connected)    // new/reset connection requested.
+    		if (!connected)    // Not yet connected to Zigbee LTE cell device; new/reset connection requested.
 	   		{	   	  
-    			System.out.println(">>>>>>>>>>>>>>>>>>>  Attempting new connecting to XBee cellular device >>>>>>>>>");
+    			System.out.println(">>>>>>>>>>>>>>>>>>>  Attempting new connecting to XBee cellular LTE device >>>>>>>>>");
     		   	try	    		   	
     	    	{
     		   		if (myDevice != null)            
-    		   	    {
-    		   			myDevice.setReceiveTimeout(2000);
-    		   			
-    		   	    	if (myDevice.isOpen())
-    	   	    		{    	    		   	        		   	    		
-    	   	    			myDevice.close();			     // !!!! May hang here if USB is pulled from XBee.  		   	    			
-    	   	    		}				    		   	    	
+    		   	    {    		    		   		    		   			   			    		   		
+    		   			try
+    		   			{
+    		   				if (myDevice.isConnected()) System.out.println(">>>>>>>>>>>> myDevice is connected");
+    		   				if (myDevice.isOpen()) myDevice.close();  
+    		   			}
+    		   			catch (Exception e)
+    		   			{
+    		   				System.out.println("!Trouble opening myDevice " + e ); 
+    		   				e.printStackTrace();   		   		
+    		   			}
     		   	    }	    		   	    
    		   		
-    	    	    if (devFile0.exists())    // TTY Port 0; /dev/ttyUSB0  (may be on port 0 or 1)  
+    		   		if (myDevice.isConnected()) System.out.println(">>>>>>>>>>>> myDevice is connected");
+    		   		
+    		   		
+    	    	    if (devFile0.exists())    // Open the Device file; USB TTY Port 0; /dev/ttyUSB0  (may be on port 0 or 1)  
     	    	    {
 	    		   		System.out.println(">>>>>>> Attempting new connection to XBee Cellular device via TTY_PORT_0 ... ");
-    		   	    	     		   	    
-	       		   	    myDevice = null;
-	    	        	myDevice = new CellularDevice (TTY_PORT_0, BAUD_RATE);	   	   
+    		   	    	connected = false;    		   	    	
+	       		   	    //myDevice = null;
+	    	        	myDevice = new CellularDevice (TTY_PORT_0, BAUD_RATE);	
+
 	   	    		   	connected = true;	         // Connection to XBee cellular is ready.
     	    	    }
     	    	    else if (devFile1.exists())      // TTY Port 1; /dev/ttyUSB1  (may be on port 0 or 1)  
     	    	    {
 	    		   		System.out.println(">>>>>>>  Attempting new connecting to XBee Cellular device via TTY_PORT_1 ... ");
 	    		   			  		   	   
-	    		   	    myDevice = null;
+	    		   	    //myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_1, BAUD_RATE);
 	    	        	connected = true;	  // Connection to XBee cellular is ready.
     	    	    }
@@ -400,7 +411,7 @@ class Send {
     	    	    {
 	    		   		System.out.println(" >>>>>>> Attempting new connecting to XBee Cellular device via TTY_PORT_2 ... ");
 	    		   			  		   	   
-	    		   	    myDevice = null;
+	    		   	    //myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_2, BAUD_RATE);
 	    	        	connected = true;	  // Connection to XBee cellular is ready.
     	    	    }
@@ -412,22 +423,15 @@ class Send {
     	    	    	Thread.sleep(1000);    	    	  
     	    	    }
     	    	    
-       			    if ( connected )     // just connected now; open the device and make settings.
-	    		   	{
-       			    	try
-       			    	{       			    		
-       			    		myDevice.open();
-       			    		myDevice.setReceiveTimeout(2000);
-       			    	}
-       			    	catch (XBeeException e)
-       			    	{
-       	    	    		connected = false;
-       	    			    System.out.println(" !!!! Trouble opening XBee Cellular Device. ex: " + e.getMessage());
-       	   		    
-       			    	}
-       			    	
+       			    if ( connected )     // just connected now; try to open the device and make settings.
+       			    {	
+       			    	starting = false;
 			    		myDevice.setReceiveTimeout(6000);                 // was 12 seconds.		 	 	    
 			    		
+			    		if (myDevice.isOpen()) myDevice.close();
+			    		myDevice.open();  
+						opened = true;
+						
 //						byte[] value = {0};   // 1 for yes, 0 for no.  
 //						myDevice.setParameter("AM", value );                // Airplane mode.
 //						System.out.println (" ------ Powering Xbee RF on (Airplane mode off).");
@@ -444,34 +448,46 @@ class Send {
 						//String parameter = null;
 						//myDevice.getParameter(parameter);
 											
-						System.out.println("\n>> Waiting for cmd msgs, via XBee SMS texts ...");
+						System.out.println("\n>> Waiting for incoming cmd msgs, via XBee SMS texts ...");
 						
 						try {
 							myDevice.sendSMSAsync("7039636672", "BlueJay imageSend process started at New York Cir.");
+							connected = true;
 							
 						} catch (TimeoutException e) {
 							System.out.println("!Trouble with sendSMSAsync #1, timeout: " + e );			
-							// TODO Auto-generated catch block
 							e.printStackTrace();
+							connected = false;							
 						} catch (XBeeException e) {
-							// TODO Auto-generated catch block
 							System.out.println("!Trouble with sendSMSAsync #2, XBee: " + e );
 							e.printStackTrace();
-						}
-						
-	    		   	}			
-    			}
-    		   	
+							connected = false;
+													
+						} catch (Exception e) {							
+							System.out.println("!Trouble with sendSMSAsync; other exc: " + e );
+							if (e.getMessage() == "The connection interface is not open.")
+							{						
+								connected = false;
+							}							
+							e.printStackTrace();
+							connected = false;						
+						}			
+	    		   	} // if not eq null. 
+    	    	}  	
     	    	catch (Exception e) 
     			{
     	    		connected = false;
-    			    System.out.println(" !! ERROR opening ZigBee cellular myDevice: exc: " + e.getMessage());
+    	    		System.out.println(" !! ERROR connecting ZigBee cellular myDevice: exc: " + e.getMessage());
     			    System.out.println("    StackTrace: ");
     			    e.printStackTrace();      			  
     			}    	     
     		   	// 
-	    	} // End if !connected.    		       		
+	    	}   // End if !connected.  (connection start up)  		       		
 			
+    		
+    		// Check for image files, read file, sent to web server.
+    		// 
+    		
     		//grabberControlThread.sendGrabberCommand( "ping" );  
     		
 		    System.out.println("\n>> Checking for existance of new image files ...");
@@ -513,9 +529,7 @@ class Send {
 //				System.out.println ("----- Powering Xbee RF on (Airplane mode off)");
 								
 	    		if (file.isFile())
-	    		{	    
-	    			
-	    	   		
+	    		{	      	   		
 	    	   		// Only proceed if device is open and connected to Internet;
 	    	   		//
 	    	   		if (myDevice == null )
@@ -531,15 +545,15 @@ class Send {
 		    		   	if (!myDevice.isOpen() || !myDevice.isConnected() )     // May be a timeout issue here. 
 	    		   		{
 		    		   		System.out.println("! WARNING: Device is not open and/or not connected to Internet.  ");
-	    		   			connected = false;             
+	    		   			connected = false;      // will try to reconnected        
 	    		   			break;
 	    		   		}	
 	    			}
 			        catch (Exception e)
 			        {			        	  
-			        	 System.out.println("!! May have lost connection to XBee device. ex: " + e.getMessage() + "\n");			       
-			        	 e.printStackTrace();
+			        	 System.out.println("!! May have lost connection to XBee device. ex: " + e.getMessage() + "\n");
 			        	 connected = false;    // will try to reconnected.
+			        	 e.printStackTrace();			        	 
 			        	 break;
 			        }
 			        

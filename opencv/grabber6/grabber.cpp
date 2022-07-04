@@ -1,4 +1,6 @@
 /**
+ * grabber6
+ *
   @file grabber.cpp for grabber4 (original taken from videocapture_basic.cpp
   @brief A very basic sample for using VideoCapture and VideoWriter
   @author PkLab.net  (Thank You!)
@@ -117,6 +119,8 @@ void* getCmdThread(void *passedArg) {
 				//string msg = rcvStr.c_str();        // Will make a null terminate string.
 				//char *writeBuffer =   msg.data();
 
+			   cout << " Msg from ImageSend: " << rcvStr << endl;
+
 			   if (rcvStr == "err" || rcvStr == "eof")
 			   {
 				   cout << "!Error while rcv msg from client, or connection closed by client." << endl;
@@ -136,7 +140,6 @@ void* getCmdThread(void *passedArg) {
 			   if (rcvStr.compare("takeimage") == 0 )  threadArgs->commandStr = "takeimage";
 			   else if (rcvStr.compare("err") == 0 )   threadArgs->commandStr = "err";
 			   else  threadArgs->commandStr = "\ngetCmdThread: unk command from client: " + rcvStr;
-
 
 		   }
 		   catch (exception *ex)

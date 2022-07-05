@@ -12,6 +12,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <iostream>
+
 using namespace std;
 
 
@@ -52,37 +54,58 @@ int SocketServer::send(std::string message){
 
 	//string msg = message.c_str();  // Will make a null terminated string.
 	//char *writeBuffer =  message.data();
+	int n = 0;
+	string msg;
 
-	string msg = message.c_str();
-	msg.append("\n");                      // Needs null to work right.
-	int length = msg.length();
+	try
+	{
+		msg = message.c_str();
+		msg.append("\n");                      // Needs null to work right.
+		int length = msg.length();
 
-	char *writeBuffer =  msg.data();
+		char *writeBuffer =  msg.data();
 
-    int n = write(this->clientSocketfd, writeBuffer, length);      // ????
+		n = write(this->clientSocketfd, writeBuffer, length);      // ????
 
-    if (n < 0){
-       perror("Socket Server: error writing to client socket.");
-       return n;
-    }
-    return n;
+		if (n < 0){
+		   perror("!! SocketServer::send: error writing to client socket.");
+		   return n;
+		}
+		return n;
+	}
+	catch (char *ex)
+	{
+		cout << "!! Some error in SocketServer::send. " << endl;
+		return n;
+	}
+	return n;
 }
 
 
 
 string SocketServer::receive(int size=1024)
 {
-    char readBuffer[size];
-    memset (readBuffer, 0, size);
+	char readBuffer[size];
+	int n;
 
-    int n = read(this->clientSocketfd, readBuffer, size);
+	try
+	{
+		memset (readBuffer, 0, size);
 
-    if (n < 0){
-       perror("Socket Server: error reading from client socket.");
-       return ("ERR");
-    }
-    else if (n == 0){
-	  return ("NULL");
+		n = read(this->clientSocketfd, readBuffer, size);
+
+		if (n < 0){
+		   perror("Socket Server: error reading from client socket.");
+		   return string("ERR");
+		}
+		else if (n == 0){
+		  return string("NULL");
+		}
+	}
+	catch (char *ex)
+	{
+		cout << "!! Some error in SocketServer::receive." << endl;
+		return ("NULL");
 	}
 
     return string(readBuffer);

@@ -47,6 +47,8 @@ unistd.h
 -
 string.h
 -
+iostream
+-
 
 /home/pi/java_proj/gitHub/myFirstRepos/opencv/grabber6/SocketServer.h
 sys/socket.h
@@ -70,6 +72,8 @@ time.h
 unistd.h
 -
 ctime
+-
+cctype
 -
 pthread.h
 -

@@ -357,7 +357,9 @@ class Send {
     	recvThread.socket = grabberControlThread.socket;
     	//recvThread.inputStream = grabberContr
     	
-    	// loop continuously, checking for (new) files in the /data/images dir and sending those images to server side.
+    	// Main app loop.
+    	// loop continuously, checking for (new) files in the /data/images dir and 
+    	// sending those images to server side.
     	//
     	while (run)
     	{	    	    		
@@ -368,18 +370,17 @@ class Send {
 			File devFile1 = new File(TTY_PORT_1);	    			
 			File devFile2 = new File(TTY_PORT_2);
 			
-    		if (!connected)    // Not yet connected to Zigbee LTE cell device; new/reset connection requested.
+    		if (!connected)    // If Not yet connected to Zigbee LTE cell device; new/reset connection requested.
 	   		{	   	  
     			System.out.println(">>>>>>>>>>>>>>>>>>>  Attempting new connecting to XBee cellular LTE device >>>>>>>>>");
     		   	try	    		   	
     	    	{
-    		   		if (myDevice != null)            
+    		   		if (myDevice != null)          
     		   	    {    		    		   		    		   			   			    		   		
     		   			try
-    		   			{
-    		   				if (myDevice.isConnected()) System.out.println(">>>>>>>>>>>> myDevice is connected");
-    		   				if (myDevice.isOpen()) myDevice.close();  
-    		   			}
+    		   			{    		   				
+    		   				//if (myDevice.isOpen()) myDevice.close();      	
+    		   			} 
     		   			catch (Exception e)
     		   			{
     		   				System.out.println("!Trouble opening myDevice " + e ); 
@@ -387,14 +388,14 @@ class Send {
     		   			}
     		   	    }	    		   	    
    		   		
-    		   		if (myDevice.isConnected()) System.out.println(">>>>>>>>>>>> myDevice is connected");
+    		   		
     		   		
     		   		
     	    	    if (devFile0.exists())    // Open the Device file; USB TTY Port 0; /dev/ttyUSB0  (may be on port 0 or 1)  
     	    	    {
 	    		   		System.out.println(">>>>>>> Attempting new connection to XBee Cellular device via TTY_PORT_0 ... ");
     		   	    	connected = false;    		   	    	
-	       		   	    //myDevice = null;
+	       		   	    myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_0, BAUD_RATE);	
 
 	   	    		   	connected = true;	         // Connection to XBee cellular is ready.
@@ -403,7 +404,7 @@ class Send {
     	    	    {
 	    		   		System.out.println(">>>>>>>  Attempting new connecting to XBee Cellular device via TTY_PORT_1 ... ");
 	    		   			  		   	   
-	    		   	    //myDevice = null;
+	    		   	    myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_1, BAUD_RATE);
 	    	        	connected = true;	  // Connection to XBee cellular is ready.
     	    	    }
@@ -411,7 +412,7 @@ class Send {
     	    	    {
 	    		   		System.out.println(" >>>>>>> Attempting new connecting to XBee Cellular device via TTY_PORT_2 ... ");
 	    		   			  		   	   
-	    		   	    //myDevice = null;
+	    		   	    myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_2, BAUD_RATE);
 	    	        	connected = true;	  // Connection to XBee cellular is ready.
     	    	    }
@@ -426,11 +427,14 @@ class Send {
        			    if ( connected )     // just connected now; try to open the device and make settings.
        			    {	
        			    	starting = false;
+       			    	
+       			    	//if (myDevice.isOpen()) myDevice.close();
+       			    	
+			    		myDevice.open();  
+						
 			    		myDevice.setReceiveTimeout(6000);                 // was 12 seconds.		 	 	    
 			    		
-			    		if (myDevice.isOpen()) myDevice.close();
-			    		myDevice.open();  
-						opened = true;
+			    		opened = true;
 						
 //						byte[] value = {0};   // 1 for yes, 0 for no.  
 //						myDevice.setParameter("AM", value );                // Airplane mode.
@@ -484,6 +488,8 @@ class Send {
     		   	// 
 	    	}   // End if !connected.  (connection start up)  		       		
 			
+    		//if (myDevice.isConnected()) System.out.println(">>>>>>>>>>>> myDevice is connected. <<<<<<<");
+    		
     		
     		// Check for image files, read file, sent to web server.
     		// 

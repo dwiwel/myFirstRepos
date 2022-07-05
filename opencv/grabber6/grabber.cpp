@@ -27,15 +27,18 @@
 //       191016  Mod to AND both IO lines
 //       191024  RFI issue testing.
 //       210710
+//       220704  fix bug; app stops if TCP connection is broken.
 
 #include <iostream>
 #include <stdio.h>
 #include <time.h>
 #include <unistd.h>  // for sleep
 #include <ctime>
-
+#include <cctype>
 #include <pthread.h>
 #include <csignal>
+using namespace std;
+
 
 #include <opencv2/opencv.hpp>         // opencv lib for image processing
 #include <raspicam/raspicam_cv.h>     // lib for accessing raspberry pi onboard camera.
@@ -49,7 +52,7 @@
 #include<unistd.h>  // for the usleep() function
 #include"GPIO.h"
 using namespace exploringRPi;
-using namespace std;
+
 
 
 #define SIGHUP  1   /* Hangup the process */
@@ -85,11 +88,11 @@ void* getCmdThread(void *passedArg) {
    int cmdCnt = 0;
    bool serverRunning = false;
 
-
-
    while (threadArgs->run)
    {
-	   SocketServer server(8210);      // This is for imageSend client to connect in.
+	   // Start up this server side thead.
+
+	   SocketServer server(8210);      // This is for imageSend client to connect in to this server side.
 
 	   cout << "Listening for a new control client to connect in ..." << endl;
 	   int retVal = server.listen();
@@ -101,7 +104,7 @@ void* getCmdThread(void *passedArg) {
 	   else
 	   {
 		   serverRunning = true;
-		   cout << "Client connected." << endl;
+		   cout << "New imageSend Client connected." << endl;
 	   }
 
 	   cmdCnt = 0;
@@ -110,9 +113,10 @@ void* getCmdThread(void *passedArg) {
 	   {
 		   try
 		   {
-			   string rcvStr = server.receive(1024);
-			   //rcvStr = rcvStr.toLowerCase();
+			   std::string rcvStr = server.receive(1024);
+			   //rcvStr = std::tolower(rcvStr);
 
+			   //std::transform(rcvStr.begin(), rcvStr.end(), rcvStr.begin(), tolower);
 //			   server.receive(readBuffer, 1024);
 //			   rcvStr = string(readBuffer);
 
@@ -121,7 +125,9 @@ void* getCmdThread(void *passedArg) {
 
 			   cout << " Msg from ImageSend: " << rcvStr << endl;
 
-			   if (rcvStr == "err" || rcvStr == "eof")
+			   if (rcvStr == "err" || rcvStr == "eof" || rcvStr == "null"
+					   || rcvStr == "ERR" || rcvStr == "EOF" || rcvStr == "NULL"
+			   	   )
 			   {
 				   cout << "!Error while rcv msg from client, or connection closed by client." << endl;
 				   break;
@@ -135,7 +141,7 @@ void* getCmdThread(void *passedArg) {
 
 			   //cout << "Echo back: [" << message << "]" << endl;
 			   int cnt = server.send(message);
-			   if (cnt < 0)  break;                    // Some error; reset listen.
+			   //if (cnt < 0)  break;                    // Some error; reset listen.
 
 			   if (rcvStr.compare("takeimage") == 0 )  threadArgs->commandStr = "takeimage";
 			   else if (rcvStr.compare("err") == 0 )   threadArgs->commandStr = "err";
@@ -146,10 +152,12 @@ void* getCmdThread(void *passedArg) {
 		   {
 			   cout << "! Exception while reading from client. Resetting server." << endl;
 			   sleep(2);
-			   break;
+
+			   break;      // Start over.
 		   }
 		   sleep(1);
 	   }
+	   cout << "Ending getCmdThread " << endl;
 	   sleep(2);
    }
 
@@ -179,7 +187,7 @@ void raiseFlag(int signum)
 int main(int argCnt, char** args)
 {
 
-    cout << "Starting my little **grabber6** program, using RPi camera and USB camera ... " << endl;
+	cout << "Starting my little **grabber6** program, using RPi camera and USB camera ... " << endl;
     cout << "rev: 191024+. \n" << endl;
     cout << "Uses the GPIO lines to get signal from IR sensors. Root privilege is required to run.\n" << endl;
 
@@ -325,7 +333,7 @@ int main(int argCnt, char** args)
 		bool sendPicPing = false;
 		bool takeImageCmd = false;
 
-		while (run)
+		while (run)         // Main runtime loop.
 		{
 			currentTime = time(NULL);
 
@@ -460,7 +468,7 @@ int main(int argCnt, char** args)
 				prevFrame = frameCam1.clone();
 			}
 
-			if (useIRsensor)                  //#######
+			if (useIRsensor)                  // Black and White image (I think)
 			{
 				// Apply hist eq on image to cam1 image; IR Cam.
 				//

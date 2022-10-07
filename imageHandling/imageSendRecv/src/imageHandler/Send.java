@@ -19,7 +19,9 @@
 // 190910 Bug receiving inter-process message from grabber.
 // 190913 Info SMS messages to phone.
 // 210720 Bug: stops reading and/or sending images.  ?Some thread ?  It's okay. 
-// 220703 Working here.  Fixing coms disruption issued for USB to LTE cell device.
+// 220727 Working here.  Fixing coms disruption issued for USB to LTE cell device.
+//        Some thread is stopping unexpectedly? Possibly main thread.
+//        Adding try/catch to stop main loop on error.
 
 
 
@@ -76,7 +78,6 @@ class RcvGrabberMsgThread extends Thread {
 	public InputStream inputStream;
 	public DataInputStream dataInputStream;
 	
-	
 	public Scanner scanner;
 	public Socket socket;
 	public boolean connected = true;
@@ -88,9 +89,12 @@ class RcvGrabberMsgThread extends Thread {
 	{	
 		System.out.format("\n---- Starting RecGrabberMsgThread to read msgs from grabber ...\n");		
 
-		byte[] buffer = new byte[1024]; 
+		// byte[] buffer = new byte[1024];     not used. 
+		int loopCounter = 0;
+		
 		while (run)
 		{
+			loopCounter++;
 			//System.out.println("-----------Checking for incoming msg from grabber, if connected.");
 			if ( true )
 			{
@@ -105,13 +109,13 @@ class RcvGrabberMsgThread extends Thread {
 						
 						if (dataInputStream.available() > 0 )							
 						{	
-							System.out.println("-----------Data is available. Reading ...");
+							System.out.println("----------- Msg data from grabber is available. Reading msg...");
 							//String incomingMsg = dataInputStream.readLine();     // ##### Seems to block here. 
 							//String incomingMsg = buffer.toString();
 							//String incomingMsg = dataInputStream.readLine();  
 							//int incomingMsgLen = inputStream.read(buffer);    // last tested; something comes over.
 																					
-							System.out.println("------- Incoming msg receive: " + scanner.nextLine() );
+							System.out.println("----------- Incoming msg receive: " + "\"" + scanner.nextLine() + "\"");
 							
 							//System.out.println("------- Incoming msg receive: " + buffer.toString()  + "  Length: " + incomingMsgLen );
 							//System.out.println("------- Incoming msg receive: " + incomingMsg  + "  Length: " + incomingMsg.length() );						
@@ -259,7 +263,7 @@ class GrabberControlThread extends Thread
 
 
 
-// Main class to send image/data files to server side.
+// Main class to send image/data files to server side (Web server computer). App starts here (main).
 //
 class Send {
   
@@ -282,10 +286,11 @@ class Send {
     
     
     
+    
     @SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
 
-    	System.out.format("\n-- Starting BlueJay imageSend app rev 1909nn...\n");
+    	System.out.format("\n-- Starting BlueJay imageSend app rev 220730 ...\n");
     	
         String inputImagePath = "";
         String backupImagePath = "";
@@ -341,16 +346,19 @@ class Send {
        	//List<String> results = new ArrayList<String>();
     	
     	boolean run = true;
-    	boolean starting = true;
+    	boolean starting = true; 
     	boolean connected = false;   // Flag to indicate the XBee connection status; timed outed, no ack msg, etc.
     	                             // false will cause a reconnection attempt.  (may be connected, but not open)
-    	boolean opened = false;
+    	boolean opened = false; 
      	
     	GrabberControlThread grabberControlThread = new GrabberControlThread();  // Thread to receive SMS txt messages.
+    	grabberControlThread.setName("grabberControlThread");
+    	
     	grabberControlThread.run = run;
     	grabberControlThread.start();
     	
     	RcvGrabberMsgThread recvThread = new RcvGrabberMsgThread();         // Thread to receive TCP msgs from grabber.
+    	recvThread.setName("recvThread");
     	recvThread.run = run;    	
     	recvThread.start();
     	recvThread.connected = grabberControlThread.connected;    	
@@ -361,8 +369,17 @@ class Send {
     	// loop continuously, checking for (new) files in the /data/images dir and 
     	// sending those images to server side.
     	//
-    	while (run)
-    	{	    	    		
+    	int loopCounter = 0;
+    	
+    	while (run)                        // run will be set to false to stop all execution.
+    	{
+    		loopCounter++;
+    	    		
+    		try     
+    		{
+    		System.out.println("**** In main thread loop.");
+    		System.out.println("**** loopCounter: " + loopCounter );
+    		
     		recvThread.connected = grabberControlThread.connected;
     		recvThread.socket = grabberControlThread.socket;
     		
@@ -370,7 +387,7 @@ class Send {
 			File devFile1 = new File(TTY_PORT_1);	    			
 			File devFile2 = new File(TTY_PORT_2);
 			
-    		if (!connected)    // If Not yet connected to Zigbee LTE cell device; new/reset connection requested.
+    		if (!connected)    // If Not yet connected, or connection lost, to Zigbee LTE cell device; new/reset connection requested.
 	   		{	   	  
     			System.out.println(">>>>>>>>>>>>>>>>>>>  Attempting new connecting to XBee cellular LTE device >>>>>>>>>");
     		   	try	    		   	
@@ -388,16 +405,14 @@ class Send {
     		   			}
     		   	    }	    		   	    
    		   		
-    		   		
-    		   		
-    		   		
     	    	    if (devFile0.exists())    // Open the Device file; USB TTY Port 0; /dev/ttyUSB0  (may be on port 0 or 1)  
     	    	    {
 	    		   		System.out.println(">>>>>>> Attempting new connection to XBee Cellular device via TTY_PORT_0 ... ");
     		   	    	connected = false;    		   	    	
 	       		   	    myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_0, BAUD_RATE);	
-
+	    	        	System.out.println(">>>>>>> Connection was successful. ");
+	    	        	
 	   	    		   	connected = true;	         // Connection to XBee cellular is ready.
     	    	    }
     	    	    else if (devFile1.exists())      // TTY Port 1; /dev/ttyUSB1  (may be on port 0 or 1)  
@@ -430,8 +445,10 @@ class Send {
        			    	
        			    	//if (myDevice.isOpen()) myDevice.close();
        			    	
+       			    	System.out.println(">>>>>>> attempting to open my device... ");
 			    		myDevice.open();  
-						
+			    		System.out.println(">>>>>>> myDevice opened ok. ");
+			    		
 			    		myDevice.setReceiveTimeout(6000);                 // was 12 seconds.		 	 	    
 			    		
 			    		opened = true;
@@ -441,10 +458,13 @@ class Send {
 //						System.out.println (" ------ Powering Xbee RF on (Airplane mode off).");
 					    		
 						MySMSReceiveListener listener =  new MySMSReceiveListener();
+											
 						listener.myDevice = myDevice;	   	    		   	
 						myDevice.addSMSListener(listener);                // cb incoming for SMS text messages.
 						
-						listener.grabberThread = grabberControlThread;				
+						System.out.println(">>>>>>> AddSMSListener okay. ");
+						
+						listener.grabberThread = grabberControlThread;							
 						
 						//myDevice.reset();
 						// myDevice.setSendTimeout(1000);
@@ -519,7 +539,6 @@ class Send {
 //        			System.out.println ("  Powering Xbee RF ON.");
 //    			}
 //    		}
-
     		
     		int fileCnt = 0;
     		for (File file : files)    // For each file in the /data/image dir.
@@ -823,10 +842,25 @@ class Send {
     	
     		System.out.println("\n-----Done attempt to send any available new images in image directory.");
     		
+    		
+    		
     		Thread.sleep(2000);     // was 2000 Check for new files every two seconds, or resend what's still there.
-    	} // End while run.
+    		}
+    		catch ( Exception ex)        // Main loop exception.
+    		{
+       			connected = false;  
+        			System.out.println(" !!! Trouble in main loop! " + ex.getMessage() );
+        			System.out.println("\n     StackTrace: \n");
+		        	ex.printStackTrace();
+		        	System.out.println("       loopCounter: " + loopCounter );
+		        	run = false;                    // ##### Stop all execution.
+        		    break;
+    		}
+    		//if (loopCounter == 6) run = false;   
+    		
+    	} // End main while run.
     	
-    	System.out.println("\n--------------------------------------- End of main run thread. ");    	
+    	System.out.println("\n--------------------------------------- End of main run thread. Have a great day!");    	
     	
         //outputStream.flush();
         //System.out.println("Flushed: " + System.currentTimeMillis());
@@ -835,9 +869,14 @@ class Send {
         //System.out.println("Closing: " + System.currentTimeMillis());
         //socket.close();
     	
-    	recvThread.stop();    	
+    	run = false;
+    	recvThread.run = false;
+    	recvThread.stop();
     	
-        System.out.println("\n---- End of BlueJay Producer Client execution.");
-
+    	grabberControlThread.run = false;
+    	grabberControlThread.stop();
+    	
+        System.out.println("\n---- End of BlueJay Producer Send Image Client execution.");
+        
     }
 }

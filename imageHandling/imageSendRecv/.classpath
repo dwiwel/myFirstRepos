@@ -3,12 +3,12 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="jars_extra/android-sdk-5.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="jars_extra/android-sdk-addon-3.jar"/>
-	<classpathentry kind="lib" path="jars_extra/rxtx-1.7.jar"/>
+	<classpathentry kind="lib" path="jars_extra/rxtx-1.7.jar" sourcepath="/home/pi/java_proj/gitHub/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageSend_lib"/>
 	<classpathentry kind="lib" path="jars_extra/rxtx-2.2.jar"/>
 	<classpathentry kind="lib" path="jars_extra/RXTXcomm-1.7.jar"/>
 	<classpathentry kind="lib" path="jars_extra/slf4j-api-1.7.12.jar"/>
 	<classpathentry kind="lib" path="jars_extra/slf4j-jdk14-1.7.12.jar"/>
-	<classpathentry kind="lib" path="jars_extra/xbee-java-library-1.2.0.jar" sourcepath="/home/pi/workspace/XBee"/>
+	<classpathentry kind="lib" path="jars_extra/xbee-java-library-1.2.0.jar" sourcepath="bin/imageHandler/imageSend.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>

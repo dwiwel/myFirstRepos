@@ -28,6 +28,7 @@
 //       191024  RFI issue testing.
 //       210710
 //       220704  fix bug; app stops if TCP connection is broken.
+//       220727  Reduce number of images captured.
 
 #include <iostream>
 #include <stdio.h>
@@ -259,14 +260,10 @@ int main(int argCnt, char** args)
 //		gpioSetMode(19, PI_INPUT);    // Line GPIO19 is for input; pull down.
 //
 //
-
-
 		inGPIO_1.setDirection(INPUT);      // basic input example
 		inGPIO_2.setDirection(INPUT);      // basic input example
 		cout << "The input state of line1 is: "<< inGPIO_1.getValue() << endl;
 		cout << "The input state of line2 is: "<< inGPIO_2.getValue() << endl;
-
-
 
 		util.initApp(argCnt, args);
 
@@ -515,28 +512,30 @@ int main(int argCnt, char** args)
 					std::cout << timestr << ": ";
 					cout << "-- **** Line BOTH HIGH;" << " count=" << lineBothCnt << endl;
 				}
-				else lineBothCnt = 0;
+				else if (!lineBothHigh)
+				{
+					lineBothCnt = 0;
+				}
 
-				if (line13High)
+				else if (line13High)
 				{
 					line13cnt++;
 					std::cout << timestr << ": ";
 					cout << "-- Line 13 HIGH;" << " count=" << line13cnt << endl;
 				}
-				if (!line13High)              // Going low resets counter.
+				else if (!line13High)              // Going low resets counter.
 				{
 					line13cnt = 0;
 					//std::cout << timestr << ": ";
 					//cout << " -- Line 13 low" << endl;
 				}
-
-				if (line19High)
+				else if (line19High)
 				{
 					line19cnt++;
 					std::cout << timestr << ": ";
 					cout << "-- Line 19 HIGH;" << " count=" << line19cnt << endl;
 				}
-				if (!line19High)
+				else if (!line19High)
 				{
 					line19cnt = 0;
 					//std::cout << timestr << ": ";
@@ -545,17 +544,28 @@ int main(int argCnt, char** args)
 
 				// Take two sets for images after GPIO line13 (and/or line19) goes high.
 				// On count 1 and 2, take/save images.
+				// #### Now Just take one image. and use both digital lines to trigger.
 				//
-//				if( (   (line19cnt >= 1) && (line19cnt <= 2)
-//				      && (line13cnt >= 1) && (line13cnt <= 2)
+//				if( ((line19cnt >= 1) && (line19cnt <= 1)               // Look at line 19 count
+//				      && (line13cnt >= 1) && (line13cnt <= 1))
+//						|| sendPicPing             // Take image 0000 and 1200
+//						|| takeImageCmd
 //					)
-				if ( ((line13cnt >= 1) && (line13cnt <= 2))
-						|| sendPicPing
-						|| takeImageCmd
+
+//				if ( ((line13cnt >= 1) && (line13cnt <= 2))             // Look at line 13 count.
+//
+//						|| sendPicPing             // Take image 0000 and 1200
+//						|| takeImageCmd            // A command was received to take an image.
+//				   )
+
+				if ( ((lineBothCnt >= 1) && (lineBothCnt <= 1))         // look at both lines count; only take image on first lineBoth occurence.
+
+						|| sendPicPing             // Take image 0000 and 1200
+						|| takeImageCmd            // A command was received to take an image.
 				   )
 				{
 					std::cout << timestr << ": ";
-					cout << "----------***************** IR motion sensor detected activity; GPIO line13 high, or commanded to take ------" << endl;
+					cout << "----------********  IR motion sensor detected activity; dig lines went high or commanded to take ------" << endl;
 					//cout << "---------- ******** IR motion sensor detected activity or commanded to save image  ------" << endl;
 
 					if(readyCam1) if( !util.isHeadless()) imshow(" **Cam1 -- Saved frame", frameCam1 );
@@ -572,7 +582,7 @@ int main(int argCnt, char** args)
 						util.saveImageFile( frameCam2_cor, "c2eq", line13cnt , timeDateStr_image);
 					}
 
-					takeImageCmd = false;      // Internal commands has been executed; clear flags.
+					takeImageCmd = false;      // Internal command has been executed; clear flags.
 					sendPicPing = false;       //
 
 				} // End if line 19 (18) cnt
@@ -585,7 +595,6 @@ int main(int argCnt, char** args)
 //			{
 //				break;
 //			}
-
 		}
 		// End main for.
     }
@@ -593,7 +602,7 @@ int main(int argCnt, char** args)
     {
     	const char* err_msg = ex.what();
     	String  msgStr = ex.msg;
-    	cout << "!!! Some very unexpected Exception:" << err_msg << endl;
+    	cout << "!!! Some very unexpected Exception in main loop: " << err_msg << endl;
     	cout << "   msg: " << ex.msg << endl;
     	cout << "   file: " << ex.file << endl;
     	cout << "   function: " << ex.func << endl ;

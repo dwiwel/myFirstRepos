@@ -20,6 +20,7 @@ public class MySMSReceiveListener implements ISMSReceiveListener {
 	String cmdStr = null;
 	
 	public String phoneNum;
+	private int loopCounter;
 	
 	@Override
 	public void smsReceived(SMSMessage smsMessage) {
@@ -60,8 +61,8 @@ public class MySMSReceiveListener implements ISMSReceiveListener {
 			}
 			
 			cmdStr = "takeimage";        // A valid takeimage command.
-			try {
-				grabberThread.sendGrabberCommand( cmdStr );
+			try {				
+				grabberThread.sendGrabberCommand( cmdStr, loopCounter);  // !!!!!!!
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				System.out.println("!!Trouble with sendGrabberCommand: " + e );

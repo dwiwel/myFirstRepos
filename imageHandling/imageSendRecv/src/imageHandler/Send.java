@@ -22,6 +22,8 @@
 // 220727 Working here.  Fixing coms disruption issued for USB to LTE cell device.
 //        Some thread is stopping unexpectedly? Possibly main thread.
 //        Adding try/catch to stop main loop on error.
+// 221018       May be when trying to open zigbee LTE device.
+
 
 
 
@@ -84,13 +86,15 @@ class RcvGrabberMsgThread extends Thread {
 			
 	public String phoneNum;
 	 
+	public int loopCounter = 0;
+	
 	@SuppressWarnings("deprecation")
 	public void run()	
 	{	
 		System.out.format("\n---- Starting RecGrabberMsgThread to read msgs from grabber ...\n");		
 
 		// byte[] buffer = new byte[1024];     not used. 
-		int loopCounter = 0;
+		
 		
 		while (run)
 		{
@@ -113,8 +117,10 @@ class RcvGrabberMsgThread extends Thread {
 							//String incomingMsg = dataInputStream.readLine();     // ##### Seems to block here. 
 							//String incomingMsg = buffer.toString();
 							//String incomingMsg = dataInputStream.readLine();  
-							//int incomingMsgLen = inputStream.read(buffer);    // last tested; something comes over.
-																					
+							//int incomingMsgLen = inputStream.read(buffer);    // last tested; something comes over.											
+											
+							System.out.println("----------- Main loopCounter: " + loopCounter);
+							
 							System.out.println("----------- Incoming msg receive: " + "\"" + scanner.nextLine() + "\"");
 							
 							//System.out.println("------- Incoming msg receive: " + buffer.toString()  + "  Length: " + incomingMsgLen );
@@ -161,9 +167,9 @@ class GrabberControlThread extends Thread
     public DataOutputStream dataOutputStream = null;  
     public DataInputStream dataInputStream = null;
     public Scanner scanner = null;
-    
-    
+        
     public String cmdStr = "NULL";
+    public static int loopCounter;
     
 	//@SuppressWarnings("deprecation")
 	public void run()	
@@ -199,7 +205,7 @@ class GrabberControlThread extends Thread
 	    				// ex.printStackTrace();
 	    			}
 	    		}	       	    			 
-	    		sendGrabberCommand("ping");          	    		
+	    		sendGrabberCommand("ping", loopCounter);          	    		
 	    		Thread.sleep(3000);
 	    	} 
 	    	// End run while    	   	
@@ -225,7 +231,7 @@ class GrabberControlThread extends Thread
 	} // end of run.
 	
 	
-	public void sendGrabberCommand (String cmdStr)   
+	public void sendGrabberCommand (String cmdStr, int loopCounter)   
 	{		
 		//String cmdStrVal = cmdStr;
 		//byte bytesVal[] = cmdStrVal.getBytes(cmdStrVal);
@@ -234,6 +240,7 @@ class GrabberControlThread extends Thread
 		
 		if (connected)
 		{	        
+			System.out.println("---- sendGrabberCommand. Main loop counter: " + loopCounter );
 	        try 
 	        {
 	        	//System.out.println("\nSending command to grabber: " + cmdStr);
@@ -290,7 +297,7 @@ class Send {
     @SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
 
-    	System.out.format("\n-- Starting BlueJay imageSend app rev 220730 ...\n");
+    	System.out.format("\n-- Starting BlueJay imageSend app rev 220730, 221018 ...\n");
     	
         String inputImagePath = "";
         String backupImagePath = "";
@@ -346,6 +353,7 @@ class Send {
        	//List<String> results = new ArrayList<String>();
     	
     	boolean run = true;
+    	int loopCounter = 0;
     	boolean starting = true; 
     	boolean connected = false;   // Flag to indicate the XBee connection status; timed outed, no ack msg, etc.
     	                             // false will cause a reconnection attempt.  (may be connected, but not open)
@@ -353,7 +361,7 @@ class Send {
      	
     	GrabberControlThread grabberControlThread = new GrabberControlThread();  // Thread to receive SMS txt messages.
     	grabberControlThread.setName("grabberControlThread");
-    	
+    	GrabberControlThread.loopCounter = loopCounter;   
     	grabberControlThread.run = run;
     	grabberControlThread.start();
     	
@@ -369,7 +377,6 @@ class Send {
     	// loop continuously, checking for (new) files in the /data/images dir and 
     	// sending those images to server side.
     	//
-    	int loopCounter = 0;
     	
     	while (run)                        // run will be set to false to stop all execution.
     	{
@@ -445,9 +452,13 @@ class Send {
        			    	
        			    	//if (myDevice.isOpen()) myDevice.close();
        			    	
-       			    	System.out.println(">>>>>>> attempting to open my device... ");
+       			    	System.out.println(">>>>>>> attempting to open my cellular device...  loopCounter: " + loopCounter);
+       			    	
+       			    	// ######  !!!!!! Trouble: the current error may be during exec of the following line ############
+       			    	
 			    		myDevice.open();  
-			    		System.out.println(">>>>>>> myDevice opened ok. ");
+			    		
+			    		System.out.println(">>>>>>> my cellular opened ok. ");
 			    		
 			    		myDevice.setReceiveTimeout(6000);                 // was 12 seconds.		 	 	    
 			    		
@@ -698,7 +709,7 @@ class Send {
 			        int startIndex = 0;
 			        int endIndex = 0;
 			        
-			        System.out.println("--Now attempt to send image data ...");        
+			        System.out.println("--Now attempt to send image data packet  ...");        
 			        while (numBytesRemaining > 0)
 			        {
 			    	
@@ -840,7 +851,7 @@ class Send {
 	    		Thread.sleep(10);   		
 	    	} // End for (File file : files)
     	
-    		System.out.println("\n-----Done attempt to send any available new images in image directory.");
+    		System.out.println("\n-----Done attempt to send any available new images in image directory. main loopCounter: " + loopCounter );
     		
     		
     		
@@ -849,18 +860,18 @@ class Send {
     		catch ( Exception ex)        // Main loop exception.
     		{
        			connected = false;  
-        			System.out.println(" !!! Trouble in main loop! " + ex.getMessage() );
+        			System.out.println(" !!! $$$$$ Trouble in main loop! " + ex.getMessage() );
         			System.out.println("\n     StackTrace: \n");
 		        	ex.printStackTrace();
 		        	System.out.println("       loopCounter: " + loopCounter );
-		        	run = false;                    // ##### Stop all execution.
+		        	run = false;                    // Stop all execution.
         		    break;
     		}
     		//if (loopCounter == 6) run = false;   
     		
     	} // End main while run.
     	
-    	System.out.println("\n--------------------------------------- End of main run thread. Have a great day!");    	
+    	System.out.println("\n$$$$$$--------------------------------- End of main run thread. Have a great day!");    	
     	
         //outputStream.flush();
         //System.out.println("Flushed: " + System.currentTimeMillis());
@@ -876,7 +887,7 @@ class Send {
     	grabberControlThread.run = false;
     	grabberControlThread.stop();
     	
-        System.out.println("\n---- End of BlueJay Producer Send Image Client execution.");
+        System.out.println("\n$$$$$$--- End of BlueJay Producer Send Image Client execution.");
         
     }
 }

@@ -1,10 +1,13 @@
+// Class to read SMS messages from cellular device
 //
 // rev: 210710  Added invalid command reply to SMS client (cell phone txt msg)
+//		221207  Added REBOOT SMS command. 
+
+
+//import java.io.IOException;
 
 
 package imageHandler;
-
-import java.io.IOException;
 
 import com.digi.xbee.api.CellularDevice;
 import com.digi.xbee.api.exceptions.TimeoutException;
@@ -60,7 +63,7 @@ public class MySMSReceiveListener implements ISMSReceiveListener {
 				e.printStackTrace();		
 			}
 			
-			cmdStr = "takeimage";        // A valid takeimage command.
+			cmdStr = "takeimage";        // A valid takeimage command; send to grabber app.
 			try {				
 				grabberThread.sendGrabberCommand( cmdStr, loopCounter);  // !!!!!!!
 			} catch (Exception e) {
@@ -69,7 +72,35 @@ public class MySMSReceiveListener implements ISMSReceiveListener {
 				e.printStackTrace();
 			}
 		}
-		else 
+		else if (msgIn.matches("reboot") || msgIn.matches("rb"))
+		{
+			try {
+				myDevice.sendSMSAsync( phoneNum, ">> Valid Cmd rcvd: REBOOT." );
+			
+			} catch (TimeoutException e) {
+				// TODO Auto-generated catch block
+				System.out.println("!Trouble with sendSMSAsync #1, timeout: " + e );
+				e.printStackTrace();
+			} catch (XBeeException e) {
+				// TODO Auto-generated catch block
+				System.out.println("!Trouble with sendSMSAsync #2, Xbee: " + e );
+				e.printStackTrace();		
+			}
+			
+			try
+			{				
+				myDevice.sendSMSAsync( phoneNum, ">> Rebooting RPi ..." );
+				Process p = Runtime.getRuntime().exec("reboot");
+			}
+			catch (Exception e)
+			{
+				// TODO Auto-generated catch block
+				System.out.println("!!Trouble with sendGrabberCommand REBOOT: " + e );
+				e.printStackTrace();
+			}
+		}
+					
+		else
 		{
 			try {
 				myDevice.sendSMSAsync( phoneNum, "INVALID Cmd rcvd! " );

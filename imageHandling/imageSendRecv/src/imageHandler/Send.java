@@ -20,9 +20,11 @@
 // 190913 Info SMS messages to phone.
 // 210720 Bug: stops reading and/or sending images.  ?Some thread ?  It's okay. 
 // 220727 Working here.  Fixing coms disruption issued for USB to LTE cell device.
-//        Some thread is stopping unexpectedly? Possibly main thread.
+//        !!! Some thread is stopping unexpectedly? Possibly main thread.
 //        Adding try/catch to stop main loop on error.
 // 221018       May be when trying to open zigbee LTE device.
+//              Seems to block on the open() call
+//
 
 
 
@@ -31,8 +33,8 @@ package imageHandler;
 
 //import java.net.ServerSocket;
 import java.nio.ByteBuffer;
-import java.nio.file.CopyOption;
-import java.nio.file.Files;
+//import java.nio.file.CopyOption;
+//import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
@@ -45,30 +47,31 @@ import java.io.InputStream;
 import java.net.*;
 
 import com.digi.xbee.api.CellularDevice;
-import com.digi.xbee.api.connection.serial.SerialPortRxTx;
+// import com.digi.xbee.api.connection.serial.SerialPortRxTx;
 import com.digi.xbee.api.exceptions.TimeoutException;
 import com.digi.xbee.api.exceptions.XBeeException;
 import com.digi.xbee.api.models.IPMessage;
 import com.digi.xbee.api.models.IPProtocol;
-import com.digi.xbee.api.models.PowerLevel;
+// import com.digi.xbee.api.models.PowerLevel;
 
-import java.io.BufferedWriter;
-import java.io.Console;
-import java.io.BufferedReader;
-import java.io.FileWriter;
+//import java.io.BufferedWriter;
+//import java.io.Console;
+//import java.io.BufferedReader;
+//import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+//import java.io.InputStreamReader;
+//import java.io.UnsupportedEncodingException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.nio.file.CopyOption.*;
-import java.nio.file.StandardCopyOption.*;
+//import java.util.ArrayList;
+//import java.util.Arrays;
+//import java.util.List;
+//import java.nio.file.CopyOption.*;
+//import java.nio.file.StandardCopyOption.*;
 
 import java.io.DataOutputStream;
-import java.io.InputStream;
+//import java.io.InputStream;
 import java.io.DataInputStream;
+import java.util.Arrays;
 import java.util.Scanner;
 
 
@@ -88,7 +91,7 @@ class RcvGrabberMsgThread extends Thread {
 	 
 	public int loopCounter = 0;
 	
-	@SuppressWarnings("deprecation")
+	//@SuppressWarnings("deprecation")
 	public void run()	
 	{	
 		System.out.format("\n---- Starting RecGrabberMsgThread to read msgs from grabber ...\n");		
@@ -119,7 +122,7 @@ class RcvGrabberMsgThread extends Thread {
 							//String incomingMsg = dataInputStream.readLine();  
 							//int incomingMsgLen = inputStream.read(buffer);    // last tested; something comes over.											
 											
-							System.out.println("----------- Main loopCounter: " + loopCounter);
+							System.out.println("----------- Msg data from grabber loopCounter: " + loopCounter);
 							
 							System.out.println("----------- Incoming msg receive: " + "\"" + scanner.nextLine() + "\"");
 							
@@ -169,7 +172,7 @@ class GrabberControlThread extends Thread
     public Scanner scanner = null;
         
     public String cmdStr = "NULL";
-    public static int loopCounter;
+    public static int grabberLoopCounter;
     
 	//@SuppressWarnings("deprecation")
 	public void run()	
@@ -181,7 +184,8 @@ class GrabberControlThread extends Thread
 		try
 		{		
 	    	while (run)
-	    	{	    		
+	    	{	    
+	    		grabberLoopCounter++;
 	    		if (!connected)
 	    		{
 	    			try
@@ -205,7 +209,7 @@ class GrabberControlThread extends Thread
 	    				// ex.printStackTrace();
 	    			}
 	    		}	       	    			 
-	    		sendGrabberCommand("ping", loopCounter);          	    		
+	    		sendGrabberCommand("ping", grabberLoopCounter);          	    		
 	    		Thread.sleep(3000);
 	    	} 
 	    	// End run while    	   	
@@ -356,12 +360,12 @@ class Send {
     	int loopCounter = 0;
     	boolean starting = true; 
     	boolean connected = false;   // Flag to indicate the XBee connection status; timed outed, no ack msg, etc.
-    	                             // false will cause a reconnection attempt.  (may be connected, but not open)
+    	//                             // false will cause a reconnection attempt.  (may be connected, but not open)
     	boolean opened = false; 
      	
     	GrabberControlThread grabberControlThread = new GrabberControlThread();  // Thread to receive SMS txt messages.
     	grabberControlThread.setName("grabberControlThread");
-    	GrabberControlThread.loopCounter = loopCounter;   
+    	GrabberControlThread.grabberLoopCounter = loopCounter;   
     	grabberControlThread.run = run;
     	grabberControlThread.start();
     	
@@ -450,15 +454,17 @@ class Send {
        			    {	
        			    	starting = false;
        			    	
-       			    	//if (myDevice.isOpen()) myDevice.close();
+       			    	//if (myDevice != null)
+       			    	{
+       			    		//if (myDevice.isOpen()) myDevice.close();      // !!!!!!!!
+       			    	}
+       			    	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>????>>>>>>>> attempting to open my cellular device...  loopCounter: " + loopCounter);
        			    	
-       			    	System.out.println(">>>>>>> attempting to open my cellular device...  loopCounter: " + loopCounter);
-       			    	
-       			    	// ######  !!!!!! Trouble: the current error may be during exec of the following line ############
-       			    	
+       			    	// ######  !!!!!!!!! Trouble: the current error may be during exec of the following line ############
+       			    	// Blocks here, very infrequent ...
 			    		myDevice.open();  
 			    		
-			    		System.out.println(">>>>>>> my cellular opened ok. ");
+			    		System.out.println(">>>>>>>>>>>>??????>>>>>>> my cellular open attempt completed. ");
 			    		
 			    		myDevice.setReceiveTimeout(6000);                 // was 12 seconds.		 	 	    
 			    		
@@ -512,7 +518,7 @@ class Send {
     	    	catch (Exception e) 
     			{
     	    		connected = false;
-    	    		System.out.println(" !! ERROR connecting ZigBee cellular myDevice: exc: " + e.getMessage());
+    	    		System.out.println(" !!!!! ERROR connecting/openning ZigBee cellular myDevice: exc: " + e.getMessage());
     			    System.out.println("    StackTrace: ");
     			    e.printStackTrace();      			  
     			}    	     

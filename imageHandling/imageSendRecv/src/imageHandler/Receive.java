@@ -159,7 +159,7 @@ class Receive {
 	
 				// Read image array
 				//
-				byte[] endOfPacketMark = new byte[1];
+				//byte[] endOfPacketMark = new byte[1];
 				try {
 					System.out.println("Reading image array ...");
 					while (numBytesRemaining > 0) {

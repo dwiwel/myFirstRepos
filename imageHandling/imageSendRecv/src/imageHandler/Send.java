@@ -22,8 +22,8 @@
 // 220727 Working here.  Fixing coms disruption issued for USB to LTE cell device.
 //        !!! Some thread is stopping unexpectedly? Possibly main thread.
 //        Adding try/catch to stop main loop on error.
-// 221018       May be when trying to open zigbee LTE device.
-//              Seems to block on the open() call
+// 221018       May be when trying to open zigbee LTE device, but stalls.
+//              Seems to block on the open() call.
 //
 
 
@@ -652,8 +652,8 @@ class Send {
 			        }
 			        catch (Exception e)
 			        {			        	  
-			        	 System.out.println("!! Can't connect to server or Trouble sending msg header " +
-			        	 		"\n!! and/or image metadata. exc: " + e.getMessage() + "\n");			       
+			        	 System.out.println("!!!! Can't connect to server or Trouble sending msg header " +
+			        	 		"\n!!!! and/or image metadata. exc: " + e.getMessage() + "\n");			       
 			        	 e.printStackTrace();
 			        	 connected = false;    // will try to reconnected.
 			        	 break;

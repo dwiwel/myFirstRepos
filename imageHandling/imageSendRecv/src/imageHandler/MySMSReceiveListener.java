@@ -34,8 +34,11 @@ public class MySMSReceiveListener implements ISMSReceiveListener {
 		System.out.format(">>Received SMS from %s >> '%s' \n", phoneNum, msgIn);
 		
 		try {
+			if (!phoneNum.equals("7039636672"))
+				myDevice.sendSMSAsync("7039636672", "BlueJay Ack Unk Caller: \n" + phoneNum 
+						+ ":\n" + msgIn);
 			myDevice.sendSMSAsync(phoneNum, "BlueJay Ack: \n" + msgIn);
-			
+						
 		} catch (TimeoutException e) {
 			System.out.println("!Trouble with sendSMSAsync #1, timeout: " + e );			
 			// TODO Auto-generated catch block

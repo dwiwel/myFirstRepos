@@ -29,6 +29,7 @@
 //       210710
 //       220704  fix bug; app stops if TCP connection is broken.
 //       220727  Reduce number of images captured.
+//       221209  Minor adj.
 
 #include <iostream>
 #include <stdio.h>
@@ -123,7 +124,16 @@ void* getCmdThread(void *passedArg) {
 
 				//string msg = rcvStr.c_str();        // Will make a null terminate string.
 				//char *writeBuffer =   msg.data();
+				time_t rawtime;
+				struct tm * timeinfo;
+				char buffer[80];
+				time_t currentTime = time(NULL);
+				time (&currentTime);
+				timeinfo = localtime(&currentTime);
+				strftime(buffer,sizeof(buffer),"%Y%m%d_%H%M%S",timeinfo);
+				std::string timestr(buffer);           // Event date-time stamp.
 
+			   std::cout << timestr << ": ";
 			   cout << " Msg from ImageSend: " << rcvStr << endl;
 
 			   if (rcvStr == "err" || rcvStr == "eof" || rcvStr == "null"
@@ -189,7 +199,7 @@ int main(int argCnt, char** args)
 {
 
 	cout << "Starting my little **grabber6** program, using RPi camera and USB camera ... " << endl;
-    cout << "rev: 191024+. \n" << endl;
+    cout << "rev: 221209+. \n" << endl;
     cout << "Uses the GPIO lines to get signal from IR sensors. Root privilege is required to run.\n" << endl;
 
     // opencv objects.
@@ -333,7 +343,6 @@ int main(int argCnt, char** args)
 		while (run)         // Main runtime loop.
 		{
 			currentTime = time(NULL);
-
 			time_t rawtime;
 			struct tm * timeinfo;
 			char buffer[80];
@@ -465,7 +474,7 @@ int main(int argCnt, char** args)
 				prevFrame = frameCam1.clone();
 			}
 
-			if (useIRsensor)                  // Black and White image (I think)
+			if (useIRsensor)                  // Black and White image from RPi camera.
 			{
 				// Apply hist eq on image to cam1 image; IR Cam.
 				//
@@ -482,7 +491,7 @@ int main(int argCnt, char** args)
 					if( !util.isHeadless()) imshow("Cam1 -- Contrast Equalization", frameCam1_cor);
 				}
 
-				// Apply hist eq on image to cam2 image; Web Cam.
+				// Apply hist eq on image to cam2 image; USB Web Cam.
 				//
 				if (readyCam2)
 				{
@@ -510,14 +519,14 @@ int main(int argCnt, char** args)
 				{
 					lineBothCnt++;
 					std::cout << timestr << ": ";
-					cout << "-- **** Line BOTH HIGH;" << " count=" << lineBothCnt << endl;
+					cout << "-- ******* Line BOTH HIGH;" << " count=" << lineBothCnt << endl;
 				}
 				else if (!lineBothHigh)
 				{
 					lineBothCnt = 0;
 				}
 
-				else if (line13High)
+				if (line13High)
 				{
 					line13cnt++;
 					std::cout << timestr << ": ";
@@ -529,7 +538,8 @@ int main(int argCnt, char** args)
 					//std::cout << timestr << ": ";
 					//cout << " -- Line 13 low" << endl;
 				}
-				else if (line19High)
+
+				if (line19High)
 				{
 					line19cnt++;
 					std::cout << timestr << ": ";
@@ -558,7 +568,7 @@ int main(int argCnt, char** args)
 //						|| takeImageCmd            // A command was received to take an image.
 //				   )
 
-				if ( ((lineBothCnt >= 1) && (lineBothCnt <= 1))         // look at both lines count; only take image on first lineBoth occurence.
+				if ( ((lineBothCnt >= 1) && (lineBothCnt <= 1))         // look at both lines counts; only take one image on first lineBoth high occurrence.
 
 						|| sendPicPing             // Take image 0000 and 1200
 						|| takeImageCmd            // A command was received to take an image.

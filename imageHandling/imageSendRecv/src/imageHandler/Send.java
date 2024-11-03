@@ -356,7 +356,7 @@ class Send {
     	
        	//List<String> results = new ArrayList<String>();
     	
-    	boolean run = true;
+    	boolean run = true;    
     	int loopCounter = 0;
     	boolean starting = true; 
     	boolean connected = false;   // Flag to indicate the XBee connection status; timed outed, no ack msg, etc.

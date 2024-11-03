@@ -33,6 +33,8 @@ class Receive {
     static Socket socket = null;
     static int temp1;
     static int temp2;
+    static int temp3;
+    
     
     
 	

@@ -362,6 +362,7 @@ class Send {
     	boolean connected = false;   // Flag to indicate the XBee connection status; timed outed, no ack msg, etc.
     	//                             // false will cause a reconnection attempt.  (may be connected, but not open)
     	boolean opened = false; 
+     	int temp1;
      	
     	GrabberControlThread grabberControlThread = new GrabberControlThread();  // Thread to receive SMS txt messages.
     	grabberControlThread.setName("grabberControlThread");

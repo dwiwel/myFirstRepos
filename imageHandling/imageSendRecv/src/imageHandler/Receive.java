@@ -32,6 +32,8 @@ class Receive {
     static OutputStream outputStream = null; // Data read from client.
     static Socket socket = null;
     static int temp1;
+    static int temp2;
+    
     
 	
 	

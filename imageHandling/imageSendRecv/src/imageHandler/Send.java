@@ -278,7 +278,7 @@ class GrabberControlThread extends Thread
 //
 class Send {
   
-	static String serverName = "73.174.230.49";  // Default BlueJay Server IP; NY Cir router. Port fowarded to Dev10 (Ubuntu).
+	static String serverName = "73.40.133.76";  // Default BlueJay Server IP; NY Cir router. Port fowarded to Dev10 (Ubuntu).
 	//static String serverName = "10.0.0.39";  // Dev7.
 	                                   
     /* Constants */
@@ -301,7 +301,7 @@ class Send {
     @SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
 
-    	System.out.format("\n-- Starting BlueJay imageSend app rev 220730, 221018 ...\n");
+    	System.out.format("\n------- Starting BlueJay imageSend app rev 220730, 221018, 241105  ...\n");
     	
         String inputImagePath = "";
         String backupImagePath = "";
@@ -322,7 +322,7 @@ class Send {
         
         if (args.length == 1)
         {
-        	serverName = args[0];        	
+        	serverName = args[0];        	// IP Address of (web) server running ImageReceive.  
         }
         else
         {
@@ -407,12 +407,16 @@ class Send {
     		   		if (myDevice != null)          
     		   	    {    		    		   		    		   			   			    		   		
     		   			try
-    		   			{    		   				
-    		   				//if (myDevice.isOpen()) myDevice.close();      	
+    		   			{
+    		   				if (myDevice.isOpen())
+    		   			    {    		   			        
+    		   					myDevice.close();      // #########################	
+    		   					//myDevice = null;
+    		   			    }   		   				      	
     		   			} 
     		   			catch (Exception e)
     		   			{
-    		   				System.out.println("!Trouble opening myDevice " + e ); 
+    		   				System.out.println("!!!!!!!TROUBLE WITH myDevice.close " + e ); 
     		   				e.printStackTrace();   		   		
     		   			}
     		   	    }	    		   	    
@@ -430,7 +434,7 @@ class Send {
     	    	    else if (devFile1.exists())      // TTY Port 1; /dev/ttyUSB1  (may be on port 0 or 1)  
     	    	    {
 	    		   		System.out.println(">>>>>>>  Attempting new connecting to XBee Cellular device via TTY_PORT_1 ... ");
-	    		   			  		   	   
+
 	    		   	    myDevice = null;
 	    	        	myDevice = new CellularDevice (TTY_PORT_1, BAUD_RATE);
 	    	        	connected = true;	  // Connection to XBee cellular is ready.
@@ -445,8 +449,7 @@ class Send {
     	    	    }
     	    	    else
     	    	    {
-    	    	    	connected = false;     // not connected yet, so try to connected again.
-    	    	    	
+    	    	    	connected = false;     // not connected yet, so try to connected again.    	    	    	
     	    	    	System.out.println("!!!!! TTY_USBn Device file does not exist. Is device connected and powered on? ");
     	    	    	Thread.sleep(1000);    	    	  
     	    	    }
@@ -461,11 +464,20 @@ class Send {
        			    	}
        			    	System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>????>>>>>>>> attempting to open my cellular device...  loopCounter: " + loopCounter);
        			    	
-       			    	// ######  !!!!!!!!! Trouble: the current error may be during exec of the following line ############
-       			    	// Blocks here, very infrequent ...
-			    		myDevice.open();  
+       			    	// ###########  !!!!!!!!! Trouble: the current error may be during exec of the following line ############
+       			    	// Blocks here, very infrequent .
+       			    	try
+       			    	{
+       			    		myDevice.open();
+       			    	}
+       			    	catch (XBeeException e) 
+       			    	{
+							System.out.println("!!!!!!TROUBLE WITH myDevice.open: \n XBee: " + e );
+							e.printStackTrace();
+							connected = false;
+       			    	}
 			    		
-			    		System.out.println(">>>>>>>>>>>>??????>>>>>>> my cellular open attempt completed. ");
+			    		System.out.println(">>>>>>>>>>>>!!!!!!>>>>>>> my cellular open attempt completed; not blocked. ");
 			    		
 			    		myDevice.setReceiveTimeout(6000);                 // was 12 seconds.		 	 	    
 			    		
@@ -578,23 +590,50 @@ class Send {
 	    	   		if (myDevice == null )
 	    	   		{
 	    	   			connected = false;
-	    	   			System.out.println("! WARNING: myDevice not yet initialized.");
-	    	   			Thread.sleep(2000);
+	    	   			System.out.println("!!!! WARNING: myDevice not yet initialized.");
+	    	   			Thread.sleep(3000);
 	    	   			break;	    	   		
 	    	   		}
 	    	   		
 	    		   	try
 	    		   	{
-		    		   	if (!myDevice.isOpen() || !myDevice.isConnected() )     // May be a timeout issue here. 
+		    		   	if (!myDevice.isOpen() )     // May be a timeout issue here. 		    		
 	    		   		{
-		    		   		System.out.println("! WARNING: Device is not open and/or not connected to Internet.  ");
-	    		   			connected = false;      // will try to reconnected        
+		    		   		System.out.println("!!!!!!!! WARNING: Device is NOT OPEN.  ");
+	    		   	    		   			
+	    		   			//myDevice.reset();   // #########################
+	    		   			//myDevice.close();   // #################
+	    		   			//myDevice = null;
+	    		   			//myDevice.open();
+	    		   			connected = false;      // will try to reconnected
 	    		   			break;
 	    		   		}	
 	    			}
 			        catch (Exception e)
 			        {			        	  
-			        	 System.out.println("!! May have lost connection to XBee device. ex: " + e.getMessage() + "\n");
+			        	 System.out.println("!! Some problem with XBee device. ex: " + e.getMessage() + "\n");
+			        	 connected = false;    // will try to reconnected.
+			        	 e.printStackTrace();			        	 
+			        	 break;
+			        }
+			        
+	    		   	try
+	    		   	{
+	    		   	if (!myDevice.isConnected() )     // Check connection to internet.	    		   
+	    		   		{
+		    		   		System.out.println("!!!!!!!!!! WARNING: Device is NOT CONNECTED TO INTERNET !!.  ");
+	    		   	    		   			
+	    		   			//myDevice.reset();   // #########################!!!!!!!!!!!!!!!
+	    		   			//myDevice.close();   // #################	    		   			
+	    		   			//Thread.sleep(2000);
+	    		   			//myDevice.open();
+	    		   			connected = false;      // will try to reconnected
+	    		   			break;
+	    		   		}	
+	    			}
+			        catch (Exception e)
+			        {			        	  
+			        	 System.out.println("!! Some problem with XBee device: " + e.getMessage() + "\n");
 			        	 connected = false;    // will try to reconnected.
 			        	 e.printStackTrace();			        	 
 			        	 break;
@@ -629,7 +668,12 @@ class Send {
 			        				        	
 			        	System.out.format("---- Attempting new connection to server, send msg header/metadata . \n");			        	
 			       
-			        	if (!myDevice.isConnected()) System.out.println(" WARNING: Device not connected to Internet.");
+			        	if (!myDevice.isConnected()) 
+		        		{
+		        			System.out.println("!!!! WARNING: Device not connected to Internet.");
+	    		   			connected = false;      // will try to reconnected
+	    		   			break;
+		        		}
 			        
 			        	myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),  // This will open socket connection to server, and			        	
 				                SERVER_PORT, PROTOCOL_TCP, "X".getBytes());                     // send beginning of msg indicator 'X'.		        	

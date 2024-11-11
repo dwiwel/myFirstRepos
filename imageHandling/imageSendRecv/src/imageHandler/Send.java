@@ -362,7 +362,7 @@ class Send {
     	boolean connected = false;   // Flag to indicate the XBee connection status; timed outed, no ack msg, etc.
     	//                             // false will cause a reconnection attempt.  (may be connected, but not open)
     	boolean opened = false; 
-     	int temp1;
+     	
      	
     	GrabberControlThread grabberControlThread = new GrabberControlThread();  // Thread to receive SMS txt messages.
     	grabberControlThread.setName("grabberControlThread");
@@ -409,7 +409,8 @@ class Send {
     		   			try
     		   			{
     		   				if (myDevice.isOpen())
-    		   			    {    		   			        
+    		   			    {   
+    		   					myDevice.reset();
     		   					myDevice.close();      // #########################	
     		   					//myDevice = null;
     		   			    }   		   				      	
@@ -575,7 +576,7 @@ class Send {
 	    	{
     			if (!connected) 
     				{
-    					System.out.println("! WARNING: Cellular Device is not connected yet.");
+    					System.out.println("!!!! WARNING: Cellular Device is not connected yet.");
     					break;    				
     				}
     							
@@ -627,13 +628,13 @@ class Send {
 	    		   			//myDevice.close();   // #################	    		   			
 	    		   			//Thread.sleep(2000);
 	    		   			//myDevice.open();
-	    		   			connected = false;      // will try to reconnected
+	    		   			//connected = false;      // will try to reconnected
 	    		   			break;
 	    		   		}	
 	    			}
 			        catch (Exception e)
 			        {			        	  
-			        	 System.out.println("!! Some problem with XBee device: " + e.getMessage() + "\n");
+			        	 System.out.println("!!!! SOME PROBLEM WITH XBEE DEVICE: " + e.getMessage() + "\n");
 			        	 connected = false;    // will try to reconnected.
 			        	 e.printStackTrace();			        	 
 			        	 break;
@@ -666,7 +667,7 @@ class Send {
 //				        myDevice.sendIPData((Inet4Address) Inet4Address.getByName(serverName),
 //				                SERVER_PORT, PROTOCOL_TCP, null);				       
 			        				        	
-			        	System.out.format("---- Attempting new connection to server, send msg header/metadata . \n");			        	
+			        	System.out.format("------ Attempting new connection to server, send msg header/metadata . \n");			        	
 			       
 			        	if (!myDevice.isConnected()) 
 		        		{
@@ -723,7 +724,8 @@ class Send {
 			        }
 			        catch (Exception ex)
 			        {
-			        	 System.out.println(" !! Trouble reading image from disk: exc: " + ex);
+			        	 System.out.println(" !!! TROUBLE READING IMAGE from disk: exc: " + ex);
+			        	 connected = false; 
 			        	 break;			        
 			        }
 			        
@@ -858,7 +860,6 @@ class Send {
 			        	}		        
 			        } // end while (numBytesRemaining)
 				    
-			        if (!connected) break;
 			        
 			        // Send end of message marker, get ack.
 			        //
@@ -904,7 +905,7 @@ class Send {
     	
     		System.out.println("\n-----Done attempt to send any available new images in image directory. main loopCounter: " + loopCounter );
     		
-    		
+ 
     		
     		Thread.sleep(2000);     // was 2000 Check for new files every two seconds, or resend what's still there.
     		}

@@ -4,6 +4,6 @@ sleep 2
 
 #java -classpath "/home/pi/java_proj/gitHub/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageSend.jar:/home/pi/java_proj/gitHub/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageSend_lib/*"  -Djava.library.path=/usr/lib/jni  imageHandler.Send &> /home/pi/Desktop/ImageSend.log 2>&1 
 
-java -classpath "/home/don/java_proj/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageRecv.jar:/home/don/java_proj/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageSend_lib/*"  -Djava.library.path=/usr/lib/jni  imageHandler.Receive 
+java -classpath "/home/pi/java_proj/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/imageRecv.jar:/home/pi/java_proj/myFirstRepos/imageHandling/imageSendRecv/bin/imageHandler/image/*"  -Djava.library.path=/usr/lib/jni  imageHandler.Receive 
 
 

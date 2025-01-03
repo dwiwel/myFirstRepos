@@ -622,7 +622,8 @@ class Send {
 	    		   	{
 	    		   	if (!myDevice.isConnected() )     // Check connection to internet.	    		   
 	    		   		{
-		    		   		System.out.println("!!!!!!!!!! WARNING: Device is NOT CONNECTED TO INTERNET !!.  ");
+		    		   		System.out.println("!!! WARNING: Device MAY NOT CONNECTED TO INTERNET !!.  ");
+		    		   		System.out.println("!!! OR CAN'T CONNECT TO SERVER SIDE APP.  ");
 	    		   	    		   			
 	    		   			//myDevice.reset();   // #########################!!!!!!!!!!!!!!!
 	    		   			//myDevice.close();   // #################	    		   			

@@ -24,8 +24,8 @@
 //        Adding try/catch to stop main loop on error.
 // 221018       May be when trying to open zigbee LTE device, but stalls.
 //              Seems to block on the open() call.
-//
-
+// 250108 Minor edits.
+//  
 
 
 
